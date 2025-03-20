@@ -1,11 +1,12 @@
 require "test_helper"
 
 class SourceTest < ActiveSupport::TestCase
+  include TestConstants::Endpoints
+
   setup do
-    stub_request(:head, "http://test.archivesspace.org:21").to_return(status: 200)
-    stub_request(:head, "https://test.archivesspace.org/oai").to_return(status: 200)
-    stub_request(:head, "https://demo.archivesspace.org/staff/api").to_return(status: 200)
-    stub_request(:head, "https://test.archivesspace.org/staff/api").to_return(status: 200)
+    ARCHIVES.values.each do |url|
+      stub_request(:head, url).to_return(status: 200)
+    end
   end
 
   test "valid source" do

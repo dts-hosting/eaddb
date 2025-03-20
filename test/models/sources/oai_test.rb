@@ -1,10 +1,13 @@
 require "test_helper"
 
 class Sources::OaiTest < ActiveSupport::TestCase
+  include TestConstants::Endpoints
   include ActiveJob::TestHelper
 
   setup do
-    stub_request(:head, "https://test.archivesspace.org/oai").to_return(status: 200)
+    ARCHIVES.values.each do |url|
+      stub_request(:head, url).to_return(status: 200)
+    end
   end
 
   test "enqueues correct job" do
