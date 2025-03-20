@@ -1,24 +1,8 @@
-# README
+# Regifter
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Receives records from sources and shifts them on to destinations:
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+- A source is required to have zero or more collections.
+- When a source is being processed for records a record must be matched to a collection.
+- Each collection has zero or more destinations.
+- Records belonging to a collection are sent to each destination configured for that collection.
