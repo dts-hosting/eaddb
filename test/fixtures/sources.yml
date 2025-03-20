@@ -1,6 +1,6 @@
 archives_space:
   type: Source::ArchivesSpace
-  name: Test Archives
+  name: Test ArchivesSpace
   url: https://test.archivesspace.org/staff/api
   username: admin
   password: admin

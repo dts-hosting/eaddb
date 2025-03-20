@@ -1,6 +1,6 @@
 class Source < ApplicationRecord
   validates :name, presence: true
-  validates :url, presence: true
+  validates :url, presence: true, uniqueness: { scope: :name, message: "and name combination already exists" }
   validate :url_format
   validate :url_connectivity
 

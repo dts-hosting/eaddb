@@ -9,7 +9,7 @@ class Sources::OaiTest < ActiveSupport::TestCase
 
   test "enqueues correct job" do
     source = Sources::Oai.create!(
-      name: "Test OAI",
+      name: "Test OAI job",
       url: "https://test.archivesspace.org/oai"
     )
 

@@ -4,6 +4,7 @@ class SourceTest < ActiveSupport::TestCase
   setup do
     stub_request(:head, "http://test.archivesspace.org:21").to_return(status: 200)
     stub_request(:head, "https://test.archivesspace.org/oai").to_return(status: 200)
+    stub_request(:head, "https://demo.archivesspace.org/staff/api").to_return(status: 200)
     stub_request(:head, "https://test.archivesspace.org/staff/api").to_return(status: 200)
   end
 
@@ -58,6 +59,36 @@ class SourceTest < ActiveSupport::TestCase
     source.url = "https://error-url.com"
     assert_not source.valid?
     assert_match /is not accessible/, source.errors[:url].first
+  end
+
+  test "should validate uniqueness of url scoped to name" do
+    original = Source.create!(
+      type: "Sources::ArchivesSpace",
+      name: "Test Source",
+      url: "https://test.archivesspace.org/staff/api",
+      username: "user",
+      password: "pass"
+    )
+
+    duplicate = Source.new(
+      type: "Sources::ArchivesSpace",
+      name: original.name,
+      url: original.url,
+      username: "different_user",
+      password: "different_pass"
+    )
+
+    assert_not duplicate.valid?
+    assert_includes duplicate.errors[:url], "and name combination already exists"
+
+    # Test that different name allows same URL
+    duplicate.name = "Demo Source"
+    assert duplicate.valid?
+
+    # Test that different URL allows same name
+    duplicate.name = original.name
+    duplicate.url = "https://demo.archivesspace.org/staff/api"
+    assert duplicate.valid?
   end
 
   test "encrypts username and password" do

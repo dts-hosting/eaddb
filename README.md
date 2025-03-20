@@ -1,6 +1,6 @@
-# Regifter
+# EadDB
 
-Receives records from sources and shifts them on to destinations:
+Pulls (EAD) records from sources and passes them on to destinations:
 
 - A source is required to have zero or more collections.
 - When a source is being processed for records a record must be matched to a collection.

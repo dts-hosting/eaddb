@@ -7,37 +7,37 @@ default: &default
 development:
   primary: &primary_development
     <<: *default
-    database: storage/regifter_development.sqlite3
+    database: storage/eaddb_development.sqlite3
   cable:
     <<: *primary_development
-    database: storage/regifter_development_cable.sqlite3
+    database: storage/eaddb_development_cable.sqlite3
     migrations_paths: db/cable_migrate
   cache:
     <<: *primary_development
-    database: storage/regifter_development_cache.sqlite3
+    database: storage/eaddb_development_cache.sqlite3
     migrations_paths: db/cache_migrate
   queue:
     <<: *primary_development
-    database: storage/regifter_development_queue.sqlite3
+    database: storage/eaddb_development_queue.sqlite3
     migrations_paths: db/queue_migrate
 
 test:
   <<: *default
-  database: storage/regifter_test.sqlite3
+  database: storage/eaddb_test.sqlite3
 
 production:
   primary: &primary_production
     <<: *default
-    database: storage/regifter_production.sqlite3
+    database: storage/eaddb_production.sqlite3
   cable:
     <<: *primary_production
-    database: storage/regifter_production_cable.sqlite3
+    database: storage/eaddb_production_cable.sqlite3
     migrations_paths: db/cable_migrate
   cache:
     <<: *primary_production
-    database: storage/regifter_production_cache.sqlite3
+    database: storage/eaddb_production_cache.sqlite3
     migrations_paths: db/cache_migrate
   queue:
     <<: *primary_production
-    database: storage/regifter_production_queue.sqlite3
+    database: storage/eaddb_production_queue.sqlite3
     migrations_paths: db/queue_migrate

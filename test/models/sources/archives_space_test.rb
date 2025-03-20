@@ -9,7 +9,7 @@ class Sources::ArchivesSpaceTest < ActiveSupport::TestCase
 
   test "enqueues correct job" do
     source = Sources::ArchivesSpace.create!(
-      name: "Test Archives",
+      name: "Test ArchivesSpace job",
       url: "https://test.archivesspace.org/api"
     )
 
