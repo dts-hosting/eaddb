@@ -5,14 +5,29 @@ class Sources::OaiTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
 
   setup do
-    ARCHIVES.values.each do |url|
+    ARCHIVES.each do |url|
       stub_request(:head, url).to_return(status: 200)
     end
   end
 
+  test "validates url ends with /oai for OAI" do
+    valid_source = Sources::Oai.new(
+      name: "Test OAI source",
+      url: "https://test.archivesspace.org/oai"
+    )
+    assert valid_source.valid?
+
+    invalid_source = Sources::Oai.new(
+      name: "Test OAI",
+      url: "https://test.archivesspace.org/api"
+    )
+    assert_not invalid_source.valid?
+    assert_includes invalid_source.errors[:url], "must end with '/oai'"
+  end
+
   test "enqueues correct job" do
     source = Sources::Oai.create!(
-      name: "Test OAI job",
+      name: "Test OAI source",
       url: "https://test.archivesspace.org/oai"
     )
 

@@ -4,7 +4,7 @@ class SourceTest < ActiveSupport::TestCase
   include TestConstants::Endpoints
 
   setup do
-    ARCHIVES.values.each do |url|
+    ARCHIVES.each do |url|
       stub_request(:head, url).to_return(status: 200)
     end
   end

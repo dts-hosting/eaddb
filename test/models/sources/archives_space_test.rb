@@ -5,14 +5,29 @@ class Sources::ArchivesSpaceTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
 
   setup do
-    ARCHIVES.values.each do |url|
+    ARCHIVES.each do |url|
       stub_request(:head, url).to_return(status: 200)
     end
   end
 
+  test "validates url ends with /api for ArchivesSpace" do
+    valid_source = Sources::ArchivesSpace.new(
+      name: "Test ArchivesSpace source",
+      url: "https://test.archivesspace.org/staff/api"
+    )
+    assert valid_source.valid?
+
+    invalid_source = Sources::ArchivesSpace.new(
+      name: "Test ArchivesSpace source",
+      url: "https://test.archivesspace.org/staff"
+    )
+    assert_not invalid_source.valid?
+    assert_includes invalid_source.errors[:url], "must end with '/api'"
+  end
+
   test "enqueues correct job" do
     source = Sources::ArchivesSpace.create!(
-      name: "Test ArchivesSpace job",
+      name: "Test ArchivesSpace source",
       url: "https://test.archivesspace.org/api"
     )
 
