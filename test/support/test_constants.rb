@@ -9,7 +9,7 @@ module TestConstants
       "https://#{BASE_TEST_URL}/oai?verb=Identify",
       "https://#{BASE_DEMO_URL}/staff/api/version",
       "https://#{BASE_TEST_URL}/staff/api/version",
-      "https://#{BASE_TEST_URL}/staff/version",
+      "https://#{BASE_TEST_URL}/staff/version"
     ]
   end
 end
