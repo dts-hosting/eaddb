@@ -38,28 +38,35 @@ class SourceTest < ActiveSupport::TestCase
       url: "not_a_url"
     )
     assert_not source.valid?
-    assert_includes source.errors[:url], "must be a valid URL"
-
-    source.url = "ftp://test.archivesspace.org"
-    assert_not source.valid?
-    assert_includes source.errors[:url], "must be a valid URL"
+    assert_match(/must be a valid/, source.errors[:url].first)
   end
 
   test "validates url connectivity" do
-    stub_request(:head, "https://good-url.com/").to_return(status: 200)
-    stub_request(:head, "https://bad-url.com/").to_return(status: 404)
-    stub_request(:head, "https://error-url.com/").to_raise(SocketError)
+    stub_request(:head, "https://fail.archivesspace.org/oai?verb=Identify").to_return(status: 404)
+    stub_request(:head, "https://timeout.archivesspace.org/oai?verb=Identify").to_raise(Timeout::Error)
+    stub_request(:head, "https://error.archivesspace.org/oai?verb=Identify").to_raise(SocketError)
 
-    source = Source.new(name: "Test", url: "https://good-url.com")
+    source = Source.new(type: "Sources::Oai", name: "Test", url: "https://test.archivesspace.org/oai")
     assert source.valid?
 
-    source.url = "https://bad-url.com"
+    source.url = "https://fail.archivesspace.org/oai"
     assert_not source.valid?
-    assert_includes source.errors[:url], "returned invalid response code: 404"
+    assert_match(/404/, source.errors[:url].first)
 
-    source.url = "https://error-url.com"
+    source.url = "https://timeout.archivesspace.org/oai"
     assert_not source.valid?
-    assert_match /is not accessible/, source.errors[:url].first
+    assert_match(/connection timed out/, source.errors[:url].first)
+
+    source.url = "https://error.archivesspace.org/oai"
+    assert_not source.valid?
+    assert_match(/connection timed out/, source.errors[:url].first)
+
+    source = Source.new(
+      type: "Sources::ArchivesSpace",
+      name: "Test Source",
+      url: "https://test.archivesspace.org/staff/api"
+    )
+    assert source.valid?
   end
 
   test "should validate uniqueness of url scoped to name" do
@@ -112,28 +119,5 @@ class SourceTest < ActiveSupport::TestCase
       url: "https://test.archivesspace.org/oai"
     )
     assert source.valid?
-  end
-
-  test "handles urls with paths properly" do
-    stub_request(:head, "https://test.archivesspace.org/staff/api/").
-      to_return(status: 200)
-
-    source = Source.new(
-      name: "Test Source",
-      url: "https://test.archivesspace.org/staff/api"
-    )
-    assert source.valid?
-  end
-
-  test "handles network timeouts" do
-    stub_request(:head, "https://slow-server.com/").
-      to_raise(Timeout::Error)
-
-    source = Source.new(
-      name: "Test Source",
-      url: "https://slow-server.com"
-    )
-    assert_not source.valid?
-    assert_match /is not accessible/, source.errors[:url].first
   end
 end

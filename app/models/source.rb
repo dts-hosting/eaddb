@@ -1,7 +1,7 @@
 class Source < ApplicationRecord
   validates :name, presence: true
-  validates :url, presence: true, uniqueness: { scope: :name, message: "and name combination already exists" }
-  validate :url_format
+  validates :url, format: {with: URI::DEFAULT_PARSER.make_regexp, message: "must be a valid URL"}
+  validates :url, presence: true, uniqueness: {scope: :name, message: "and name combination already exists"}
   validate :url_connectivity
 
   encrypts :username
@@ -9,26 +9,21 @@ class Source < ApplicationRecord
 
   private
 
-  def url_format
-    return if url.blank?
-
-    uri = URI.parse(url)
-    errors.add(:url, "must be a valid URL") unless uri.kind_of?(URI::HTTP)
-  rescue URI::InvalidURIError
-    errors.add(:url, "must be a valid URL")
+  def build_validation_url
+    "" # default implementation
   end
 
   def url_connectivity
     return if url.blank?
 
-    begin
-      uri = URI.parse(url)
-      response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
-        http.request_head(uri.path.presence || '/')
-      end
-      errors.add(:url, "returned invalid response code: #{response.code}") unless response.is_a?(Net::HTTPSuccess)
-    rescue Addressable::URI::InvalidURIError, SocketError, Net::HTTPError, Timeout::Error => e
-      errors.add(:url, "is not accessible: #{e.message}")
+    uri = URI.parse(build_validation_url)
+    Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == "https") do |http|
+      response = http.head(uri)
+      errors.add(:url, "returned status #{response.code}") unless response.is_a?(Net::HTTPSuccess)
     end
+  rescue SocketError, Timeout::Error => e
+    errors.add(:url, "connection timed out: #{e.message}")
+  rescue => e
+    errors.add(:url, "must be a valid resolvable URL: #{e.message}")
   end
 end
