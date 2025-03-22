@@ -5,6 +5,16 @@ class RecordTest < ActiveSupport::TestCase
 
   def setup
     @collection = collections(:oai)
+    @destination1 = Destinations::ArcLight.create!(
+      name: "Destination 1",
+      url: "https://example1.com",
+      collection: @collection
+    )
+    @destination2 = Destinations::S3Bucket.create!(
+      name: "Destination 2",
+      url: "https://example2.com",
+      collection: @collection
+    )
     @ead_xml = fixture_file_upload(
       Rails.root.join("test/fixtures/files/sample.xml"),
       "application/xml"
@@ -75,5 +85,29 @@ class RecordTest < ActiveSupport::TestCase
   test "modification_date cannot be nil" do
     @record.modification_date = nil
     refute @record.valid?
+  end
+
+  test "creates transfers for all collection destinations after creation" do
+    @record.save
+    assert_equal @collection.destinations.count, @record.transfers.count
+    assert @record.transfers.all? { |t| t.pending? }
+
+    [@destination1, @destination2].each do |destination|
+      assert Transfer.exists?(record: @record, destination: destination)
+    end
+  end
+
+  test "resets transfer status to pending after update" do
+    @record.save
+
+    transfer = @record.transfers.first
+    transfer.update!(status: :succeeded)
+    assert transfer.succeeded?
+
+    @record.update!(modification_date: Date.current)
+
+    @record.transfers.reload.each do |t|
+      assert t.pending?, "Transfer should be reset to pending after record update"
+    end
   end
 end

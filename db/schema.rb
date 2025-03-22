@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_22_063324) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_22_210744) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -53,6 +53,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_22_063324) do
     t.index ["source_id"], name: "index_collections_on_source_id"
   end
 
+  create_table "destinations", force: :cascade do |t|
+    t.string "type", null: false
+    t.string "name", null: false
+    t.string "url", null: false
+    t.string "identifier"
+    t.string "username"
+    t.string "password"
+    t.integer "collection_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["collection_id"], name: "index_destinations_on_collection_id"
+    t.index ["name", "type"], name: "index_destinations_on_name_and_type", unique: true
+  end
+
   create_table "records", force: :cascade do |t|
     t.integer "collection_id", null: false
     t.string "identifier", null: false
@@ -88,6 +102,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_22_063324) do
     t.index ["type"], name: "index_sources_on_type"
   end
 
+  create_table "transfers", force: :cascade do |t|
+    t.integer "destination_id", null: false
+    t.integer "record_id", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["destination_id", "record_id"], name: "index_transfers_on_destination_id_and_record_id", unique: true
+    t.index ["destination_id"], name: "index_transfers_on_destination_id"
+    t.index ["record_id"], name: "index_transfers_on_record_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email_address", null: false
     t.string "password_digest", null: false
@@ -99,6 +124,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_22_063324) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "collections", "sources"
+  add_foreign_key "destinations", "collections"
   add_foreign_key "records", "collections"
   add_foreign_key "sessions", "users"
+  add_foreign_key "transfers", "destinations"
+  add_foreign_key "transfers", "records"
 end

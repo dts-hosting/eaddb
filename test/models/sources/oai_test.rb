@@ -1,38 +1,40 @@
 require "test_helper"
 
-class Sources::OaiTest < ActiveSupport::TestCase
-  include TestConstants::Endpoints
-  include ActiveJob::TestHelper
+module Sources
+  class OaiTest < ActiveSupport::TestCase
+    include TestConstants::Endpoints
+    include ActiveJob::TestHelper
 
-  setup do
-    ARCHIVES.each do |url|
-      stub_request(:head, url).to_return(status: 200)
+    setup do
+      ARCHIVES.each do |url|
+        stub_request(:head, url).to_return(status: 200)
+      end
     end
-  end
 
-  test "validates url ends with /oai for OAI" do
-    valid_source = Sources::Oai.new(
-      name: "Test OAI source",
-      url: "https://test.archivesspace.org/oai"
-    )
-    assert valid_source.valid?
+    test "validates url ends with /oai for OAI" do
+      valid_source = Sources::Oai.new(
+        name: "Test OAI source",
+        url: "https://test.archivesspace.org/oai"
+      )
+      assert valid_source.valid?
 
-    invalid_source = Sources::Oai.new(
-      name: "Test OAI",
-      url: "https://test.archivesspace.org/api"
-    )
-    assert_not invalid_source.valid?
-    assert_includes invalid_source.errors[:url], "must end with '/oai'"
-  end
+      invalid_source = Sources::Oai.new(
+        name: "Test OAI",
+        url: "https://test.archivesspace.org/api"
+      )
+      assert_not invalid_source.valid?
+      assert_includes invalid_source.errors[:url], "must end with '/oai'"
+    end
 
-  test "enqueues correct job" do
-    source = Sources::Oai.create!(
-      name: "Test OAI source",
-      url: "https://test.archivesspace.org/oai"
-    )
+    test "enqueues correct job" do
+      source = Sources::Oai.create!(
+        name: "Test OAI source",
+        url: "https://test.archivesspace.org/oai"
+      )
 
-    assert_enqueued_with(job: OaiGetRecordsJob) do
-      source.run
+      assert_enqueued_with(job: OaiGetRecordsJob) do
+        source.run
+      end
     end
   end
 end

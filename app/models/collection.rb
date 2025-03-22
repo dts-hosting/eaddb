@@ -1,5 +1,6 @@
 class Collection < ApplicationRecord
   belongs_to :source, counter_cache: true
+  has_many :destinations, dependent: :destroy
   has_many :records, dependent: :destroy
 
   validates :name, presence: true, uniqueness: {scope: :source_id}
