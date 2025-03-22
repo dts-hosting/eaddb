@@ -67,7 +67,7 @@ class OaiImporter
   def build_record_attributes(record_identifier, datestamp)
     {
       identifier: record_identifier,
-      modification_date: datestamp,
+      modification_date: datestamp
     }
   end
 

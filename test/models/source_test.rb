@@ -128,7 +128,7 @@ class SourceTest < ActiveSupport::TestCase
     assert_difference -> { @source.reload.total_records_count }, 1 do
       @collection.records.create!(
         identifier: "new-record",
-        modification_date: Date.today,
+        modification_date: Time.zone.today,
         ead_xml: fixture_file_upload("test/fixtures/files/sample.xml", "application/xml")
       )
     end
@@ -146,7 +146,7 @@ class SourceTest < ActiveSupport::TestCase
 
     new_collection.records.create!(
       identifier: "new-record",
-      modification_date: Date.today,
+      modification_date: Time.zone.today,
       ead_xml: fixture_file_upload("test/fixtures/files/sample.xml", "application/xml")
     )
 
