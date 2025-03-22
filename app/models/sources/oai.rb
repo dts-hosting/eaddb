@@ -6,7 +6,7 @@ class Sources::Oai < Source
   end
 
   def client
-    OAI::Client.new(url, metadata_prefix: "oai_ead")
+    OAI::Client.new(url)
   end
 
   def metadata_prefix
