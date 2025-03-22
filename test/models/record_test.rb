@@ -4,28 +4,19 @@ class RecordTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
 
   def setup
-    @collection = collections(:oai)
-    @destination1 = Destinations::ArcLight.create!(
-      name: "Destination 1",
-      url: "https://example1.com",
-      collection: @collection
-    )
-    @destination2 = Destinations::S3Bucket.create!(
-      name: "Destination 2",
-      url: "https://example2.com",
-      collection: @collection
-    )
-    @ead_xml = fixture_file_upload(
-      Rails.root.join("test/fixtures/files/sample.xml"),
-      "application/xml"
-    )
-    @record = Record.new(
+    @collection = create_collection
+    @destination1 = create_destination(type: :arc_light, attributes: {collection: @collection})
+    @destination2 = create_destination(type: :s3_bucket, attributes: {collection: @collection})
+
+    @record_attributes = {
       collection: @collection,
       identifier: "unique-id-123",
       creation_date: Date.current,
       modification_date: Date.current,
-      ead_xml: @ead_xml
-    )
+      ead_xml: fixture_file_upload(Rails.root.join("test/fixtures/files/sample.xml"), "application/xml")
+    }
+
+    @record = Record.new(@record_attributes)
   end
 
   test "valid record" do
@@ -61,13 +52,13 @@ class RecordTest < ActiveSupport::TestCase
   end
 
   test "identifier can be reused in different collections" do
-    different_collection = collections(:api)
+    different_collection = create_collection
     record = Record.new(
       collection: different_collection,
       identifier: @record.identifier,
       creation_date: Date.current,
       modification_date: Date.current,
-      ead_xml: @ead_xml
+      ead_xml: fixture_file_upload(Rails.root.join("test/fixtures/files/sample.xml"), "application/xml")
     )
     assert record.valid?
   end
@@ -89,8 +80,9 @@ class RecordTest < ActiveSupport::TestCase
 
   test "creates transfers for all collection destinations after creation" do
     @record.save
+
     assert_equal @collection.destinations.count, @record.transfers.count
-    assert @record.transfers.all? { |t| t.pending? }
+    assert @record.transfers.all?(&:pending?)
 
     [@destination1, @destination2].each do |destination|
       assert Transfer.exists?(record: @record, destination: destination)

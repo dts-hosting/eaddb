@@ -2,15 +2,15 @@ require "test_helper"
 
 class CollectionTest < ActiveSupport::TestCase
   def setup
-    @source = sources(:oai)
-    @collection = collections(:oai)
+    @source = create_source
+    @collection = create_collection(source: @source)
   end
 
   test "valid collection" do
     collection = Collection.new(
       source: @source,
-      name: "Unique Test Collection",
-      identifier: "/repositories/2"
+      name: "Test Collection #{SecureRandom.hex(4)}",
+      identifier: "/repositories/#{rand(1000)}"
     )
     assert collection.valid?
   end
@@ -34,7 +34,7 @@ class CollectionTest < ActiveSupport::TestCase
   end
 
   test "cannot create collection with duplicate name for same source" do
-    source = sources(:oai)
+    source = create_source
     Collection.create!(
       name: "Test Collection 1",
       source: source,
@@ -52,19 +52,19 @@ class CollectionTest < ActiveSupport::TestCase
   end
 
   test "can create collections with same name for different sources" do
-    source1 = sources(:oai)
-    source2 = sources(:archives_space)
+    source1 = create_source
+    source2 = create_source
 
     Collection.create!(
       name: "Test Collection 1",
       source: source1,
-      identifier: "/repositories/4"
+      identifier: "/repositories/1"
     )
 
     collection = Collection.new(
       name: "Test Collection 1",
       source: source2,
-      identifier: "/repositories/4"
+      identifier: "/repositories/2"
     )
 
     assert collection.valid?
@@ -75,12 +75,12 @@ class CollectionTest < ActiveSupport::TestCase
     refute @collection.valid?
     assert_includes @collection.errors[:identifier], "is invalid"
 
-    @collection.identifier = "/repositories/2"
+    @collection.identifier = "/repositories/#{rand(1000)}"
     assert @collection.valid?
   end
 
   test "cannot create collection with duplicate identifier for same source" do
-    source = sources(:oai)
+    source = create_source
     Collection.create!(
       name: "First Collection",
       source: source,
@@ -98,8 +98,8 @@ class CollectionTest < ActiveSupport::TestCase
   end
 
   test "can create collections with same identifier for different sources" do
-    source1 = sources(:oai)
-    source2 = sources(:archives_space)
+    source1 = create_source
+    source2 = create_source
 
     Collection.create!(
       name: "First Collection",
@@ -117,7 +117,7 @@ class CollectionTest < ActiveSupport::TestCase
   end
 
   test "can save existing collection without triggering uniqueness validation" do
-    collection = collections(:oai)
+    collection = create_collection
     assert collection.valid?
     assert collection.save
   end
@@ -132,7 +132,7 @@ class CollectionTest < ActiveSupport::TestCase
       Collection.create!(
         source: @source,
         name: "New Collection",
-        identifier: "/repositories/2"
+        identifier: "/repositories/#{rand(1000)}"
       )
     end
   end
@@ -147,7 +147,7 @@ class CollectionTest < ActiveSupport::TestCase
     assert_difference -> { @collection.reload.records_count }, 1 do
       @collection.records.create!(
         identifier: "new-record",
-        modification_date: Time.zone.today,
+        modification_date: Date.current,
         ead_xml: fixture_file_upload("test/fixtures/files/sample.xml", "application/xml")
       )
     end

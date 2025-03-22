@@ -3,7 +3,7 @@ require "rexml/document"
 
 class OaiImporterTest < ActiveSupport::TestCase
   setup do
-    @importer = OaiImporter.new(sources(:oai))
+    @importer = OaiImporter.new(create_source)
   end
 
   test "extracts repository name from namespaced XML" do

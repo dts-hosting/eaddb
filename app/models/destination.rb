@@ -3,7 +3,7 @@ class Destination < ApplicationRecord
   has_many :transfers
   has_many :records, through: :transfers
 
-  validates :name, presence: true, uniqueness: { scope: :type }
+  validates :name, presence: true, uniqueness: {scope: :type}
   validates :url, presence: true, format: {with: URI::DEFAULT_PARSER.make_regexp, message: "must be a valid URL"}
 
   encrypts :username

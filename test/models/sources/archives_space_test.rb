@@ -2,14 +2,7 @@ require "test_helper"
 
 module Sources
   class ArchivesSpaceTest < ActiveSupport::TestCase
-    include TestConstants::Endpoints
     include ActiveJob::TestHelper
-
-    setup do
-      ARCHIVES.each do |url|
-        stub_request(:head, url).to_return(status: 200)
-      end
-    end
 
     test "validates url ends with /api for ArchivesSpace" do
       valid_source = Sources::ArchivesSpace.new(

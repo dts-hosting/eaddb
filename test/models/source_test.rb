@@ -1,15 +1,9 @@
 require "test_helper"
 
 class SourceTest < ActiveSupport::TestCase
-  include TestConstants::Endpoints
-
   setup do
-    ARCHIVES.each do |url|
-      stub_request(:head, url).to_return(status: 200)
-    end
-
-    @source = sources(:oai)
-    @collection = collections(:oai)
+    @source = create_source
+    @collection = create_collection(source: @source)
   end
 
   test "valid source" do
@@ -92,11 +86,9 @@ class SourceTest < ActiveSupport::TestCase
     assert_not duplicate.valid?
     assert_includes duplicate.errors[:url], "and name combination already exists"
 
-    # Test that different name allows same URL
     duplicate.name = "Demo Source"
     assert duplicate.valid?
 
-    # Test that different URL allows same name
     duplicate.name = original.name
     duplicate.url = "https://demo.archivesspace.org/staff/api"
     assert duplicate.valid?

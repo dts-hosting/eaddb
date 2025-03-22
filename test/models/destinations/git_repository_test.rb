@@ -3,12 +3,10 @@ require "test_helper"
 module Destinations
   class GitRepositoryTest < ActiveSupport::TestCase
     test "is a valid destination subclass" do
-      source = sources(:oai)
-      collection = Collection.create!(source: source, name: "Test Collection for Git", identifier: "/repositories/4")
-      destination = Destinations::GitRepository.new(
-        name: "Git Repo", 
-        url: "https://github.com/example/repo.git", 
-        collection: collection
+      collection = create_collection
+      destination = create_destination(
+        type: :git_repository,
+        attributes: {collection: collection}
       )
 
       assert destination.valid?
