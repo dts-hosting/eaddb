@@ -78,4 +78,14 @@ class CollectionTest < ActiveSupport::TestCase
       @collection.destroy
     end
   end
+
+  test "records_count updates automatically" do
+    assert_difference -> { @collection.reload.records_count }, 1 do
+      @collection.records.create!(
+        identifier: "new-record",
+        modification_date: Date.today,
+        ead_xml: fixture_file_upload("test/fixtures/files/sample.xml", "application/xml")
+      )
+    end
+  end
 end

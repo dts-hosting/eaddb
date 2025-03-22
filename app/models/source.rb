@@ -1,5 +1,6 @@
 class Source < ApplicationRecord
   has_many :collections, dependent: :destroy
+  has_many :records, through: :collections
 
   validates :name, presence: true
   validates :url, format: {with: URI::DEFAULT_PARSER.make_regexp, message: "must be a valid URL"}
@@ -9,14 +10,22 @@ class Source < ApplicationRecord
   encrypts :username
   encrypts :password
 
-  private
-
   def build_validation_url
     "" # default implementation
   end
 
+  def recalculate_total_records_count!
+    update_total_records_count
+  end
+
   def run
     raise NotImplementedError
+  end
+
+  private
+
+  def update_total_records_count
+    update_column(:total_records_count, collections.sum(:records_count))
   end
 
   def url_connectivity

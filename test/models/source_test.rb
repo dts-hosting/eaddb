@@ -7,6 +7,9 @@ class SourceTest < ActiveSupport::TestCase
     ARCHIVES.each do |url|
       stub_request(:head, url).to_return(status: 200)
     end
+
+    @source = sources(:oai)
+    @collection = collections(:oai)
   end
 
   test "valid source" do
@@ -119,5 +122,39 @@ class SourceTest < ActiveSupport::TestCase
       url: "https://test.archivesspace.org/oai"
     )
     assert source.valid?
+  end
+
+  test "total_records_count updates when records are added or removed" do
+    assert_difference -> { @source.reload.total_records_count }, 1 do
+      @collection.records.create!(
+        identifier: "new-record",
+        modification_date: Date.today,
+        ead_xml: fixture_file_upload("test/fixtures/files/sample.xml", "application/xml")
+      )
+    end
+
+    assert_difference -> { @source.reload.total_records_count }, -1 do
+      @collection.records.first.destroy
+    end
+  end
+
+  test "total_records_count updates when collection is added or removed" do
+    new_collection = @source.collections.create!(
+      name: "New Collection",
+      identifier: "/repositories/3"
+    )
+
+    new_collection.records.create!(
+      identifier: "new-record",
+      modification_date: Date.today,
+      ead_xml: fixture_file_upload("test/fixtures/files/sample.xml", "application/xml")
+    )
+
+    assert_equal 1, new_collection.reload.records_count
+    assert_equal @source.collections.sum(:records_count), @source.reload.total_records_count
+
+    assert_difference -> { @source.reload.total_records_count }, -1 do
+      new_collection.destroy
+    end
   end
 end

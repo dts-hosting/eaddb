@@ -5,4 +5,12 @@ class Record < ApplicationRecord
   validates :ead_xml, presence: true
   validates :identifier, presence: true, uniqueness: { scope: :collection_id }
   validates :modification_date, presence: true
+
+  after_commit :update_source_counter
+
+  private
+
+  def update_source_counter
+    collection.update_source_counter
+  end
 end
