@@ -8,7 +8,7 @@ class Record < ApplicationRecord
   validates :identifier, presence: true, uniqueness: {scope: :collection_id}
   validates :modification_date, presence: true
 
-  after_create_commit :update_source_counter
+  after_commit :update_source_counter, on: [:create, :destroy]
   after_create_commit :create_transfers_for_collection_destinations
   after_update_commit :reset_transfers_status
 

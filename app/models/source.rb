@@ -1,5 +1,5 @@
 class Source < ApplicationRecord
-  has_many :collections, dependent: :destroy
+  has_many :collections, dependent: nil
   has_many :records, through: :collections
 
   validates :name, presence: true
@@ -9,6 +9,8 @@ class Source < ApplicationRecord
 
   encrypts :username
   encrypts :password
+
+  before_destroy :ensure_no_collections
 
   def build_validation_url
     "" # default implementation
@@ -27,6 +29,13 @@ class Source < ApplicationRecord
   end
 
   private
+
+  def ensure_no_collections
+    if collections.exists?
+      errors.add(:base, "Cannot delete source while collections exist.")
+      throw(:abort)
+    end
+  end
 
   def update_total_records_count
     update_column(:total_records_count, collections.sum(:records_count))

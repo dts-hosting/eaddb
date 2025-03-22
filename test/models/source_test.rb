@@ -149,4 +149,24 @@ class SourceTest < ActiveSupport::TestCase
       new_collection.destroy
     end
   end
+
+  test "cannot destroy source with existing collections" do
+    assert_no_difference "Source.count" do
+      @source.destroy
+    end
+
+    assert @source.persisted?
+
+    assert_includes @source.errors[:base], "Cannot delete source while collections exist."
+  end
+
+  test "can destroy source after collections are removed" do
+    @source.collections.destroy_all
+
+    assert_difference "Source.count", -1 do
+      @source.destroy
+    end
+
+    assert @source.destroyed?
+  end
 end
