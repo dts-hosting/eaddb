@@ -1,4 +1,6 @@
 class Source < ApplicationRecord
+  has_many :collections, dependent: :destroy
+
   validates :name, presence: true
   validates :url, format: {with: URI::DEFAULT_PARSER.make_regexp, message: "must be a valid URL"}
   validates :url, presence: true, uniqueness: {scope: :name, message: "and name combination already exists"}

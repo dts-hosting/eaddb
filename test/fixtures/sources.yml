@@ -1,11 +1,11 @@
 archives_space:
-  type: Source::ArchivesSpace
+  type: Sources::ArchivesSpace
   name: Test ArchivesSpace
   url: https://test.archivesspace.org/staff/api
   username: admin
   password: admin
 
 oai:
-  type: Source::Oai
+  type: Sources::Oai
   name: Test OAI
   url: https://test.archivesspace.org/oai

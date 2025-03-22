@@ -10,7 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_20_205439) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_22_033706) do
+  create_table "collections", force: :cascade do |t|
+    t.integer "source_id", null: false
+    t.string "name", null: false
+    t.string "owner"
+    t.boolean "require_owner_in_record", default: false
+    t.string "identifier", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["source_id", "name"], name: "index_collections_on_source_id_and_name", unique: true
+    t.index ["source_id"], name: "index_collections_on_source_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "ip_address"
@@ -28,6 +40,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_20_205439) do
     t.string "type", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "collections_count", default: 0, null: false
     t.index ["name", "url"], name: "index_sources_on_name_and_url", unique: true
     t.index ["name"], name: "index_sources_on_name"
     t.index ["type"], name: "index_sources_on_type"
@@ -41,5 +54,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_20_205439) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  add_foreign_key "collections", "sources"
   add_foreign_key "sessions", "users"
 end
