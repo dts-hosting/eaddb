@@ -141,7 +141,7 @@ class SourceTest < ActiveSupport::TestCase
   test "total_records_count updates when collection is added or removed" do
     new_collection = @source.collections.create!(
       name: "New Collection",
-      identifier: "/repositories/3"
+      identifier: "/repositories/4"
     )
 
     new_collection.records.create!(

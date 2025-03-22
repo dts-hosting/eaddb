@@ -5,6 +5,10 @@ class Sources::ArchivesSpace < Source
     "#{url}/version"
   end
 
+  def client
+    raise NotImplementedError
+  end
+
   def run
     ArchivesSpaceGetRecordsJob.perform_later(self)
   end

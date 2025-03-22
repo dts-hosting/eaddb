@@ -14,6 +14,10 @@ class Source < ApplicationRecord
     "" # default implementation
   end
 
+  def client
+    raise NotImplementedError
+  end
+
   def recalculate_total_records_count!
     update_total_records_count
   end

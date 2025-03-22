@@ -73,3 +73,5 @@ group :test do
   gem "webmock"
 end
 gem "pagy"
+
+gem "oai", "~> 1.3"

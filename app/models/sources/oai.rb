@@ -5,6 +5,14 @@ class Sources::Oai < Source
     "#{url}?verb=Identify"
   end
 
+  def client
+    OAI::Client.new(url, metadata_prefix: "oai_ead")
+  end
+
+  def metadata_prefix
+    "oai_ead"
+  end
+
   def run
     OaiGetRecordsJob.perform_later(self)
   end

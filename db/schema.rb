@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_22_041956) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_22_063324) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -48,6 +48,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_22_041956) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "records_count", default: 0, null: false
+    t.index ["source_id", "identifier"], name: "index_collections_on_source_id_and_identifier", unique: true
     t.index ["source_id", "name"], name: "index_collections_on_source_id_and_name", unique: true
     t.index ["source_id"], name: "index_collections_on_source_id"
   end
@@ -56,7 +57,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_22_041956) do
     t.integer "collection_id", null: false
     t.string "identifier", null: false
     t.date "creation_date"
-    t.date "modification_date", null: false
+    t.datetime "modification_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["collection_id", "identifier"], name: "index_records_on_collection_id_and_identifier", unique: true

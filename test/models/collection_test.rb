@@ -33,19 +33,40 @@ class CollectionTest < ActiveSupport::TestCase
     assert_includes @collection.errors[:identifier], "can't be blank"
   end
 
-  test "name must be unique per source" do
-    duplicate = @collection.dup
-    refute duplicate.valid?
+  test "cannot create collection with duplicate name for same source" do
+    source = sources(:oai)
+    Collection.create!(
+      name: "Test Collection 1",
+      source: source,
+      identifier: "/repositories/1"
+    )
+
+    duplicate = Collection.new(
+      name: "Test Collection 1",
+      source: source,
+      identifier: "/repositories/2"
+    )
+
+    assert_not duplicate.valid?
     assert_includes duplicate.errors[:name], "has already been taken"
   end
 
-  test "name can be reused in different sources" do
-    different_source = sources(:archives_space)
-    collection = Collection.new(
-      source: different_source,
-      name: @collection.name,
-      identifier: "/repositories/2"
+  test "can create collections with same name for different sources" do
+    source1 = sources(:oai)
+    source2 = sources(:archives_space)
+
+    Collection.create!(
+      name: "Test Collection 1",
+      source: source1,
+      identifier: "/repositories/4"
     )
+
+    collection = Collection.new(
+      name: "Test Collection 1",
+      source: source2,
+      identifier: "/repositories/4"
+    )
+
     assert collection.valid?
   end
 
@@ -56,6 +77,49 @@ class CollectionTest < ActiveSupport::TestCase
 
     @collection.identifier = "/repositories/2"
     assert @collection.valid?
+  end
+
+  test "cannot create collection with duplicate identifier for same source" do
+    source = sources(:oai)
+    Collection.create!(
+      name: "First Collection",
+      source: source,
+      identifier: "/repositories/1"
+    )
+
+    duplicate = Collection.new(
+      name: "Second Collection",
+      source: source,
+      identifier: "/repositories/1"
+    )
+
+    assert_not duplicate.valid?
+    assert_includes duplicate.errors[:identifier], "has already been taken"
+  end
+
+  test "can create collections with same identifier for different sources" do
+    source1 = sources(:oai)
+    source2 = sources(:archives_space)
+
+    Collection.create!(
+      name: "First Collection",
+      source: source1,
+      identifier: "/repositories/1"
+    )
+
+    collection = Collection.new(
+      name: "Second Collection",
+      source: source2,
+      identifier: "/repositories/1"
+    )
+
+    assert collection.valid?
+  end
+
+  test "can save existing collection without triggering uniqueness validation" do
+    collection = collections(:oai)
+    assert collection.valid?
+    assert collection.save
   end
 
   test "require_owner_in_record defaults to false" do
