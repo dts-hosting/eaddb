@@ -1,5 +1,9 @@
 return unless Rails.env.development?
 
+User.find_or_create_by!(email_address: "admin@eaddb.org") do |user|
+  user.password = "password"
+end
+
 [
   {base_url: "test.archivesspace.org", name: "Test Instance"},
   {base_url: "demo.archivesspace.org", name: "Demo Instance"},
