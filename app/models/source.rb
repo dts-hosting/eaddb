@@ -13,6 +13,10 @@ class Source < ApplicationRecord
     "" # default implementation
   end
 
+  def run
+    raise NotImplementedError
+  end
+
   def url_connectivity
     return if url.blank?
 
