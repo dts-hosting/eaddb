@@ -6,6 +6,8 @@ require "webmock/minitest"
 
 module ActiveSupport
   class TestCase
+    include ActionDispatch::TestProcess
+
     # Run tests in parallel with specified workers
     parallelize(workers: :number_of_processors)
 
