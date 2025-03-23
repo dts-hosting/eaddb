@@ -40,7 +40,10 @@ class OaiImporter
     return unless should_process?(existing_record, datestamp)
 
     record = fetch_record(record_identifier)
-    ead_xml = record.metadata.write("")
+    ead_xml = ""
+    formatter = REXML::Formatters::Pretty.new(0)
+    formatter.compact = true
+    formatter.write(record.metadata, ead_xml)
     corpname = extract_repository_name(record.metadata)
     return if collection.require_owner_in_record && corpname != collection.owner
 

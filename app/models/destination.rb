@@ -11,6 +11,10 @@ class Destination < ApplicationRecord
 
   after_create_commit :create_transfers_for_collection_records
 
+  def run
+    raise NotImplementedError
+  end
+
   private
 
   def create_transfers_for_collection_records

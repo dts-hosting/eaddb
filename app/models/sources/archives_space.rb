@@ -12,6 +12,7 @@ module Sources
 
     def run
       ArchivesSpaceGetRecordsJob.perform_later(self)
+      # TODO: ArchivesSpaceDeleteRecordsJob.perform_later(self)
     end
 
     private

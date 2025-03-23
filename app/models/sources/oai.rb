@@ -16,6 +16,7 @@ module Sources
 
     def run
       OaiGetRecordsJob.perform_later(self)
+      # TODO: OaiDeleteRecordsJob.perform_later(self)
     end
 
     private
