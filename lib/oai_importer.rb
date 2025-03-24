@@ -12,8 +12,10 @@ class OaiImporter
     xml_element.elements["/metadata/ead"] || xml_element.elements["//ead"]
   end
 
-  def extract_eadid(xml_element)
-    xml_text_value(xml_element, "//eadheader/eadid")
+  # TODO: is the fallback ok? This may need to be a configurable thing.
+  def extract_eadid(xml_element, path = "//eadheader/eadid")
+    xml_text_value(xml_element, "//eadheader/eadid") ||
+      xml_text_value(xml_element, "//ead/archdesc/did/unitid")
   end
 
   def extract_repository_name(xml_element)
@@ -49,12 +51,12 @@ class OaiImporter
 
     record = fetch_record(record_identifier)
     ead_element = extract_ead(record.metadata)
-    ead_content = xml_to_string(ead_element)
     corpname = extract_repository_name(ead_element)
-    eadid = extract_eadid(ead_element)
     return if collection.require_owner_in_record && corpname != collection.owner
 
+    eadid = extract_eadid(ead_element)
     attributes = build_record_attributes(record_identifier, datestamp, corpname, eadid)
+    ead_content = xml_to_string(ead_element)
     if existing_record
       update_record(existing_record, ead_content, attributes)
     else
