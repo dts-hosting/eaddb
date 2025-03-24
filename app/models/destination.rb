@@ -2,6 +2,7 @@ class Destination < ApplicationRecord
   belongs_to :collection
   has_many :transfers, dependent: :destroy
   has_many :records, through: :transfers
+  has_one_attached :config
 
   validates :name, presence: true, uniqueness: {scope: :type}
   validates :url, presence: true, format: {with: URI::DEFAULT_PARSER.make_regexp, message: "must be a valid URL"}

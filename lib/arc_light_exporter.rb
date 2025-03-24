@@ -12,6 +12,9 @@ class ArcLightExporter
       -u #{destination.url} \
       -i xml \
       -c #{indexer_cfg} \
+      -s processing_thread_pool=0 \
+      -s solr_writer.batch_size=1 \
+      -s solr_writer.thread_pool=0 \
       #{ead_xml}
     CMD
   end
@@ -21,7 +24,6 @@ class ArcLightExporter
     indexer_config = File.join(arclight_dir, "lib", "arclight", "traject", "ead2_config.rb")
 
     destination.transfers.where.not(status: "succeeded").find_each do |transfer|
-      # TODO: we need to add config to destination (for arclight: repositories.yml file)
       destination.config.open do |repositories|
         # TODO: update transfer to have message/s
         transfer.record.ead_xml.open do |xml|

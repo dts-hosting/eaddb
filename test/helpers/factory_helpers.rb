@@ -41,8 +41,13 @@ module FactoryHelpers
       collection: collection
     }
 
+    config = nil
     klass = case type
     when :arc_light
+      config = fixture_file_upload(
+        Rails.root.join("test/fixtures/files/repositories.yml"),
+        "application/xml"
+      )
       Destinations::ArcLight
     when :s3_bucket
       Destinations::S3Bucket
@@ -51,6 +56,7 @@ module FactoryHelpers
     else
       raise ArgumentError, "Unknown destination type: #{type}"
     end
+    attributes[:config] = config if config
 
     klass.create!(defaults.merge(attributes))
   end

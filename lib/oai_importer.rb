@@ -30,7 +30,6 @@ class OaiImporter
 
       datestamp = header.datestamp
       process_record(collection, record_identifier, datestamp)
-      break
     end
   end
 

@@ -24,6 +24,15 @@ module Destinations
       assert_includes destination.errors.messages[:identifier], "can't be blank"
     end
 
+    test "requires a config file" do
+      destination = create_destination(
+        type: :arc_light,
+        attributes: {collection: create_collection}
+      )
+      destination.config.purge
+      assert_not destination.valid?
+    end
+
     test "enqueues correct job" do
       destination = create_destination(
         type: :arc_light,
