@@ -12,10 +12,12 @@ class OaiImporter
     xml_element.elements["/metadata/ead"] || xml_element.elements["//ead"]
   end
 
-  def extract_repository_name(xml_element)
-    return if xml_element.nil?
+  def extract_eadid(xml_element)
+    xml_text_value(xml_element, "//eadheader/eadid")
+  end
 
-    REXML::XPath.first(xml_element, "//repository/corpname")&.text
+  def extract_repository_name(xml_element)
+    xml_text_value(xml_element, "//repository/corpname")
   end
 
   def import
@@ -49,9 +51,10 @@ class OaiImporter
     ead_element = extract_ead(record.metadata)
     ead_content = xml_to_string(ead_element)
     corpname = extract_repository_name(ead_element)
+    eadid = extract_eadid(ead_element)
     return if collection.require_owner_in_record && corpname != collection.owner
 
-    attributes = build_record_attributes(record_identifier, datestamp)
+    attributes = build_record_attributes(record_identifier, datestamp, corpname, eadid)
     if existing_record
       update_record(existing_record, ead_content, attributes)
     else
@@ -75,10 +78,12 @@ class OaiImporter
     ).record
   end
 
-  def build_record_attributes(record_identifier, datestamp)
+  def build_record_attributes(record_identifier, datestamp, corpname, eadid)
     {
       identifier: record_identifier,
-      modification_date: datestamp
+      ead_identifier: eadid,
+      modification_date: datestamp,
+      owner: corpname
     }
   end
 
@@ -102,6 +107,12 @@ class OaiImporter
   end
 
   # TODO: move somewhere general? ...
+  def xml_text_value(xml_element, xpath)
+    return if xml_element.nil?
+
+    REXML::XPath.first(xml_element, xpath)&.text
+  end
+
   def xml_to_string(xml_element)
     return if xml_element.nil?
 

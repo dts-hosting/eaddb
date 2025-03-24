@@ -24,21 +24,29 @@ class ArcLightExporter
     indexer_config = File.join(arclight_dir, "lib", "arclight", "traject", "ead2_config.rb")
 
     destination.transfers.where.not(status: "succeeded").find_each do |transfer|
+      if transfer.record.ead_identifier.blank?
+        error_message = "Record #{transfer.record.id} has no EAD ID"
+        Rails.logger.error(error_message)
+        transfer.failed!(error_message)
+        next
+      end
+
       destination.config.open do |repositories|
-        # TODO: update transfer to have message/s
         transfer.record.ead_xml.open do |xml|
           output = `#{command(indexer_config, repositories.path, xml.path)}`
           if $?.success?
             transfer.succeeded!
           else
-            Rails.logger.error("Failed to process transfer #{$?.exitstatus}: #{output}")
-            transfer.failed!
+            error_message = "Failed to process transfer #{$?.exitstatus}: #{output}"
+            Rails.logger.error(error_message)
+            transfer.failed!(error_message)
           end
         end
       end
     rescue => e
-      Rails.logger.error("Failed to process transfer #{transfer.id}: #{e.message}")
-      transfer.failed!
+      error_message = "Failed to process transfer #{transfer.id}: #{e.message}"
+      Rails.logger.error(error_message)
+      transfer.failed!(error_message)
     end
   end
 end

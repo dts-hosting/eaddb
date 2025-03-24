@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_22_210744) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_24_191135) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -74,8 +74,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_22_210744) do
     t.datetime "modification_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "ead_identifier"
+    t.string "owner"
     t.index ["collection_id", "identifier"], name: "index_records_on_collection_id_and_identifier", unique: true
     t.index ["collection_id"], name: "index_records_on_collection_id"
+    t.index ["ead_identifier"], name: "index_records_on_ead_identifier"
+    t.index ["owner"], name: "index_records_on_owner"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -108,6 +112,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_22_210744) do
     t.integer "status", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "message"
     t.index ["destination_id", "record_id"], name: "index_transfers_on_destination_id_and_record_id", unique: true
     t.index ["destination_id"], name: "index_transfers_on_destination_id"
     t.index ["record_id"], name: "index_transfers_on_record_id"

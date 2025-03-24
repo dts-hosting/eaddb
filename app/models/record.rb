@@ -12,6 +12,8 @@ class Record < ApplicationRecord
   after_create_commit :create_transfers_for_collection_destinations
   after_update_commit :reset_transfers_status
 
+  scope :for_owner, ->(owner_name) { where(owner: owner_name) }
+
   private
 
   def create_transfers_for_collection_destinations
