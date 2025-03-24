@@ -6,8 +6,14 @@ class OaiImporter
     @source = source
   end
 
+  def extract_ead(xml_element)
+    return if xml_element.nil?
+
+    xml_element.elements["/metadata/ead"] || xml_element.elements["//ead"]
+  end
+
   def extract_repository_name(xml_element)
-    return nil if xml_element.nil?
+    return if xml_element.nil?
 
     REXML::XPath.first(xml_element, "//repository/corpname")&.text
   end
@@ -24,6 +30,7 @@ class OaiImporter
 
       datestamp = header.datestamp
       process_record(collection, record_identifier, datestamp)
+      break
     end
   end
 
@@ -40,16 +47,17 @@ class OaiImporter
     return unless should_process?(existing_record, datestamp)
 
     record = fetch_record(record_identifier)
-    ead_xml = ""
-    formatter = REXML::Formatters::Pretty.new(0)
-    formatter.compact = true
-    # TODO: need to remove the wrapping <metadata> element. Root needs to be <ead>
-    formatter.write(record.metadata, ead_xml)
-    corpname = extract_repository_name(record.metadata)
+    ead_element = extract_ead(record.metadata)
+    ead_content = xml_to_string(ead_element)
+    corpname = extract_repository_name(ead_element)
     return if collection.require_owner_in_record && corpname != collection.owner
 
     attributes = build_record_attributes(record_identifier, datestamp)
-    existing_record ? update_record(existing_record, ead_xml, attributes) : create_record(collection, ead_xml, attributes)
+    if existing_record
+      update_record(existing_record, ead_content, attributes)
+    else
+      create_record(collection, ead_content, attributes)
+    end
   rescue => e
     Rails.logger.error("Failed to process record #{record_identifier}: #{e.message}")
     Rails.logger.debug(e.backtrace.join("\n"))
@@ -92,5 +100,15 @@ class OaiImporter
       filename: "ead.xml",
       content_type: "application/xml"
     )
+  end
+
+  # TODO: move somewhere general? ...
+  def xml_to_string(xml_element)
+    return if xml_element.nil?
+
+    xml = ""
+    formatter = REXML::Formatters::Pretty.new(0)
+    formatter.compact = true
+    formatter.write(xml_element, xml)
   end
 end

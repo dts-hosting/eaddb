@@ -1,6 +1,6 @@
 class Record < ApplicationRecord
   belongs_to :collection, counter_cache: true
-  has_many :transfers
+  has_many :transfers, dependent: :destroy
   has_many :destinations, through: :transfers
   has_one_attached :ead_xml
 

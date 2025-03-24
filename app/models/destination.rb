@@ -1,6 +1,6 @@
 class Destination < ApplicationRecord
   belongs_to :collection
-  has_many :transfers
+  has_many :transfers, dependent: :destroy
   has_many :records, through: :transfers
 
   validates :name, presence: true, uniqueness: {scope: :type}
