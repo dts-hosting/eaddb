@@ -43,6 +43,7 @@ class OaiImporter
     ead_xml = ""
     formatter = REXML::Formatters::Pretty.new(0)
     formatter.compact = true
+    # TODO: need to remove the wrapping <metadata> element. Root needs to be <ead>
     formatter.write(record.metadata, ead_xml)
     corpname = extract_repository_name(record.metadata)
     return if collection.require_owner_in_record && corpname != collection.owner

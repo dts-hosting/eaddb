@@ -75,3 +75,7 @@ end
 gem "pagy"
 
 gem "oai", "~> 1.3"
+
+gem "traject", "~> 3.8"
+
+gem "arclight", "~> 2.0.alpha", git: "https://github.com/projectblacklight/arclight", ref: "086061a"
