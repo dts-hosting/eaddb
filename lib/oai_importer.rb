@@ -133,7 +133,6 @@ class OaiImporter
     )
   end
 
-  # TODO: move somewhere general? ...
   def xml_text_value(xml_element, xpath)
     return if xml_element.nil?
 

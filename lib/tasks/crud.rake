@@ -1,6 +1,6 @@
 namespace :crud do
   namespace :create do
-    task :api_source, ["name", "url", "username", "password"] => :environment do |_t, args|
+    task :api_source, [:name, :url, :username, :password] => :environment do |_t, args|
       source = Source.create!(
         type: "Sources::Api",
         name: args.name,
@@ -11,7 +11,7 @@ namespace :crud do
       puts source.to_json
     end
 
-    task :collection, ["source_id", "name", "identifier"] => :environment do |_t, args|
+    task :collection, [:source_id, :name, :identifier] => :environment do |_t, args|
       collection = Collection.create!(
         source_id: args.source_id,
         name: args.name,
@@ -20,7 +20,7 @@ namespace :crud do
       puts collection.to_json
     end
 
-    task :destination_arclight, ["collection_id", "name", "url", "identifier", "config"] => :environment do |_t, args|
+    task :destination_arclight, [:collection_id, :name, :url, :identifier, :config] => :environment do |_t, args|
       raise "Config file not found" unless File.exist?(args.config)
 
       config = args.config
@@ -36,7 +36,7 @@ namespace :crud do
       puts destination.to_json
     end
 
-    task :oai_source, ["name", "url"] => :environment do |_t, args|
+    task :oai_source, [:name, :url] => :environment do |_t, args|
       source = Sources::Oai.create!(
         name: args.name,
         url: args.url
@@ -44,7 +44,7 @@ namespace :crud do
       puts source.to_json
     end
 
-    task :user, ["email_address", "password"] => :environment do |_t, args|
+    task :user, [:email_address, :password] => :environment do |_t, args|
       user = User.create!(
         email_address: args.email_address,
         password: args.password

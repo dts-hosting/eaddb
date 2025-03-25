@@ -53,11 +53,11 @@ class ArcLightExporter
     end
 
     transfer.record.ead_xml.open do |xml|
-      output = `#{command(indexer_cfg, repositories_cfg, xml.path)}`
+      `#{command(indexer_cfg, repositories_cfg, xml.path)}`
       if $?.success?
         transfer.succeeded!
       else
-        error_message = "Failed to process transfer #{$?.exitstatus}: #{output}"
+        error_message = "Failed to process transfer #{transfer.id}: #{$?.exitstatus}"
         Rails.logger.error(error_message)
         transfer.failed!(error_message)
       end
