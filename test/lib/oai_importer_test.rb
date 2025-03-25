@@ -197,7 +197,7 @@ class OaiImporterTest < ActiveSupport::TestCase
       {input: nil, expected: nil},
       {input: "invalid:identifier", expected: nil}
     ].each do |test_case|
-      result = @importer.parse_identifier(test_case[:input])
+      result = @importer.send(:parse_identifier, test_case[:input])
 
       if test_case[:expected].nil?
         assert_nil result
@@ -220,7 +220,7 @@ class OaiImporterTest < ActiveSupport::TestCase
       </metadata>
     XML
 
-    ead_element = @importer.extract_ead(xml)
+    ead_element = @importer.send(:extract_ead, xml)
 
     assert_not_nil ead_element
     assert_equal "ead", ead_element.name
@@ -246,7 +246,7 @@ class OaiImporterTest < ActiveSupport::TestCase
       </root>
     XML
 
-    ead_element = @importer.extract_ead(xml)
+    ead_element = @importer.send(:extract_ead, xml)
 
     assert_not_nil ead_element
     assert_equal "ead", ead_element.name
@@ -261,10 +261,10 @@ class OaiImporterTest < ActiveSupport::TestCase
       </metadata>
     XML
 
-    assert_nil @importer.extract_ead(xml)
+    assert_nil @importer.send(:extract_ead, xml)
   end
 
   test "extract_ead returns nil for nil input" do
-    assert_nil @importer.extract_ead(nil)
+    assert_nil @importer.send(:extract_ead, nil)
   end
 end

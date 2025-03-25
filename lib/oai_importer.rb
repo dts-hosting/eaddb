@@ -6,47 +6,6 @@ class OaiImporter
     @source = source
   end
 
-  def ensure_eadid(xml_element)
-    return if xml_element.nil?
-
-    eadid = extract_eadid(xml_element)
-    return eadid if eadid
-
-    unitid = xml_text_value(xml_element, "//ead/archdesc/did/unitid")
-    return nil if unitid.nil?
-
-    eadid_element = REXML::XPath.first(xml_element, "//eadheader/eadid")
-
-    if eadid_element
-      eadid_element.text = unitid
-    else
-      eadheader = REXML::XPath.first(xml_element, "//eadheader")
-      if eadheader
-        eadid_element = REXML::Element.new("eadid")
-        eadid_element.text = unitid
-        eadheader.add_element(eadid_element)
-      else
-        return nil
-      end
-    end
-
-    unitid
-  end
-
-  def extract_ead(xml_element)
-    return if xml_element.nil?
-
-    xml_element.elements["/metadata/ead"] || xml_element.elements["//ead"]
-  end
-
-  def extract_eadid(xml_element)
-    xml_text_value(xml_element, "//eadheader/eadid")
-  end
-
-  def extract_repository_name(xml_element)
-    xml_text_value(xml_element, "//repository/corpname")
-  end
-
   def import
     source.client.list_identifiers(metadata_prefix: source.metadata_prefix).full.each do |header|
       status = header.status
@@ -59,14 +18,6 @@ class OaiImporter
 
       datestamp = header.datestamp
       process_record(collection, record_identifier, datestamp)
-    end
-  end
-
-  def parse_identifier(identifier)
-    return nil unless identifier
-
-    if (match = identifier.match(%r{(/repositories/\d+)}))
-      match[1]
     end
   end
 
@@ -131,6 +82,56 @@ class OaiImporter
       filename: "ead.xml",
       content_type: "application/xml"
     )
+  end
+
+  # XML helpers
+  def ensure_eadid(xml_element)
+    return if xml_element.nil?
+
+    eadid = extract_eadid(xml_element)
+    return eadid if eadid
+
+    unitid = xml_text_value(xml_element, "//ead/archdesc/did/unitid")
+    return nil if unitid.nil?
+
+    eadid_element = REXML::XPath.first(xml_element, "//eadheader/eadid")
+
+    if eadid_element
+      eadid_element.text = unitid
+    else
+      eadheader = REXML::XPath.first(xml_element, "//eadheader")
+      if eadheader
+        eadid_element = REXML::Element.new("eadid")
+        eadid_element.text = unitid
+        eadheader.add_element(eadid_element)
+      else
+        return nil
+      end
+    end
+
+    unitid
+  end
+
+  def extract_ead(xml_element)
+    return if xml_element.nil?
+
+    xml_element.elements["/metadata/ead"] || xml_element.elements["//ead"]
+  end
+
+  def extract_eadid(xml_element)
+    xml_text_value(xml_element, "//eadheader/eadid")
+  end
+
+  def extract_repository_name(xml_element)
+    xml_text_value(xml_element, "//repository/corpname")
+  end
+
+  def parse_identifier(identifier)
+    return nil unless identifier
+
+    if (match = identifier.match(%r{(/repositories/\d+)}))
+      match[1]
+    end
   end
 
   def xml_text_value(xml_element, xpath)
