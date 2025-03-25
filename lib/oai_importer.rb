@@ -50,8 +50,9 @@ class OaiImporter
     end
   end
 
-  # TODO: status "active" (i.e. not deleted record)
   def should_process?(record, datestamp)
+    # return false if record.deleted? # TODO: status "active" (i.e. not deleted record)
+
     !record.ead_xml.attached? || record.modification_date < datestamp
   end
 

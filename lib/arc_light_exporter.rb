@@ -23,6 +23,11 @@ class ArcLightExporter
       destination.pending_transfers.find_each do |transfer|
         process_transfer(transfer, indexer_cfg, repositories_cfg.path)
       end
+
+      # TODO:
+      # destination.pending_deletes.find_each do |transfer|
+      #   process_delete(transfer)
+      # end
     ensure
       repositories_cfg.close
       repositories_cfg.unlink

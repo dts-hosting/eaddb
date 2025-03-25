@@ -12,6 +12,14 @@ class Destination < ApplicationRecord
 
   after_create_commit :create_transfers_for_collection_records
 
+  # TODO:
+  # def pending_deletes
+  #   transfers
+  #     .joins(:record)
+  #     .where(record: {status: "deleted"})
+  #     .where.not(status: "succeeded")
+  # end
+
   def pending_transfers
     transfers
       .joins(:record)

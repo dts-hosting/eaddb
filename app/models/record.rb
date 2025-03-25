@@ -14,6 +14,7 @@ class Record < ApplicationRecord
   scope :for_owner, ->(owner) { where(owner: owner) }
   scope :with_ead, -> {
     joins(ead_xml_join_sql("INNER"))
+      # TODO: .where(status: "active")
       .where.not(ead_identifier: nil)
   }
   scope :without_ead, -> {
