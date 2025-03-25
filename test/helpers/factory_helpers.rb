@@ -20,7 +20,8 @@ module FactoryHelpers
   def create_record(attributes = {})
     defaults = {
       collection: attributes[:collection] || create_collection,
-      identifier: "unique-id-#{SecureRandom.hex(4)}",
+      identifier: "id-#{SecureRandom.hex(4)}",
+      ead_identifier: "ead-id-#{SecureRandom.hex(4)}",
       creation_date: Date.current,
       modification_date: Date.current,
       ead_xml: fixture_file_upload(

@@ -10,7 +10,8 @@ class RecordTest < ActiveSupport::TestCase
 
     @record_attributes = {
       collection: @collection,
-      identifier: "unique-id-123",
+      identifier: "id-123",
+      ead_identifier: "ead-id-123",
       creation_date: Date.current,
       modification_date: Date.current,
       ead_xml: fixture_file_upload(Rails.root.join("test/fixtures/files/sample.xml"), "application/xml")
@@ -33,15 +34,6 @@ class RecordTest < ActiveSupport::TestCase
     @record.identifier = nil
     refute @record.valid?
     assert_includes @record.errors[:identifier], "can't be blank"
-  end
-
-  test "requires ead_xml" do
-    record = Record.new(
-      collection: @collection,
-      identifier: "unique-id-123"
-    )
-    refute record.valid?
-    assert_includes record.errors[:ead_xml], "can't be blank"
   end
 
   test "identifier must be unique per collection" do
@@ -101,5 +93,22 @@ class RecordTest < ActiveSupport::TestCase
     @record.transfers.reload.each do |t|
       assert t.pending?, "Transfer should be reset to pending after record update"
     end
+  end
+
+  test "with_ead scope returns only records with ead attachment and identifier" do
+    @record.save
+    assert_includes Record.with_ead, @record
+  end
+
+  test "without_ead scope returns only records without ead attachment" do
+    @record.ead_xml = nil
+    @record.save
+    assert_includes Record.without_ead, @record
+  end
+
+  test "without_ead scope returns only records without identifier" do
+    @record.ead_identifier = nil
+    @record.save
+    assert_includes Record.without_ead, @record
   end
 end

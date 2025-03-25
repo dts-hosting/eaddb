@@ -11,8 +11,7 @@ class ArcLightExporter
     repositories = YAML.safe_load(destination.config.download)
 
     unless repositories.key?(destination.identifier)
-      error_message = "Repository #{destination.identifier} not found in #{repositories.keys}"
-      Rails.logger.error(error_message)
+      Rails.logger.error("Repository #{destination.identifier} not found in #{repositories.keys}")
       return
     end
 
@@ -21,7 +20,7 @@ class ArcLightExporter
       repositories_cfg.write(repositories.to_yaml)
       repositories_cfg.flush
 
-      destination.transfers.where.not(status: "succeeded").find_each do |transfer|
+      destination.pending_transfers.find_each do |transfer|
         process_transfer(transfer, indexer_cfg, repositories_cfg.path)
       end
     ensure
@@ -31,19 +30,12 @@ class ArcLightExporter
   end
 
   def process_transfer(transfer, indexer_cfg, repositories_cfg)
-    if transfer.record.ead_identifier.blank?
-      error_message = "Record #{transfer.record.id} has no EAD ID"
-      Rails.logger.error(error_message)
-      transfer.failed!(error_message)
-      return
-    end
-
     transfer.record.ead_xml.open do |xml|
-      `#{command(indexer_cfg, repositories_cfg, xml.path)}`
-      if $?.success?
+      _, stderr, status = Open3.capture3(command(indexer_cfg, repositories_cfg, xml.path))
+      if status.success?
         transfer.succeeded!
       else
-        error_message = "Failed to process transfer #{transfer.id}: #{$?.exitstatus}"
+        error_message = "Failed to process transfer #{transfer.id}: #{first_error(stderr)}"
         Rails.logger.error(error_message)
         transfer.failed!(error_message)
       end
@@ -68,5 +60,26 @@ class ArcLightExporter
       -s solr_writer.thread_pool=0 \
       #{ead_xml}
     CMD
+  end
+
+  def first_error(text)
+    error_content = "UNKNOWN ERROR"
+    if /ERROR/i.match?(text)
+      lines = text.lines
+      error_start_idx = lines.find_index { |line| line.include?("ERROR") }
+
+      if error_start_idx
+        error_lines = []
+        i = error_start_idx
+
+        while i < lines.size && !lines[i].strip.empty?
+          error_lines << lines[i]
+          i += 1
+        end
+
+        error_content = error_lines.join
+      end
+    end
+    error_content
   end
 end

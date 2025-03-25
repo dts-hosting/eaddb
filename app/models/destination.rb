@@ -12,6 +12,13 @@ class Destination < ApplicationRecord
 
   after_create_commit :create_transfers_for_collection_records
 
+  def pending_transfers
+    transfers
+      .joins(:record)
+      .merge(Record.with_ead)
+      .where.not(status: "succeeded")
+  end
+
   def run
     raise NotImplementedError
   end

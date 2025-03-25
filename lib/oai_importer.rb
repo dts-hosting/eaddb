@@ -9,7 +9,7 @@ class OaiImporter
   def import
     source.client.list_identifiers(metadata_prefix: source.metadata_prefix).full.each do |header|
       status = header.status
-      next unless status.nil?
+      next unless status.nil? # TODO: allow when supporting deletes
 
       record_identifier = header.identifier
       collection_identifier = parse_identifier(record_identifier)
@@ -17,36 +17,42 @@ class OaiImporter
       next unless collection
 
       datestamp = header.datestamp
-      process_record(collection, record_identifier, datestamp)
+      # TODO: also set record status (active or deleted)
+      record = create_record(collection, record_identifier, datestamp)
+      next unless should_process?(record, datestamp)
+
+      process_record(collection, record, datestamp)
     end
   end
 
-  def process_record(collection, record_identifier, datestamp)
-    existing_record = collection.records.where(identifier: record_identifier).first
-    return unless should_process?(existing_record, datestamp)
-
-    record = fetch_record(record_identifier)
-    ead_element = extract_ead(record.metadata)
+  def process_record(collection, record, datestamp)
+    oai_record = fetch_record(record.identifier)
+    ead_element = extract_ead(oai_record.metadata)
     corpname = extract_repository_name(ead_element)
-    return if collection.require_owner_in_record && corpname != collection.owner
+    return if collection.requires_owner? && !collection.has_owner?(corpname)
 
     eadid = ensure_eadid(ead_element)
-    attributes = build_record_attributes(record_identifier, datestamp, corpname, eadid)
-    ead_content = xml_to_string(ead_element)
-    if existing_record
-      update_record(existing_record, ead_content, attributes)
-    else
-      create_record(collection, ead_content, attributes)
-    end
+    attributes = build_record_attributes(datestamp, corpname, eadid)
+    update_record(record, xml_to_string(ead_element), attributes)
   rescue => e
-    Rails.logger.error("Failed to process record #{record_identifier}: #{e.message}")
+    Rails.logger.error("Failed to process record #{record.identifier}: #{e.message}")
     Rails.logger.debug(e.backtrace.join("\n"))
   end
 
   private
 
-  def should_process?(existing_record, datestamp)
-    existing_record.nil? || existing_record.modification_date < datestamp
+  def create_record(collection, record_identifier, datestamp)
+    collection.records.find_or_create_by(
+      collection: collection,
+      identifier: record_identifier
+    ) do |r|
+      r.modification_date = datestamp
+    end
+  end
+
+  # TODO: status "active" (i.e. not deleted record)
+  def should_process?(record, datestamp)
+    !record.ead_xml.attached? || record.modification_date < datestamp
   end
 
   def fetch_record(identifier)
@@ -56,32 +62,21 @@ class OaiImporter
     ).record
   end
 
-  def build_record_attributes(record_identifier, datestamp, corpname, eadid)
+  def build_record_attributes(datestamp, corpname, eadid)
     {
-      identifier: record_identifier,
       ead_identifier: eadid,
       modification_date: datestamp,
       owner: corpname
     }
   end
 
-  def update_record(existing_record, record, attributes)
-    attach_ead_xml(existing_record, record)
-    existing_record.update!(attributes)
-  end
-
-  def create_record(collection, record, attributes)
-    new_record = Record.new(attributes.merge(collection: collection))
-    attach_ead_xml(new_record, record)
-    new_record.save!
-  end
-
-  def attach_ead_xml(record_instance, xml_content)
-    record_instance.ead_xml.attach(
-      io: StringIO.new(xml_content.to_s),
+  def update_record(record, ead_xml, attributes)
+    record.ead_xml.attach(
+      io: StringIO.new(ead_xml.to_s),
       filename: "ead.xml",
       content_type: "application/xml"
     )
+    record.update!(attributes)
   end
 
   # XML helpers
