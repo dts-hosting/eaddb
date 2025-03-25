@@ -7,6 +7,91 @@ class OaiImporterTest < ActiveSupport::TestCase
   end
 
   {
+    ensure_eadid: {
+      method_name: :ensure_eadid,
+      cases: [
+        {
+          name: "returns nil when xml_element is nil",
+          xml: nil,
+          expected: nil
+        },
+        {
+          name: "returns existing eadid when present",
+          xml: <<~XML,
+            <ead>
+              <eadheader>
+                <eadid>existing-id</eadid>
+              </eadheader>
+            </ead>
+          XML
+          expected: "existing-id"
+        },
+        {
+          name: "updates empty eadid with unitid value",
+          xml: <<~XML,
+            <ead>
+              <eadheader>
+                <eadid></eadid>
+              </eadheader>
+              <archdesc>
+                <did>
+                  <unitid>unit-id-value</unitid>
+                </did>
+              </archdesc>
+            </ead>
+          XML
+          expected: "unit-id-value",
+          post_check: ->(doc) { doc.elements["//eadheader/eadid"].text == "unit-id-value" }
+        },
+        {
+          name: "creates eadid element when missing but unitid exists",
+          xml: <<~XML,
+            <ead>
+              <eadheader>
+                <!-- No eadid element here -->
+              </eadheader>
+              <archdesc>
+                <did>
+                  <unitid>new-unit-id</unitid>
+                </did>
+              </archdesc>
+            </ead>
+          XML
+          expected: "new-unit-id",
+          post_check: ->(doc) { doc.elements["//eadheader/eadid"].text == "new-unit-id" }
+        },
+        {
+          name: "returns nil when both eadid and unitid are missing",
+          xml: <<~XML,
+            <ead>
+              <eadheader>
+                <!-- No eadid element -->
+              </eadheader>
+              <archdesc>
+                <did>
+                  <!-- No unitid element -->
+                </did>
+              </archdesc>
+            </ead>
+          XML
+          expected: nil
+        },
+        {
+          name: "returns nil when eadheader is missing",
+          xml: <<~XML,
+            <ead>
+              <!-- No eadheader -->
+              <archdesc>
+                <did>
+                  <unitid>orphaned-unit-id</unitid>
+                </did>
+              </archdesc>
+            </ead>
+          XML
+          expected: nil
+        }
+      ]
+    },
     extract_eadid: {
       method_name: :extract_eadid,
       cases: [
@@ -96,6 +181,10 @@ class OaiImporterTest < ActiveSupport::TestCase
           assert_nil result
         else
           assert_equal test_case[:expected], result
+        end
+
+        if test_case[:post_check] && xml
+          assert test_case[:post_check].call(xml), "Post-condition check failed"
         end
       end
     end

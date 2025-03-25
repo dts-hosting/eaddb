@@ -6,16 +6,41 @@ class OaiImporter
     @source = source
   end
 
+  def ensure_eadid(xml_element)
+    return if xml_element.nil?
+
+    eadid = extract_eadid(xml_element)
+    return eadid if eadid
+
+    unitid = xml_text_value(xml_element, "//ead/archdesc/did/unitid")
+    return nil if unitid.nil?
+
+    eadid_element = REXML::XPath.first(xml_element, "//eadheader/eadid")
+
+    if eadid_element
+      eadid_element.text = unitid
+    else
+      eadheader = REXML::XPath.first(xml_element, "//eadheader")
+      if eadheader
+        eadid_element = REXML::Element.new("eadid")
+        eadid_element.text = unitid
+        eadheader.add_element(eadid_element)
+      else
+        return nil
+      end
+    end
+
+    unitid
+  end
+
   def extract_ead(xml_element)
     return if xml_element.nil?
 
     xml_element.elements["/metadata/ead"] || xml_element.elements["//ead"]
   end
 
-  # TODO: is the fallback ok? This may need to be a configurable thing.
-  def extract_eadid(xml_element, path = "//eadheader/eadid")
-    xml_text_value(xml_element, "//eadheader/eadid") ||
-      xml_text_value(xml_element, "//ead/archdesc/did/unitid")
+  def extract_eadid(xml_element)
+    xml_text_value(xml_element, "//eadheader/eadid")
   end
 
   def extract_repository_name(xml_element)
@@ -54,7 +79,7 @@ class OaiImporter
     corpname = extract_repository_name(ead_element)
     return if collection.require_owner_in_record && corpname != collection.owner
 
-    eadid = extract_eadid(ead_element)
+    eadid = ensure_eadid(ead_element)
     attributes = build_record_attributes(record_identifier, datestamp, corpname, eadid)
     ead_content = xml_to_string(ead_element)
     if existing_record
