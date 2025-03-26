@@ -54,3 +54,26 @@ D_CFG_FILE=test/fixtures/files/repositories.yml
 ./bin/rake "export:destination[1]"
 ./bin/rake "export:destination[2]"
 ```
+
+## Deployment
+
+Remote with Kamal.
+
+```bash
+# TODO: download .kamal/secrets.qa
+
+# verify connections to the server
+bundle exec kamal server bootstrap -d qa
+
+# verify access to docker registry
+bundle exec kamal registry login -d qa
+
+# run the deploy process
+bundle exec kamal deploy -d qa
+
+# run a command on the container
+bundle exec kamal app exec -d qa "bin/rails about"
+
+# connect to the container
+bundle exec kamal app exec -i -d qa "bin/rails console"
+```

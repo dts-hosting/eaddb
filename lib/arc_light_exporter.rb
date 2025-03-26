@@ -1,4 +1,4 @@
-# Exports records to ArcLight using traject as per the docs (bundle exec)
+``# Exports records to ArcLight using traject as per the docs (bundle exec)
 # and getting the EAD mapping configuration from the ArcLight gem directly
 class ArcLightExporter
   attr_reader :destination

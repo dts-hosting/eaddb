@@ -1,0 +1,11 @@
+proxy:
+  ssl: true
+  host: eaddb.lyrasistechnology.org
+  app_port: 3000
+
+servers:
+  web:
+    hosts:
+      - eaddb.lyrasistechnology.org
+    env:
+      SOLID_QUEUE_IN_PUMA: true
