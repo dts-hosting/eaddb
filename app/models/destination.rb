@@ -27,6 +27,10 @@ class Destination < ApplicationRecord
       .where.not(status: "succeeded")
   end
 
+  def reset_transfers_status
+    transfers.update_all(status: :pending, message: nil)
+  end
+
   def run
     raise NotImplementedError
   end

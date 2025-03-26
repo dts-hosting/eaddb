@@ -4,6 +4,8 @@ class Record < ApplicationRecord
   has_many :destinations, through: :transfers
   has_one_attached :ead_xml
 
+  # TODO: enum :status, {deleted: 0, active: 1}, default: :active
+
   validates :identifier, presence: true, uniqueness: {scope: :collection_id}
   validates :modification_date, presence: true
 
