@@ -20,6 +20,14 @@ class Source < ApplicationRecord
     raise NotImplementedError
   end
 
+  def duplicate_ead_identifiers
+    records
+      .where.not(ead_identifier: nil)
+      .group(:ead_identifier)
+      .having("COUNT(*) > 1")
+      .pluck(:ead_identifier)
+  end
+
   def recalculate_total_records_count!
     update_total_records_count
   end
