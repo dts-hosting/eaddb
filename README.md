@@ -74,6 +74,9 @@ bundle exec kamal deploy -d qa
 # run a command on the container
 bundle exec kamal app exec -d qa "bin/rails about"
 
-# connect to the container
+# connect to the instance
+bundle exec kamal app exec -i --reuse bash -d qa
+
+# connect to the container and access the console
 bundle exec kamal app exec -i -d qa "bin/rails console"
 ```
