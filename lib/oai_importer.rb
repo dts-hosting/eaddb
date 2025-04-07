@@ -7,6 +7,8 @@ class OaiImporter
   end
 
   def import
+    return unless source.collections.any?
+
     source.client.list_identifiers(metadata_prefix: source.metadata_prefix).full.each do |header|
       status = header.status
       next unless status.nil? # TODO: allow when supporting deletes
