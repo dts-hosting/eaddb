@@ -1,2 +1,17 @@
-<h1>Home#index</h1>
-<p>Find me in app/views/home/index.html.erb</p>
+<div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4 mt-3">
+  <div>
+    <h2 class="fw-bold mb-0">Latest Transfers</h2>
+    <p class="text-muted small">Stream of most recent transfer activities</p>
+  </div>
+</div>
+
+<div id="transfers">
+  <%= turbo_frame_tag :transfers_page, @pagy.page, target: :_top do %>
+    <%= render partial: "transfers/transfer", collection: @transfers, locals: {inline: true} %>
+    <% if @pagy.next %>
+      <%= turbo_frame_tag :transfers_page, @pagy.next, src: home_index_path(page: @pagy.next), loading: :lazy, target: :_top do %>
+        <%= tag.div "Loading..." %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

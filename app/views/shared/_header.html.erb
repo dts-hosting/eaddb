@@ -1,9 +1,23 @@
-<header>
+<header class="border-bottom">
   <nav class="navbar bg-body-tertiary">
     <div class="container-fluid">
-      <span class="navbar-brand">
+      <span class="navbar-brand border-end pe-3">
         EadDB
       </span>
+
+      <% if authenticated? %>
+        <div class="d-flex align-items-center me-auto">
+          <ul class="navbar-nav flex-row me-auto">
+            <li class="nav-item me-3">
+              <%= link_to "Sources", root_path, class: "nav-link" %>
+            </li>
+            <li class="nav-item me-3">
+              <%= link_to "Destinations", root_path, class: "nav-link" %>
+            </li>
+          </ul>
+        </div>
+      <% end %>
+
       <div class="d-flex">
         <% if authenticated? %>
           <%= button_to "Sign Out", session_path, method: :delete, class: "btn btn-outline-secondary" %>
