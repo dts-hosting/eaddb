@@ -31,7 +31,7 @@ class Destination < ApplicationRecord
     transfers.update_all(status: :pending, message: nil)
   end
 
-  def run
+  def run(transfer_ids = nil)
     raise NotImplementedError
   end
 

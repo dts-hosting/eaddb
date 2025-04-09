@@ -24,26 +24,25 @@ Supported destinations:
 ## Rake tasks
 
 ```bash
+# In development these resources are created by db:seeds but provided for example:
 ./bin/rake "crud:create:user[admin@eaddb.org,123456]"
 ./bin/rake "crud:create:oai_source[Lyrasis Archives,https://archivesspace.lyrasistechnology.org/oai]"
-
-# create collection for source 7 (this assumes db:seeds + new source)
-./bin/rake "crud:create:collection[7,Lyrasis Special Collections,/repositories/2]"
-./bin/rake "crud:create:collection[7,Lyrasis Corporate Archive,/repositories/4]"
+./bin/rake "crud:create:collection[1,Lyrasis Special Collections,/repositories/2]"
+./bin/rake "crud:create:collection[1,Lyrasis Corporate Archive,/repositories/4]"
 
 # with 1 source and 2 collections we can now run an import from the source
 # sources are processed once but can populate multiple collections
-./bin/rake "import:source[7]"
+./bin/rake "import:source[1]"
 
 # create 2 destinations
-C_ID=7
+C_ID=1
 D_NAME="Lyrasis Special Collections"
 D_ARC_URL=http://localhost:8983/solr/arclight
 D_ARC_ID=lyrasis-special-collections
 D_CFG_FILE=test/fixtures/files/repositories.yml
 ./bin/rake "crud:create:destination_arclight[$C_ID,$D_NAME,$D_ARC_URL,$D_ARC_ID,$D_CFG_FILE]"
 
-C_ID=8
+C_ID=2
 D_NAME="Lyrasis Corporate Archive"
 D_ARC_URL=http://localhost:8983/solr/arclight
 D_ARC_ID=lyrasis-corporate-archive
@@ -54,6 +53,11 @@ D_CFG_FILE=test/fixtures/files/repositories.yml
 ./bin/rake "export:destination[1]"
 ./bin/rake "export:destination[2]"
 ```
+
+In this example sources were created, records imported and then subsequently transferred.
+However, if you create the destinations before importing the records then the records will be
+automatically transferred as they are imported. This behavior can be prevented by disabling
+`transfer_on_import` for the source.
 
 ## Deployment
 

@@ -6,7 +6,7 @@ class OaiImporter
     @source = source
   end
 
-  def import
+  def import(&block)
     return unless source.collections.any?
 
     source.client.list_identifiers(metadata_prefix: source.metadata_prefix).full.each do |header|
@@ -24,6 +24,7 @@ class OaiImporter
       next unless should_process?(record, datestamp)
 
       process_record(collection, record, datestamp)
+      yield record if block_given?
     end
   end
 

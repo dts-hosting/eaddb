@@ -11,7 +11,7 @@ class Collection < ApplicationRecord
   end
 
   def requires_owner?
-    require_owner_in_record
+    require_owner_in_record?
   end
 
   def update_source_counter

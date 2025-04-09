@@ -24,6 +24,13 @@ class Record < ApplicationRecord
       .where("active_storage_attachments.id IS NULL OR records.ead_identifier IS NULL")
   }
 
+  # transfer this record to all destinations
+  def transfer
+    transfers.includes(:destination).find_each do |transfer|
+      transfer.destination.run([transfer.id])
+    end
+  end
+
   def self.ead_xml_join_sql(join_type)
     <<-SQL.squish
       #{join_type} JOIN active_storage_attachments ON

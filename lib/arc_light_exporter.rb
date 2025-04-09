@@ -7,7 +7,7 @@ class ArcLightExporter
     @destination = destination
   end
 
-  def export
+  def export(transfer_ids = nil)
     arclight_dir = Gem::Specification.find_by_name("arclight").gem_dir
     indexer_cfg = File.join(arclight_dir, "lib", "arclight", "traject", "ead2_config.rb")
     repositories = YAML.safe_load(destination.config.download)
@@ -22,12 +22,13 @@ class ArcLightExporter
       repositories_cfg.write(repositories.to_yaml)
       repositories_cfg.flush
 
-      destination.pending_transfers.find_each do |transfer|
+      transfers = transfer_ids.nil? ? destination.pending_transfers : destination.pending_transfers.where(id: transfer_ids)
+      transfers.find_each do |transfer|
         process_transfer(transfer, indexer_cfg, repositories_cfg.path)
       end
 
-      # TODO:
-      # destination.pending_deletes.find_each do |transfer|
+      # TODO: deletes = delete_ids.nil? ? destination.pending_deletes : destination.pending_deletes.where(id: delete_ids)
+      # deletes.find_each do |transfer|
       #   process_delete(transfer)
       # end
     ensure
