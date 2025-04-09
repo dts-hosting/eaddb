@@ -17,7 +17,12 @@
       </div>
 
       <div class="col-md-4 text-end">
-        <span class="text-muted small d-block mb-1">Destination</span>
+        <div class="d-flex align-items-center justify-content-end mb-1">
+          <span class="text-muted small me-2">Destination</span>
+          <span class="badge bg-secondary text-light">
+            <%= transfer.destination.type.to_s.demodulize.downcase %>
+          </span>
+        </div>
         <span class="fw-medium"><%= transfer.destination.name %></span>
       </div>
     </div>
