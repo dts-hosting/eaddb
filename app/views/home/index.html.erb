@@ -14,7 +14,7 @@
   <%= turbo_frame_tag :transfers_page, @pagy.page, target: :_top do %>
     <%= render partial: "transfers/transfer", collection: @transfers, locals: {inline: true} %>
     <% if @pagy.next %>
-      <%= turbo_frame_tag :transfers_page, @pagy.next, src: home_index_path(page: @pagy.next), loading: :lazy, target: :_top do %>
+      <%= turbo_frame_tag :transfers_page, @pagy.next, src: root_path(page: @pagy.next), loading: :lazy, target: :_top do %>
         <%= tag.div "Loading..." %>
       <% end %>
     <% end %>

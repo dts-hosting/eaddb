@@ -15,7 +15,7 @@ class Source < ApplicationRecord
   before_destroy :ensure_no_collections
 
   def build_validation_url
-    "" # default implementation
+    raise NotImplementedError
   end
 
   def client
@@ -44,12 +44,6 @@ class Source < ApplicationRecord
       .map { |klass, name| [name, klass] }
   end
 
-  def self.display_name
-    raise NotImplementedError, "#{self} must implement class method display_name"
-  end
-
-  private
-
   def self.descendants_with_names
     Rails.application.eager_load! if Rails.env.development?
     descendants = ObjectSpace.each_object(Class).select { |klass| klass < self }
@@ -63,6 +57,12 @@ class Source < ApplicationRecord
     Rails.application.eager_load! if Rails.env.development?
     ObjectSpace.each_object(Class).select { |klass| klass < self }
   end
+
+  def self.display_name
+    raise NotImplementedError, "#{self} must implement class method display_name"
+  end
+
+  private
 
   def ensure_no_collections
     if collections.exists?
@@ -83,8 +83,6 @@ class Source < ApplicationRecord
       response = http.head(uri)
       errors.add(:url, "returned status #{response.code}") unless response.is_a?(Net::HTTPSuccess)
     end
-  rescue SocketError, Timeout::Error => e
-    errors.add(:url, "connection timed out: #{e.message}")
   rescue => e
     errors.add(:url, "must be a valid resolvable URL: #{e.message}")
   end

@@ -52,11 +52,11 @@ class SourceTest < ActiveSupport::TestCase
 
     source.url = "https://timeout.archivesspace.org/oai"
     assert_not source.valid?
-    assert_match(/connection timed out/, source.errors[:url].first)
+    assert_match(/must be a valid resolvable URL/, source.errors[:url].first)
 
     source.url = "https://error.archivesspace.org/oai"
     assert_not source.valid?
-    assert_match(/connection timed out/, source.errors[:url].first)
+    assert_match(/must be a valid resolvable URL/, source.errors[:url].first)
 
     source = Source.new(
       type: "Sources::ArchivesSpace",
