@@ -7,7 +7,7 @@ class SourcesController < ApplicationController
   end
 
   def show
-    @collections = @source.collections.order(:name)
+    @pagy, @collections = pagy(@source.collections.order(:name), limit: 10)
   end
 
   def new

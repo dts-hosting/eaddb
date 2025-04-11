@@ -48,25 +48,20 @@
     </div>
 
     <% if @collections.present? %>
-      <div class="table-responsive">
-        <table class="table table-sm table-borderless">
-          <thead>
-          <tr>
-            <th>Name</th>
-            <th>Records Count</th>
-            <th>Date Added</th>
-          </tr>
-          </thead>
-          <tbody>
-          <% @collections.order(:name).each do |collection| %>
-            <tr class="align-middle">
-              <td><%= link_to collection.name, "#" %></td>
-              <td><%= number_with_delimiter(collection.records_count || 0) %></td>
-              <td><%= collection.created_at.strftime("%b %d, %Y") %></td>
-            </tr>
-          <% end %>
-          </tbody>
-        </table>
+      <div id="collections">
+        <% @collections.order(:name).each do |collection| %>
+          <%= render collection %>
+        <% end %>
+      </div>
+
+      <div class="d-flex justify-content-center mt-4">
+        <nav class="pagy-nav pagination">
+          <%== pagy_bootstrap_nav(@pagy) if @pagy.pages > 1 %>
+        </nav>
+      </div>
+
+      <div class="text-center mt-2 small text-muted">
+        <%== pagy_info(@pagy) %>
       </div>
     <% else %>
       <div class="text-center py-4">
