@@ -6,8 +6,8 @@ class Collection < ApplicationRecord
   validates :name, presence: true, uniqueness: {scope: :source_id}
   validates :identifier, presence: true, uniqueness: {scope: :source_id}, format: {with: %r{\A/repositories/\d+\z}}
 
-  def has_owner?(name)
-    owner == name
+  def is_owner?(owner)
+    name == owner
   end
 
   def requires_owner?

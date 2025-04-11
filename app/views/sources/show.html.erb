@@ -53,18 +53,16 @@
           <thead>
           <tr>
             <th>Name</th>
-            <th>Identifier</th>
             <th>Records Count</th>
-            <th>Last Harvested</th>
+            <th>Date Added</th>
           </tr>
           </thead>
           <tbody>
           <% @collections.order(:name).each do |collection| %>
             <tr class="align-middle">
               <td><%= link_to collection.name, "#" %></td>
-              <td><%= collection.identifier %></td>
               <td><%= number_with_delimiter(collection.records_count || 0) %></td>
-              <td><%= collection.updated_at.strftime("%b %d, %Y") %></td>
+              <td><%= collection.created_at.strftime("%b %d, %Y") %></td>
             </tr>
           <% end %>
           </tbody>

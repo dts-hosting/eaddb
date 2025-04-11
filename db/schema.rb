@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_24_191135) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_11_222400) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -42,7 +42,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_24_191135) do
   create_table "collections", force: :cascade do |t|
     t.integer "source_id", null: false
     t.string "name", null: false
-    t.string "owner"
     t.boolean "require_owner_in_record", default: false
     t.string "identifier", null: false
     t.datetime "created_at", null: false

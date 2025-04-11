@@ -32,7 +32,7 @@ class OaiImporter
     oai_record = fetch_record(record.identifier)
     ead_element = extract_ead(oai_record.metadata)
     corpname = extract_repository_name(ead_element)
-    return if collection.requires_owner? && !collection.has_owner?(corpname)
+    return if collection.requires_owner? && !collection.is_owner?(corpname)
 
     eadid = ensure_eadid(ead_element)
     attributes = build_record_attributes(datestamp, corpname, eadid)
