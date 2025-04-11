@@ -1,7 +1,7 @@
 <%= tag.div id: dom_id(transfer), class: "card mb-3" do %>
   <div class="card-body">
     <div class="row align-items-center">
-      <div class="col-md-4 text-start">
+      <div class="col-md-3 text-start">
         <div class="d-flex align-items-center mb-1">
           <span class="text-muted small me-2">EAD ID</span>
           <span class="badge <%= status_badge_class(transfer.status) %>">
@@ -11,19 +11,24 @@
         <span class="text-monospace fw-medium"><%= transfer.record.ead_identifier %></span>
       </div>
 
-      <div class="col-md-4 text-center">
-        <span class="text-muted small d-block mb-1">Owner</span>
-        <span class="fw-medium"><%= transfer.record.owner %></span>
-      </div>
-
-      <div class="col-md-4 text-end">
-        <div class="d-flex align-items-center justify-content-end mb-1">
+      <div class="col-md-3 text-center">
+        <div class="d-flex align-items-center justify-content-center mb-1">
           <span class="text-muted small me-2">Destination</span>
           <span class="badge bg-secondary text-light">
             <%= transfer.destination.type.to_s.demodulize.downcase %>
           </span>
         </div>
         <span class="fw-medium"><%= transfer.destination.name %></span>
+      </div>
+
+      <div class="col-md-3 text-center">
+        <span class="text-muted small d-block mb-1">Transferred</span>
+        <span class="fw-medium"><%= transfer.updated_at.strftime("%b %d, %Y %H:%M") %></span>
+      </div>
+
+      <div class="col-md-3 text-end">
+        <span class="text-muted small d-block mb-1">Owner</span>
+        <span class="fw-medium"><%= transfer.record.owner %></span>
       </div>
     </div>
   </div>
