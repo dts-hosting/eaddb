@@ -1,0 +1,44 @@
+<%= form_with(model: source, scope: :source, url: source.new_record? ? sources_path : source_path(source)) do |form| %>
+  <% if source.errors.any? %>
+    <div class="alert alert-danger">
+      <h5><%= pluralize(source.errors.count, "error") %> prohibited this source from being saved:</h5>
+      <ul>
+        <% source.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :type, "Source Type", class: "form-label" %>
+    <% if source.persisted? %>
+      <div class="form-control-plaintext">
+        <%= source.class.display_name %>
+      </div>
+      <div class="form-text">Source type cannot be changed after creation</div>
+    <% else %>
+      <%= form.select :type,
+                      [["Select source type...", "", { disabled: true }]] + Source.available_types,
+                      { selected: source.type || "" },
+                      { class: "form-select", required: true } %>
+      <div class="form-text">Select the type of source you want to create</div>
+    <% end %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :name, class: "form-label" %>
+    <%= form.text_field :name, class: "form-control", required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :url, class: "form-label" %>
+    <%= form.url_field :url, class: "form-control", required: true %>
+    <div class="form-text">Enter the full URL including protocol (e.g., https://example.com/api)</div>
+  </div>
+
+  <div class="d-flex justify-content-end gap-2">
+    <%= link_to "Cancel", sources_path, class: "btn btn-outline-secondary" %>
+    <%= form.submit class: "btn btn-primary" %>
+  </div>
+<% end %>

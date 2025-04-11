@@ -2,10 +2,12 @@ class Source < ApplicationRecord
   has_many :collections, dependent: nil
   has_many :records, through: :collections
 
-  validates :name, presence: true
+  validates :name, :type, presence: true
   validates :url, format: {with: URI::DEFAULT_PARSER.make_regexp, message: "must be a valid URL"}
   validates :url, presence: true, uniqueness: {scope: :name, message: "and name combination already exists"}
   validate :url_connectivity
+
+  attr_readonly :type
 
   encrypts :username
   encrypts :password
@@ -36,7 +38,31 @@ class Source < ApplicationRecord
     raise NotImplementedError
   end
 
+  def self.available_types
+    descendants_with_names
+      .sort_by { |_, display_name| display_name }
+      .map { |klass, name| [name, klass] }
+  end
+
+  def self.display_name
+    raise NotImplementedError, "#{self} must implement class method display_name"
+  end
+
   private
+
+  def self.descendants_with_names
+    Rails.application.eager_load! if Rails.env.development?
+    descendants = ObjectSpace.each_object(Class).select { |klass| klass < self }
+
+    descendants.map do |klass|
+      [klass.to_s, klass.display_name]
+    end
+  end
+
+  def self.descendants_including_self
+    Rails.application.eager_load! if Rails.env.development?
+    ObjectSpace.each_object(Class).select { |klass| klass < self }
+  end
 
   def ensure_no_collections
     if collections.exists?
@@ -50,7 +76,7 @@ class Source < ApplicationRecord
   end
 
   def url_connectivity
-    return if url.blank?
+    return if type.blank? || url.blank?
 
     uri = URI.parse(build_validation_url)
     Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == "https") do |http|

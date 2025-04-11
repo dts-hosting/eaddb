@@ -15,6 +15,10 @@ module Sources
       # TODO: ArchivesSpaceDeleteRecordsJob.perform_later(self)
     end
 
+    def self.display_name
+      "ArchivesSpace"
+    end
+
     private
 
     def url_must_end_with_api

@@ -19,6 +19,10 @@ module Sources
       # TODO: OaiDeleteRecordsJob.perform_later(self)
     end
 
+    def self.display_name
+      "OAI"
+    end
+
     private
 
     def url_must_end_with_oai

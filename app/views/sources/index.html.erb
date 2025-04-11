@@ -1,0 +1,22 @@
+<div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4 mt-3">
+  <div>
+    <h2 class="fw-bold mb-0">Sources</h2>
+    <p class="text-muted small">Manage data collection sources</p>
+  </div>
+  <div class="btn-group">
+    <%= link_to new_source_path, class: "btn btn-primary btn-sm me-2", title: "Add new source" do %>
+      <i class="bi bi-plus-lg"></i> Add Source
+    <% end %>
+  </div>
+</div>
+
+<div id="sources">
+  <%= turbo_frame_tag :sources_page, @pagy.page, target: :_top do %>
+    <%= render partial: "sources/source", collection: @sources, locals: {inline: true} %>
+    <% if @pagy.next %>
+      <%= turbo_frame_tag :sources_page, @pagy.next, src: sources_path(page: @pagy.next), loading: :lazy, target: :_top do %>
+        <%= tag.div "Loading..." %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>
