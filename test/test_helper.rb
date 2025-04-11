@@ -13,6 +13,8 @@ WebMock.globally_stub_request do |request|
 
   if matches_archive && request.method == :head
     {status: 200}
+  elsif request.uri.to_s.match?("https://example.*verb=Identify") && request.method == :head
+    {status: 200}
   end
 end
 
