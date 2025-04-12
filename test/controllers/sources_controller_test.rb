@@ -38,7 +38,7 @@ class SourcesControllerTest < ActionDispatch::IntegrationTest
       post sources_url, params: {
         source: {
           name: "",
-          url: "http://example.com/oai",
+          url: "http://example.com/oai"
         }
       }
     end
@@ -62,7 +62,7 @@ class SourcesControllerTest < ActionDispatch::IntegrationTest
     patch source_url(@source), params: {
       source: {
         name: "Updated Source Name",
-        url: @source.url,
+        url: @source.url
       }
     }
     assert_redirected_to source_url(@source)
@@ -75,7 +75,7 @@ class SourcesControllerTest < ActionDispatch::IntegrationTest
     patch source_url(@source), params: {
       source: {
         name: "",
-        url: @source.url,
+        url: @source.url
       }
     }
     assert_response :unprocessable_entity
@@ -98,5 +98,24 @@ class SourcesControllerTest < ActionDispatch::IntegrationTest
     get source_url(@source)
     assert_response :success
     assert_select "nav.pagination"
+  end
+
+  test "should redirect with alert when no collections exist" do
+    @source.collections.destroy_all
+    post run_source_path(@source)
+
+    assert_redirected_to source_path(@source)
+    assert_equal "At least one collection must exist before running.", flash[:alert]
+  end
+
+  test "should start job when collections exist" do
+    create_collection(source: @source)
+
+    assert_enqueued_with(job: OaiGetRecordsJob) do
+      post run_source_path(@source)
+    end
+
+    assert_redirected_to source_path(@source)
+    assert_equal "Job started successfully.", flash[:notice]
   end
 end

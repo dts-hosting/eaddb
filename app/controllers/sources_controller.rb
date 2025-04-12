@@ -1,8 +1,7 @@
 class SourcesController < ApplicationController
-  before_action :set_source, only: %i[show edit update destroy]
+  before_action :set_source, only: %i[show edit update destroy run]
 
   def index
-    # TODO: pagination / scroll / filter
     @pagy, @sources = pagy(Source.order(:name))
   end
 
@@ -37,6 +36,15 @@ class SourcesController < ApplicationController
   def destroy
     @source.destroy
     redirect_to sources_url, status: :see_other, notice: "Source was successfully destroyed."
+  end
+
+  def run
+    if @source.collections.any?
+      @source.run
+      redirect_to source_path(@source), notice: "Job started successfully."
+    else
+      redirect_to source_path(@source), alert: "At least one collection must exist before running."
+    end
   end
 
   private

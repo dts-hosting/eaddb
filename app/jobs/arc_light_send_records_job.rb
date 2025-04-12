@@ -1,5 +1,5 @@
 class ArcLightSendRecordsJob < ApplicationJob
-  limits_concurrency to: 5, key: ->(destination, transfer_ids) { destination.url }, duration: 1.hour
+  limits_concurrency to: 5, key: ->(destination, transfer_ids) { destination.url }, duration: 1.minute
   queue_as :default
 
   def perform(destination, transfer_ids = nil)

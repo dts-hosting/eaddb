@@ -1,5 +1,5 @@
 class OaiGetRecordsJob < ApplicationJob
-  limits_concurrency to: 5, key: ->(source) { source.url }, duration: 1.hour
+  limits_concurrency to: 1, key: ->(source) { source.url }, duration: 2.hours
   queue_as :default
 
   def perform(source)
