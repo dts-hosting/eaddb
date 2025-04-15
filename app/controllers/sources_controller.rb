@@ -41,7 +41,7 @@ class SourcesController < ApplicationController
   def run
     if @source.collections.any?
       @source.run
-      redirect_to source_path(@source), notice: "Job started successfully."
+      redirect_to source_path(@source)
     else
       redirect_to source_path(@source), alert: "At least one collection must exist before running."
     end

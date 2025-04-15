@@ -116,6 +116,5 @@ class SourcesControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_redirected_to source_path(@source)
-    assert_equal "Job started successfully.", flash[:notice]
   end
 end
