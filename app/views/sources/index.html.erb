@@ -10,6 +10,11 @@
   </div>
 </div>
 
+<%= render partial: "shared/search_form", locals: {
+  url: sources_path,
+  placeholder: "Search by name..."
+} %>
+
 <div id="sources">
   <%= turbo_frame_tag :sources_page, @pagy.page, target: :_top do %>
     <%= render partial: "sources/source", collection: @sources, locals: {inline: true} %>

@@ -1,5 +1,13 @@
 class HomeController < ApplicationController
   def index
-    @pagy, @transfers = pagy(Transfer.includes(:destination, :record).order(updated_at: :desc))
+    transfers = Transfer.includes(:destination, :record).order(updated_at: :desc)
+
+    if params[:query].present?
+      transfers = transfers.joins(:record).where(
+        "records.ead_identifier LIKE ?", "%#{params[:query]}%"
+      )
+    end
+
+    @pagy, @transfers = pagy(transfers)
   end
 end

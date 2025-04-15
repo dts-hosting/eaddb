@@ -2,7 +2,13 @@ class SourcesController < ApplicationController
   before_action :set_source, only: %i[show edit update destroy run]
 
   def index
-    @pagy, @sources = pagy(Source.order(:name))
+    sources = Source.order(:name)
+
+    if params[:query].present?
+      sources = sources.where("name LIKE ?", "%#{params[:query]}%")
+    end
+
+    @pagy, @sources = pagy(sources, items: 100)
   end
 
   def show

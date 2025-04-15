@@ -6,6 +6,11 @@ require_relative "helpers/test_constants"
 require "rails/test_help"
 require "webmock/minitest"
 
+WebMock.disable_net_connect!(
+  allow_localhost: true,
+  allow: ["chromedriver.storage.googleapis.com", "127.0.0.1", "localhost"]
+)
+
 WebMock.globally_stub_request do |request|
   matches_archive = TestConstants::Endpoints::ARCHIVES.any? do |archive_url|
     request.uri.to_s.start_with?(archive_url)

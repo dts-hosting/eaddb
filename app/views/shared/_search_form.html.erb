@@ -1,0 +1,17 @@
+<div class="row mb-4">
+  <div class="col-md-6">
+    <%= form_with url: url, method: :get, class: "d-flex gap-2" do |form| %>
+      <div class="flex-grow-1">
+        <%= form.search_field :query,
+                              value: params[:query],
+                              class: "form-control",
+                              placeholder: placeholder,
+                              aria: { label: "Search" } %>
+      </div>
+      <%= button_tag "Search", type: "submit", class: "btn btn-primary", name: nil %>
+      <% if params[:query].present? %>
+        <%= link_to "Reset", url, class: "btn btn-outline-secondary" %>
+      <% end %>
+    <% end %>
+  </div>
+</div>
