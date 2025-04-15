@@ -1,4 +1,4 @@
-<%= form_with(model: [source, collection], url: collection.new_record? ? source_collections_path : source_collection_path(source, collection)) do |form| %>
+<%= form_with(model: collection, url: collection.new_record? ? source_collections_path(source) : collection_path(collection)) do |form| %>
   <% if collection.errors.any? %>
     <div class="alert alert-danger">
       <h5><%= pluralize(collection.errors.count, "error") %> prohibited this collection from being saved:</h5>

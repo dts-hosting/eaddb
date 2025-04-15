@@ -25,11 +25,11 @@
         </div>
 
         <div class="btn-group" role="group" aria-label="Collection actions">
-          <%= link_to edit_source_collection_path(collection.source, collection), class: "btn btn-outline-success btn-sm border-end-0", title: "Edit collection" do %>
+          <%= link_to edit_collection_path(collection), class: "btn btn-outline-success btn-sm border-end-0", title: "Edit collection" do %>
             <i class="bi bi-pencil"></i>
-            <% end %><%= link_to source_collection_path(collection.source, collection), class: "btn btn-outline-primary btn-sm", title: "View collection details" do %>
+            <% end %><%= link_to collection_path(collection), class: "btn btn-outline-primary btn-sm", title: "View collection details" do %>
             <i class="bi bi-eye"></i>
-            <% end %><%= link_to source_collection_path(collection.source, collection), class: "btn btn-outline-danger btn-sm", data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete this collection?" }, title: "Delete collection" do %>
+            <% end %><%= link_to collection_path(collection), class: "btn btn-outline-danger btn-sm", data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete this collection?" }, title: "Delete collection" do %>
             <i class="bi bi-trash"></i>
           <% end %>
         </div>

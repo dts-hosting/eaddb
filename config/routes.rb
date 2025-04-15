@@ -17,6 +17,6 @@ Rails.application.routes.draw do
     member do
       post :run
     end
-    resources :collections
+    resources :collections, shallow: true
   end
 end

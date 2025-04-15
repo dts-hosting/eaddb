@@ -10,7 +10,7 @@ class CollectionTest < ActiveSupport::TestCase
     collection = Collection.new(
       source: @source,
       name: "Test Collection #{SecureRandom.hex(4)}",
-      identifier: "/repositories/#{rand(1000)}"
+      identifier: "/repositories/#{rand(10_000)}"
     )
     assert collection.valid?
   end
@@ -75,7 +75,7 @@ class CollectionTest < ActiveSupport::TestCase
     refute @collection.valid?
     assert_includes @collection.errors[:identifier], "is invalid"
 
-    @collection.identifier = "/repositories/#{rand(1000)}"
+    @collection.identifier = "/repositories/#{rand(10_000)}"
     assert @collection.valid?
   end
 
@@ -132,7 +132,7 @@ class CollectionTest < ActiveSupport::TestCase
       Collection.create!(
         source: @source,
         name: "New Collection",
-        identifier: "/repositories/#{rand(1000)}"
+        identifier: "/repositories/#{rand(10_000)}"
       )
     end
   end

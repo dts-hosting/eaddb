@@ -2,7 +2,7 @@ module FactoryHelpers
   def create_collection(attributes = {})
     defaults = {
       name: "Test Collection #{SecureRandom.hex(4)}",
-      identifier: "/repositories/#{rand(1000)}",
+      identifier: "/repositories/#{rand(10_000)}",
       source: attributes[:source] || create_source
     }
     Collection.create!(defaults.merge(attributes))
