@@ -9,7 +9,7 @@
     <% end %>
     <%= link_to run_source_path(@source),
                 class: "btn btn-warning btn-sm",
-                data: { turbo_method: :post } do %>
+                data: { turbo_method: :post, turbo_confirm: "Are you sure you want to queue a job for this source?" } do %>
       <i class="bi bi-cloud-download"></i> Get Records
     <% end %>
     <%= link_to edit_source_path(@source), class: "btn btn-outline-success btn-sm", title: "Edit source" do %>
