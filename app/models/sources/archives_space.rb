@@ -10,7 +10,13 @@ module Sources
       raise NotImplementedError
     end
 
+    def ok_to_run?
+      username.present? && password.present? && collections.any?
+    end
+
     def run
+      return unless ok_to_run?
+
       ArchivesSpaceGetRecordsJob.perform_later(self)
       # TODO: ArchivesSpaceDeleteRecordsJob.perform_later(self)
     end

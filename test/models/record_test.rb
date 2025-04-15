@@ -5,8 +5,12 @@ class RecordTest < ActiveSupport::TestCase
 
   def setup
     @collection = create_collection
-    @destination1 = create_destination(type: :arc_light, attributes: {collection: @collection})
-    @destination2 = create_destination(type: :s3_bucket, attributes: {collection: @collection})
+    @destination1 = create_destination(
+      type: :arc_light, attributes: {collection: @collection, username: "user", password: "<PASSWORD>"}
+    )
+    @destination2 = create_destination(
+      type: :s3_bucket, attributes: {collection: @collection, username: "user", password: "<PASSWORD>"}
+    )
 
     @record_attributes = {
       collection: @collection,

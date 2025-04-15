@@ -40,6 +40,10 @@ class Source < ApplicationRecord
       .pluck(:ead_identifier)
   end
 
+  def ok_to_run?
+    raise NotImplementedError
+  end
+
   def recalculate_total_records_count!
     update_total_records_count
   end

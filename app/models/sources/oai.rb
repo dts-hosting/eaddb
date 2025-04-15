@@ -10,11 +10,17 @@ module Sources
       OAI::Client.new(url)
     end
 
+    def ok_to_run?
+      collections.any?
+    end
+
     def metadata_prefix
       "oai_ead"
     end
 
     def run
+      return unless ok_to_run?
+
       OaiGetRecordsJob.perform_later(self)
       # TODO: OaiDeleteRecordsJob.perform_later(self)
     end

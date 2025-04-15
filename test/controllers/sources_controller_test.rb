@@ -105,7 +105,7 @@ class SourcesControllerTest < ActionDispatch::IntegrationTest
     post run_source_path(@source)
 
     assert_redirected_to source_path(@source)
-    assert_equal "At least one collection must exist before running.", flash[:alert]
+    assert_equal "Preconditions not met. See source for details.", flash[:alert]
   end
 
   test "should start job when collections exist" do

@@ -19,11 +19,20 @@ module Sources
       assert_includes invalid_source.errors[:url], "must end with '/oai'"
     end
 
+    test "ok_to_run? returns true when source has collections" do
+      source = create_source
+      create_collection(source: source)
+      assert source.ok_to_run?
+    end
+
+    test "ok_to_run? returns false when source has no collections" do
+      source = create_source
+      refute source.ok_to_run?
+    end
+
     test "enqueues correct job" do
-      source = Sources::Oai.create!(
-        name: "Test OAI source",
-        url: "https://test.archivesspace.org/oai"
-      )
+      source = create_source
+      create_collection(source: source)
 
       assert_enqueued_with(job: OaiGetRecordsJob) do
         source.run

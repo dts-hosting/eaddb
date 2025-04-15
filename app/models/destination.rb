@@ -12,6 +12,10 @@ class Destination < ApplicationRecord
 
   after_create_commit :create_transfers_for_collection_records
 
+  def ok_to_run?
+    raise NotImplementedError
+  end
+
   # TODO:
   # def pending_deletes
   #   transfers

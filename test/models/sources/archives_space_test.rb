@@ -22,8 +22,11 @@ module Sources
     test "enqueues correct job" do
       source = Sources::ArchivesSpace.create!(
         name: "Test ArchivesSpace source",
-        url: "https://test.archivesspace.org/api"
+        url: "https://test.archivesspace.org/api",
+        username: "admin",
+        password: "<PASSWORD>"
       )
+      create_collection(source: source)
 
       assert_enqueued_with(job: ArchivesSpaceGetRecordsJob) do
         source.run

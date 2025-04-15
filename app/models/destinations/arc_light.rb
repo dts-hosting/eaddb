@@ -3,6 +3,10 @@ module Destinations
     validates :identifier, presence: true
     validates :config, presence: true
 
+    def ok_to_run?
+      transfers.any?
+    end
+
     def run(transfer_ids = nil)
       ArcLightSendRecordsJob.perform_later(self, transfer_ids)
     end

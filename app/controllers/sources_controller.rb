@@ -45,11 +45,11 @@ class SourcesController < ApplicationController
   end
 
   def run
-    if @source.collections.any?
+    if @source.ok_to_run?
       @source.run
       redirect_to source_path(@source)
     else
-      redirect_to source_path(@source), alert: "At least one collection must exist before running."
+      redirect_to source_path(@source), alert: "Preconditions not met. See source for details."
     end
   end
 
