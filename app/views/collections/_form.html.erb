@@ -1,0 +1,33 @@
+<%= form_with(model: [source, collection], url: collection.new_record? ? source_collections_path : source_collection_path(source, collection)) do |form| %>
+  <% if collection.errors.any? %>
+    <div class="alert alert-danger">
+      <h5><%= pluralize(collection.errors.count, "error") %> prohibited this collection from being saved:</h5>
+      <ul>
+        <% collection.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :name, class: "form-label" %>
+    <%= form.text_field :name, class: "form-control", required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :identifier, class: "form-label" %>
+    <%= form.text_field :identifier, class: "form-control" %>
+  </div>
+
+  <div class="mb-3 form-check">
+    <%= form.check_box :require_owner_in_record, class: "form-check-input" %>
+    <%= form.label :require_owner_in_record, "Require Owner in Record", class: "form-check-label" %>
+    <div class="form-text">If checked, records are required to have a corpname that matches the collection name.</div>
+  </div>
+
+  <div class="d-flex justify-content-end gap-2">
+    <%= link_to "Cancel", :back, class: "btn btn-outline-secondary" %>
+    <%= form.submit class: "btn btn-primary" %>
+  </div>
+<% end %>

@@ -4,7 +4,7 @@
     <p class="text-muted small">Source details and statistics</p>
   </div>
   <div class="btn-group">
-    <%= link_to "#", class: "btn btn-primary btn-sm", title: "Add new collection" do %>
+    <%= link_to new_source_collection_path(@source), class: "btn btn-primary btn-sm", title: "Add new collection" do %>
       <i class="bi bi-plus-circle"></i> Add Collection
     <% end %>
     <%= link_to run_source_path(@source),
