@@ -13,7 +13,7 @@ class OaiGetRecordsJob < ApplicationJob
       records_processed += 1
       last_update_time = broadcast_import_progress(source, records_processed, last_update_time)
 
-      # TODO: next unless source.transfer_on_import?
+      next unless source.transfer_on_import?
 
       record.transfer
     end

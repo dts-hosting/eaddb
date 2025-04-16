@@ -51,10 +51,17 @@
           <strong>Name:</strong> <%= @source.name %>
         </p>
         <p><strong>URL:</strong> <%= safe_external_link(@source.url) %></p>
+        <p>
+          <strong>Transfer on import:</strong>
+          <span class="badge <%= @source.transfer_on_import? ? 'bg-success' : 'bg-secondary' %>">
+            <%= @source.transfer_on_import? ? 'Yes' : 'No' %>
+          </span>
+        </p>
       </div>
       <div class="col-md-6">
         <p><strong>Total Collections:</strong> <%= number_with_delimiter(@source.collections_count) || 0 %></p>
         <p><strong>Total Records:</strong> <%= number_with_delimiter(@source.total_records_count) || 0 %></p>
+        <p><strong>Date Created:</strong> <%= @source.created_at.strftime("%B %d, %Y at %H:%M") %></p>
         <p><strong>Last Updated:</strong> <%= @source.updated_at.strftime("%B %d, %Y at %H:%M") %></p>
       </div>
     </div>

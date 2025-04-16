@@ -42,8 +42,8 @@
         <div class="col-md-6">
           <p><strong>Type:</strong> <span class="badge bg-info text-light"><%= @destination.class.display_name %></span></p>
           <p><strong>Name:</strong> <%= @destination.name %></p>
-          <p><strong>Collection:</strong> <%= link_to @destination.collection.name, collection_path(@destination.collection) %></p>
           <p><strong>Source:</strong> <%= link_to @destination.collection.source.name, source_path(@destination.collection.source) %></p>
+          <p><strong>Collection:</strong> <%= link_to @destination.collection.name, collection_path(@destination.collection) %></p>
         </div>
         <div class="col-md-6">
           <p><strong>URL:</strong> <%= @destination.url %></p>

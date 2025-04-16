@@ -35,15 +35,15 @@
           <p><strong>Identifier:</strong> <%= @collection.identifier %></p>
           <p><strong>Source:</strong> <%= link_to @source.name, source_path(@source) %></p>
           <p>
-            <strong>Require Owner in Record:</strong>
-            <span class="badge <%= @collection.require_owner_in_record ? 'bg-success' : 'bg-secondary' %>">
-              <%= @collection.require_owner_in_record ? 'Yes' : 'No' %>
+            <strong>Require owner in record?</strong>
+            <span class="badge <%= @collection.require_owner_in_record? ? 'bg-success' : 'bg-secondary' %>">
+              <%= @collection.require_owner_in_record? ? 'Yes' : 'No' %>
             </span>
           </p>
         </div>
         <div class="col-md-6">
-          <p><strong>Total Records:</strong> <%= number_with_delimiter(@collection.records_count) || 0 %></p>
           <p><strong>Total Destinations:</strong> <%= number_with_delimiter(@collection.destinations.count) || 0 %></p>
+          <p><strong>Total Records:</strong> <%= number_with_delimiter(@collection.records_count) || 0 %></p>
           <p><strong>Date Created:</strong> <%= @collection.created_at.strftime("%B %d, %Y at %H:%M") %></p>
           <p><strong>Last Updated:</strong> <%= @collection.updated_at.strftime("%B %d, %Y at %H:%M") %></p>
         </div>
