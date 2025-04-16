@@ -1,16 +1,13 @@
 class CollectionsController < ApplicationController
   before_action :set_collection, only: [:show, :edit, :update, :destroy]
-  before_action :set_source, only: [:index, :new, :create]
-
-  def index
-    @collections = @source.collections
-  end
+  before_action :set_source, only: [:new, :create]
 
   def show
+    @pagy, @destinations = pagy(@collection.destinations, items: 10)
   end
 
   def new
-    @collection = Collection.new(source: @source)
+    @collection = @source.collections.build
   end
 
   def create
@@ -34,9 +31,9 @@ class CollectionsController < ApplicationController
   end
 
   def destroy
-    @source = @collection.source
+    source = @collection.source
     @collection.destroy
-    redirect_to source_path(@source), status: :see_other, notice: "Collection was successfully destroyed."
+    redirect_to source_path(source), status: :see_other, notice: "Collection was successfully destroyed."
   end
 
   private

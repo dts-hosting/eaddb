@@ -1,0 +1,62 @@
+<%= form_with(model: destination, scope: :destination, url: destination.new_record? ? collection_destinations_path(collection) : destination_path(destination)) do |form| %>
+  <% if destination.errors.any? %>
+    <div class="alert alert-danger">
+      <h5><%= pluralize(destination.errors.count, "error") %> prohibited this destination from being saved:</h5>
+      <ul>
+        <% destination.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :type, "Destination Type", class: "form-label" %>
+    <% if destination.persisted? %>
+      <div class="form-control-plaintext">
+        <%= destination.class.display_name %>
+      </div>
+      <div class="form-text">Destination type cannot be changed after creation</div>
+    <% else %>
+      <%= form.select :type,
+                      [["Select destination type...", "", { disabled: true }]] + Destination.available_types,
+                      { selected: destination.type || "" },
+                      { class: "form-select", required: true } %>
+      <div class="form-text">Select the type of destination you want to create</div>
+    <% end %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :name, class: "form-label" %>
+    <%= form.text_field :name, class: "form-control", required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :url, class: "form-label" %>
+    <%= form.url_field :url, class: "form-control", required: true %>
+    <div class="form-text">The URL where records will be sent</div>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :identifier, class: "form-label" %>
+    <%= form.text_field :identifier, class: "form-control" %>
+    <div class="form-text">A unique identifier. Reference the documentation for how this works.</div>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :config, "Configuration File", class: "form-label" %>
+    <% if destination.config.attached? %>
+      <div class="mb-2">
+        <span class="badge bg-info">Current file: <%= destination.config.filename %></span>
+        <%= link_to "Download", rails_blob_path(destination.config, disposition: "attachment"), class: "btn btn-sm btn-outline-primary ms-2" %>
+      </div>
+    <% end %>
+    <%= form.file_field :config, class: "form-control" %>
+    <div class="form-text">Upload a configuration file for this destination (optional)</div>
+  </div>
+
+  <div class="d-flex justify-content-between">
+    <%= link_to "Cancel", :back, class: "btn btn-outline-secondary" %>
+    <%= form.submit class: "btn btn-primary" %>
+  </div>
+<% end %>

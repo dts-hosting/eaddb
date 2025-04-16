@@ -61,6 +61,6 @@ class SourcesController < ApplicationController
 
   def source_params
     # TODO: username, password if type supports it
-    params.require(:source).permit(:type, :name, :url)
+    params.require(:source).permit(:type, :name, :url, :username, :password)
   end
 end

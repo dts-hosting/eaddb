@@ -1,4 +1,6 @@
 class Destination < ApplicationRecord
+  include Descendents
+
   belongs_to :collection
   has_many :transfers, dependent: :destroy
   has_many :records, through: :transfers

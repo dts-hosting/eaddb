@@ -1,4 +1,6 @@
 class Source < ApplicationRecord
+  include Descendents
+
   has_many :collections, dependent: nil
   has_many :records, through: :collections
 
@@ -50,26 +52,6 @@ class Source < ApplicationRecord
 
   def run
     raise NotImplementedError
-  end
-
-  def self.available_types
-    descendants_with_names
-      .sort_by { |_, display_name| display_name }
-      .map { |klass, name| [name, klass] }
-  end
-
-  def self.descendants_with_names
-    Rails.application.eager_load! if Rails.env.development?
-    descendants = ObjectSpace.each_object(Class).select { |klass| klass < self }
-
-    descendants.map do |klass|
-      [klass.to_s, klass.display_name]
-    end
-  end
-
-  def self.descendants_including_self
-    Rails.application.eager_load! if Rails.env.development?
-    ObjectSpace.each_object(Class).select { |klass| klass < self }
   end
 
   def self.display_name

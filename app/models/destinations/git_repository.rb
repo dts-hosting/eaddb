@@ -8,6 +8,10 @@ module Destinations
       raise NotImplementedError
     end
 
+    def self.display_name
+      "Git"
+    end
+
     def self.version
       # TODO: gem "git"
     end

@@ -10,6 +10,10 @@ module Destinations
       S3SendRecordsJob.perform_later(self, transfer_ids)
     end
 
+    def self.display_name
+      "S3"
+    end
+
     def self.version
       # TODO: gem "aws-sdk-s3"
     end

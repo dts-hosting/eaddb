@@ -17,6 +17,14 @@ Rails.application.routes.draw do
     member do
       post :run
     end
-    resources :collections, shallow: true
+    resources :collections, shallow: true do
+      resources :destinations, shallow: true
+    end
+  end
+
+  resources :destinations, only: [] do
+    member do
+      post :run
+    end
   end
 end
