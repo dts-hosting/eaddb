@@ -2,6 +2,16 @@ class DestinationsController < ApplicationController
   before_action :set_collection, only: [:new, :create]
   before_action :set_destination, only: [:show, :edit, :update, :destroy, :run]
 
+  def index
+    destinations = Destination.includes(:collection).order(:name)
+
+    if params[:query].present?
+      destinations = destinations.where("name LIKE ?", "%#{params[:query]}%")
+    end
+
+    @pagy, @destinations = pagy(destinations, items: 100)
+  end
+
   def show
   end
 

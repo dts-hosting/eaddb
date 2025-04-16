@@ -22,7 +22,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :destinations, only: [] do
+  resources :destinations, only: [:index] do
     member do
       post :run
     end

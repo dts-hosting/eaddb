@@ -17,7 +17,14 @@
 
 <div id="sources">
   <%= turbo_frame_tag :sources_page, @pagy.page, target: :_top do %>
-    <%= render partial: "sources/source", collection: @sources, locals: {inline: true} %>
+    <% if @sources.empty? %>
+      <div class="alert alert-info text-center">
+        <p class="mb-0">No sources found.</p>
+      </div>
+    <% else %>
+      <%= render partial: "sources/source", collection: @sources, locals: {inline: true} %>
+    <% end %>
+
     <% if @pagy.next %>
       <%= turbo_frame_tag :sources_page, @pagy.next, src: sources_path(page: @pagy.next), loading: :lazy, target: :_top do %>
         <%= tag.div "Loading..." %>

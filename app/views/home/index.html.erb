@@ -17,7 +17,14 @@
 
 <div id="transfers">
   <%= turbo_frame_tag :transfers_page, @pagy.page, target: :_top do %>
-    <%= render partial: "transfers/transfer", collection: @transfers, locals: {inline: true} %>
+    <% if @transfers.empty? %>
+      <div class="alert alert-info text-center">
+        <p class="mb-0">No transfers found.</p>
+      </div>
+    <% else %>
+      <%= render partial: "transfers/transfer", collection: @transfers, locals: {inline: true} %>
+    <% end %>
+
     <% if @pagy.next %>
       <%= turbo_frame_tag :transfers_page, @pagy.next, src: root_path(page: @pagy.next), loading: :lazy, target: :_top do %>
         <%= tag.div "Loading..." %>
