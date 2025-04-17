@@ -1,0 +1,17 @@
+<div class="mb-3">
+  <%= form.label :identifier, class: "form-label" %>
+  <%= form.text_field :identifier, class: "form-control" %>
+  <div class="form-text">A unique identifier. This identifier must match a key in the repositories config.</div>
+</div>
+
+<div class="mb-3">
+  <%= form.label :config, "Configuration File", class: "form-label" %>
+  <% if destination.config.attached? %>
+    <div class="mb-2">
+      <span class="badge bg-info">Current file: <%= destination.config.filename %></span>
+      <%= link_to "Download", rails_blob_path(destination.config, disposition: "attachment"), class: "btn btn-sm btn-outline-primary ms-2" %>
+    </div>
+  <% end %>
+  <%= form.file_field :config, class: "form-control" %>
+  <div class="form-text">Upload a repositories configuration file for this destination.</div>
+</div>

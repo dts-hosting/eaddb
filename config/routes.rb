@@ -13,12 +13,19 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
-  resources :sources do
+  resources :sources, except: [:new] do
+    collection do
+      get "new/:type", to: "sources#new", as: "new"
+    end
     member do
       post :run
     end
     resources :collections, shallow: true do
-      resources :destinations, shallow: true
+      resources :destinations, except: [:new], shallow: true do
+        collection do
+          get "new/:type", to: "destinations#new", as: "new"
+        end
+      end
     end
   end
 

@@ -13,7 +13,7 @@ class SourcesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get new" do
-    get new_source_url
+    get new_sources_path(type: "OAI")
     assert_response :success
     assert_select "h2", "New Source"
   end
@@ -37,8 +37,9 @@ class SourcesControllerTest < ActionDispatch::IntegrationTest
     assert_no_difference("Source.count") do
       post sources_url, params: {
         source: {
+          type: "Sources::Oai",
           name: "",
-          url: "http://example.com/oai"
+          url: "https://example.com/oai"
         }
       }
     end
@@ -88,6 +89,17 @@ class SourcesControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to sources_url
     assert_equal "Source was successfully destroyed.", flash[:notice]
+  end
+
+  test "should handle failure when destroying source" do
+    create_collection(source: @source)
+
+    assert_no_difference("Source.count") do
+      delete source_url(@source)
+    end
+
+    assert_redirected_to sources_url
+    assert_equal "Source could not be destroyed: Cannot delete source while collections exist.", flash[:alert]
   end
 
   test "pagination works on show page" do

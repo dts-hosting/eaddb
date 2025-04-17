@@ -10,21 +10,9 @@
     </div>
   <% end %>
 
-  <div class="mb-3">
-    <%= form.label :type, "Source Type", class: "form-label" %>
-    <% if source.persisted? %>
-      <div class="form-control-plaintext">
-        <%= source.class.display_name %>
-      </div>
-      <div class="form-text">Source type cannot be changed after creation</div>
-    <% else %>
-      <%= form.select :type,
-                      [["Select source type...", "", { disabled: true }]] + Source.available_types,
-                      { selected: source.type || "" },
-                      { class: "form-select", required: true } %>
-      <div class="form-text">Select the type of source you want to create</div>
-    <% end %>
-  </div>
+  <% unless source.persisted? %>
+    <%= form.hidden_field :type %>
+  <% end %>
 
   <div class="mb-3">
     <%= form.label :name, class: "form-label" %>
@@ -34,11 +22,19 @@
   <div class="mb-3">
     <%= form.label :url, class: "form-label" %>
     <%= form.url_field :url, class: "form-control", required: true %>
-    <div class="form-text">Enter the full URL (e.g., https://example.com/api)</div>
+    <div class="form-text">Enter the full URL (e.g., https://example.com/api).</div>
   </div>
 
-  <div class="d-flex justify-content-end gap-2">
+  <div class="mb-3 form-check">
+    <%= form.check_box :transfer_on_import, class: "form-check-input" %>
+    <%= form.label :transfer_on_import, "Transfer on import?", class: "form-check-label" %>
+    <div class="form-text">If checked, records are immediately queued for transfer after import.</div>
+  </div>
+
+  <%= render "#{source.class.display_name.underscore}_fields", form: form, source: source %>
+
+  <div class="d-flex justify-content-between">
     <%= link_to "Cancel", :back, class: "btn btn-outline-secondary" %>
-    <%= form.submit class: "btn btn-primary" %>
+    <%= form.submit "Submit", class: "btn btn-primary" %>
   </div>
 <% end %>

@@ -16,7 +16,8 @@ class SourcesController < ApplicationController
   end
 
   def new
-    @source = Source.new
+    source_type = Source.descendants_by_display_name[params[:type]]
+    @source = source_type.constantize.new
   end
 
   def create
@@ -40,8 +41,11 @@ class SourcesController < ApplicationController
   end
 
   def destroy
-    @source.destroy
-    redirect_to sources_url, status: :see_other, notice: "Source was successfully destroyed."
+    if @source.destroy
+      redirect_to sources_url, status: :see_other, notice: "Source was successfully destroyed."
+    else
+      redirect_to sources_url, alert: "Source could not be destroyed: #{@source.errors.full_messages.join(", ")}"
+    end
   end
 
   def run
@@ -61,6 +65,6 @@ class SourcesController < ApplicationController
 
   def source_params
     # TODO: username, password if type supports it
-    params.require(:source).permit(:type, :name, :url, :username, :password)
+    params.require(:source).permit(:type, :name, :url, :transfer_on_import, :username, :password)
   end
 end

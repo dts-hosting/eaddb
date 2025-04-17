@@ -16,7 +16,8 @@ class DestinationsController < ApplicationController
   end
 
   def new
-    @destination = @collection.destinations.build
+    destination_type = Destination.descendants_by_display_name[params[:type]]
+    @destination = destination_type.constantize.new
   end
 
   def create
@@ -42,7 +43,7 @@ class DestinationsController < ApplicationController
   def destroy
     collection = @destination.collection
     @destination.destroy
-    redirect_to collection_path(collection), notice: "Destination was successfully destroyed."
+    redirect_to collection_path(collection), status: :see_other, notice: "Destination was successfully destroyed."
   end
 
   def run

@@ -1,0 +1,22 @@
+<div class="mb-3">
+  <%= form.label :identifier, class: "form-label" %>
+  <%= form.text_field :identifier, class: "form-control", value: "/" %>
+  <div class="form-text">Identifier is used as a prefix (folder) to upload files into. Default is the root path.</div>
+</div>
+
+<div class="mb-3">
+  <%= form.label :key, class: "form-label" %>
+  <%= form.text_field :username,
+                      required: form.object.new_record?,
+                      placeholder: "Access key ID",
+                      class: "form-control" %>
+</div>
+
+<div class="mb-3">
+  <%= form.label :secret, class: "form-label" %>
+  <%= form.password_field :password,
+                          required: form.object.new_record?,
+                          placeholder: "Secret access key",
+                          maxlength: 72,
+                          class: "form-control" %>
+</div>

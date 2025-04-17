@@ -4,8 +4,12 @@
     <p class="text-muted small">Manage data collection sources</p>
   </div>
   <div class="btn-group">
-    <%= link_to new_source_path, class: "btn btn-primary btn-sm me-2", title: "Add new source" do %>
-      <i class="bi bi-plus-lg"></i> Add Source
+    <% Source.display_names.each_with_index do |type, index| %>
+      <%= link_to new_sources_path(type: type),
+                  class: "btn btn-primary btn-sm equal-width-btn",
+                  style: "width: 140px; #{index > 0 ? 'border-left: 2px solid #0d6efd;' : ''}" do %>
+        <i class="bi bi-plus-circle me-1"></i> <%= type.camelize %>
+      <% end %>
     <% end %>
   </div>
 </div>
