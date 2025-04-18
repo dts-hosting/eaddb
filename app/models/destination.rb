@@ -29,7 +29,8 @@ class Destination < ApplicationRecord
   def pending_transfers
     transfers
       .joins(:record)
-      .merge(Record.with_ead)
+      .where(record: {status: "active"})
+      .where.not(record: {ead_identifier: nil})
       .where.not(status: "succeeded")
   end
 
@@ -44,8 +45,13 @@ class Destination < ApplicationRecord
   private
 
   def create_transfers_for_collection_records
-    collection.records.find_each do |record|
+    transferables.find_each do |record|
       transfers.create!(record: record)
     end
+  end
+
+  def transferables
+    collection.records.where.not(status: "failed")
+      .where.not(ead_identifier: nil)
   end
 end

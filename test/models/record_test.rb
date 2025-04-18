@@ -116,12 +116,6 @@ class RecordTest < ActiveSupport::TestCase
     assert_includes Record.with_ead, @record
   end
 
-  test "without_ead scope returns only records without ead attachment" do
-    @record.ead_xml = nil
-    @record.save
-    assert_includes Record.without_ead, @record
-  end
-
   test "without_ead scope returns only records without identifier" do
     @record.ead_identifier = nil
     @record.save

@@ -7,7 +7,7 @@ class DestinationPendingTransfersTest < ActiveSupport::TestCase
     @record_with_ead = create_record(collection: @destination.collection)
     @record_with_ead_ok = create_record(collection: @destination.collection)
     @record_with_ead_failed = create_record(collection: @destination.collection)
-    @record_without_ead = create_record(collection: @destination.collection, ead_xml: nil)
+    @record_without_ead = create_record(collection: @destination.collection, ead_identifier: nil)
 
     Transfer.where(destination: @destination, record: @record_with_ead_ok).update(status: "succeeded")
     Transfer.where(destination: @destination, record: @record_with_ead_failed).update(status: "failed")
