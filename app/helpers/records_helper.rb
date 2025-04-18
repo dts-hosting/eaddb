@@ -1,11 +1,11 @@
-module TransfersHelper
-  def transfer_status_badge_class(status)
+module RecordsHelper
+  def record_status_badge_class(status)
     case status
-    when "succeeded"
+    when "active"
       "bg-success"
     when "failed"
       "bg-danger"
-    when "pending"
+    when "deleted"
       "bg-warning"
     else
       "bg-secondary"
