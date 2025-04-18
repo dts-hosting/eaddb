@@ -18,7 +18,6 @@ module Sources
       return unless ok_to_run?
 
       ArchivesSpaceGetRecordsJob.perform_later(self)
-      # TODO: ArchivesSpaceDeleteRecordsJob.perform_later(self)
     end
 
     def self.display_name

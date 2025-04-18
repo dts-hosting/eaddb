@@ -22,7 +22,6 @@ module Sources
       return unless ok_to_run?
 
       OaiGetRecordsJob.perform_later(self)
-      # TODO: OaiDeleteRecordsJob.perform_later(self)
     end
 
     def self.display_name

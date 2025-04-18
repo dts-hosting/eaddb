@@ -4,7 +4,7 @@ class Record < ApplicationRecord
   has_many :destinations, through: :transfers
   has_one_attached :ead_xml
 
-  # TODO: enum :status, {deleted: 0, active: 1}, default: :active
+  enum :status, {active: "active", deleted: "deleted", failed: "failed"}, default: :active
 
   validates :identifier, presence: true, uniqueness: {scope: :collection_id}
   validates :modification_date, presence: true
@@ -16,7 +16,7 @@ class Record < ApplicationRecord
   scope :for_owner, ->(owner) { where(owner: owner) }
   scope :with_ead, -> {
     joins(ead_xml_join_sql("INNER"))
-      # TODO: .where(status: "active")
+      .where(status: "active")
       .where.not(ead_identifier: nil)
   }
   scope :without_ead, -> {
@@ -26,6 +26,8 @@ class Record < ApplicationRecord
 
   # transfer this record to all destinations
   def transfer
+    return if failed?
+
     transfers.includes(:destination).find_each do |transfer|
       transfer.destination.run([transfer.id])
     end
@@ -43,6 +45,8 @@ class Record < ApplicationRecord
   private
 
   def create_transfers_for_collection_destinations
+    return if failed?
+
     collection.destinations.find_each do |destination|
       transfers.create!(destination: destination)
     end

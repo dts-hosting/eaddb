@@ -18,13 +18,13 @@ class Destination < ApplicationRecord
     raise NotImplementedError
   end
 
-  # TODO:
-  # def pending_deletes
-  #   transfers
-  #     .joins(:record)
-  #     .where(record: {status: "deleted"})
-  #     .where.not(status: "succeeded")
-  # end
+  def pending_deletes
+    transfers
+      .joins(:record)
+      .where(record: {status: "deleted"})
+      .where.not(record: {ead_identifier: nil})
+      .where.not(status: "succeeded")
+  end
 
   def pending_transfers
     transfers

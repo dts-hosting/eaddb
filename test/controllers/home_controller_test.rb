@@ -5,8 +5,6 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     sign_in(users(:admin))
     get root_url
     assert_response :success
-    # TODO: add assertions about content/behavior
-    # assert_select "h1", "Welcome to Data Toolkit"
   end
 
   test "should redirect to login when not authenticated" do

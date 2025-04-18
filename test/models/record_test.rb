@@ -28,6 +28,18 @@ class RecordTest < ActiveSupport::TestCase
     assert @record.valid?
   end
 
+  test "default status is active" do
+    assert @record.active?
+  end
+
+  test "can update status" do
+    @record.update!(status: :deleted)
+    assert @record.deleted?
+
+    @record.update!(status: :failed)
+    assert @record.failed?
+  end
+
   test "requires collection" do
     @record.collection = nil
     refute @record.valid?

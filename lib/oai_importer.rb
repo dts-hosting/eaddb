@@ -2,6 +2,11 @@
 # that match collection requirements and have been updated since last import.
 class OaiImporter
   attr_reader :source
+
+  RECORD_ACTIVE = "active"
+  RECORD_DELETED = "deleted"
+  RECORD_FAILED = "failed"
+
   def initialize(source)
     @source = source
   end
@@ -11,16 +16,14 @@ class OaiImporter
 
     source.client.list_identifiers(metadata_prefix: source.metadata_prefix).full.each do |header|
       status = header.status
-      next unless status.nil? # TODO: allow when supporting deletes
+      status = (status.to_s == RECORD_DELETED) ? RECORD_DELETED : RECORD_ACTIVE
 
       record_identifier = header.identifier
-      collection_identifier = parse_identifier(record_identifier)
-      collection = source.collections.where(identifier: collection_identifier).first
+      collection = get_collection(record_identifier)
       next unless collection
 
       datestamp = header.datestamp
-      # TODO: also set record status (active or deleted)
-      record = create_record(collection, record_identifier, datestamp)
+      record = create_record(collection, record_identifier, status, datestamp)
       next unless should_process?(record, datestamp)
 
       process_record(collection, record, datestamp)
@@ -32,29 +35,42 @@ class OaiImporter
     oai_record = fetch_record(record.identifier)
     ead_element = extract_ead(oai_record.metadata)
     corpname = extract_repository_name(ead_element)
-    return if collection.requires_owner? && !collection.is_owner?(corpname)
+
+    if collection.requires_owner? && !collection.is_owner?(corpname)
+      record.update(status: RECORD_FAILED, message: "Owner mismatch: #{corpname} vs #{collection.name}")
+      return
+    end
 
     eadid = ensure_eadid(ead_element)
     attributes = build_record_attributes(datestamp, corpname, eadid)
     update_record(record, xml_to_string(ead_element), attributes)
   rescue => e
+    record.update(status: RECORD_FAILED, message: e.message)
     Rails.logger.error("Failed to process record #{record.identifier}: #{e.message}")
     Rails.logger.debug(e.backtrace.join("\n"))
   end
 
   private
 
-  def create_record(collection, record_identifier, datestamp)
-    collection.records.find_or_create_by(
+  def get_collection(record_identifier)
+    collection_identifier = parse_identifier(record_identifier)
+    source.collections.where(identifier: collection_identifier).first
+  end
+
+  def create_record(collection, record_identifier, status, datestamp)
+    record = collection.records.find_or_create_by(
       collection: collection,
       identifier: record_identifier
     ) do |r|
       r.modification_date = datestamp
+      r.status = status
     end
+    record.update(status: status) if record.status != status
+    record
   end
 
   def should_process?(record, datestamp)
-    # return false if record.deleted? # TODO: status "active" (i.e. not deleted record)
+    return false unless record.active?
 
     !record.ead_xml.attached? || record.modification_date < datestamp
   end
