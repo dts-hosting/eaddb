@@ -8,7 +8,7 @@ class SourcesController < ApplicationController
       sources = sources.where("name LIKE ?", "%#{params[:query]}%")
     end
 
-    @pagy, @sources = pagy(sources, items: 100)
+    @pagy, @sources = pagy(sources, limit: 20)
   end
 
   def show

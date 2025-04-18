@@ -9,7 +9,7 @@ class DestinationsController < ApplicationController
       destinations = destinations.where("name LIKE ?", "%#{params[:query]}%")
     end
 
-    @pagy, @destinations = pagy(destinations, items: 100)
+    @pagy, @destinations = pagy(destinations, limit: 20)
   end
 
   def show

@@ -3,7 +3,7 @@ class CollectionsController < ApplicationController
   before_action :set_source, only: [:new, :create]
 
   def show
-    @pagy, @destinations = pagy(@collection.destinations, items: 10)
+    @pagy, @destinations = pagy(@collection.destinations, limit: 5)
   end
 
   def new

@@ -8,6 +8,6 @@ class HomeController < ApplicationController
       )
     end
 
-    @pagy, @transfers = pagy(transfers)
+    @pagy, @transfers = pagy(transfers, limit: 20)
   end
 end
