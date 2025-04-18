@@ -2,7 +2,7 @@ class Transfer < ApplicationRecord
   belongs_to :destination
   belongs_to :record
 
-  enum :status, {pending: 0, succeeded: 1, failed: 2}, default: :pending
+  enum :status, {pending: "pending", succeeded: "succeeded", failed: "failed"}, default: :pending
 
   validates :status, presence: true
 
