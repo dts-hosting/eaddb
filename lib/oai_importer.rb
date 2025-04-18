@@ -1,6 +1,9 @@
 # Imports records from an OAI-PMH source, processing only valid records
 # that match collection requirements and have been updated since last import.
+require_relative "utils/ead"
+
 class OaiImporter
+  include Utils::Ead
   attr_reader :source
 
   RECORD_ACTIVE = "active"
@@ -57,6 +60,14 @@ class OaiImporter
     source.collections.where(identifier: collection_identifier).first
   end
 
+  def parse_identifier(identifier)
+    return nil unless identifier
+
+    if (match = identifier.match(%r{(/repositories/\d+)}))
+      match[1]
+    end
+  end
+
   def create_record(collection, record_identifier, status, datestamp)
     record = collection.records.find_or_create_by(
       collection: collection,
@@ -97,70 +108,5 @@ class OaiImporter
       content_type: "application/xml"
     )
     record.update!(attributes)
-  end
-
-  # XML helpers
-  def ensure_eadid(xml_element)
-    return if xml_element.nil?
-
-    eadid = extract_eadid(xml_element)
-    return eadid if eadid
-
-    unitid = xml_text_value(xml_element, "//ead/archdesc/did/unitid")
-    return nil if unitid.nil?
-
-    eadid_element = REXML::XPath.first(xml_element, "//eadheader/eadid")
-
-    if eadid_element
-      eadid_element.text = unitid
-    else
-      eadheader = REXML::XPath.first(xml_element, "//eadheader")
-      if eadheader
-        eadid_element = REXML::Element.new("eadid")
-        eadid_element.text = unitid
-        eadheader.add_element(eadid_element)
-      else
-        return nil
-      end
-    end
-
-    unitid
-  end
-
-  def extract_ead(xml_element)
-    return if xml_element.nil?
-
-    xml_element.elements["/metadata/ead"] || xml_element.elements["//ead"]
-  end
-
-  def extract_eadid(xml_element)
-    xml_text_value(xml_element, "//eadheader/eadid")
-  end
-
-  def extract_repository_name(xml_element)
-    xml_text_value(xml_element, "//repository/corpname")
-  end
-
-  def parse_identifier(identifier)
-    return nil unless identifier
-
-    if (match = identifier.match(%r{(/repositories/\d+)}))
-      match[1]
-    end
-  end
-
-  def xml_text_value(xml_element, xpath)
-    return if xml_element.nil?
-
-    REXML::XPath.first(xml_element, xpath)&.text
-  end
-
-  def xml_to_string(xml_element)
-    return if xml_element.nil?
-
-    xml = ""
-    formatter = REXML::Formatters::Pretty.new(0)
-    formatter.compact = true
-    formatter.write(xml_element, xml)
   end
 end
