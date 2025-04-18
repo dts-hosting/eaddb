@@ -1,0 +1,8 @@
+<div class="mb-3">
+  <%= form.label :token, class: "form-label" %>
+  <%= form.password_field :password,
+                          required: form.object.new_record?,
+                          placeholder: "Personal access token (PAT)",
+                          maxlength: 72,
+                          class: "form-control" %>
+</div>

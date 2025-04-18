@@ -68,7 +68,6 @@ class SourcesController < ApplicationController
   end
 
   def source_params
-    # TODO: username, password if type supports it
     params.require(:source).permit(:type, :name, :url, :transfer_on_import, :username, :password)
   end
 end

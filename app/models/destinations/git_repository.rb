@@ -1,5 +1,7 @@
 module Destinations
   class GitRepository < Destination
+    attribute :username, :string, default: "x-access-token"
+
     def ok_to_run?
       username.present? && password.present? && transfers.any?
     end

@@ -11,6 +11,7 @@ module Destinations
 
       assert destination.valid?
       assert_equal "Destinations::GitRepository", destination.type
+      assert_equal "x-access-token", destination.username
     end
   end
 end
