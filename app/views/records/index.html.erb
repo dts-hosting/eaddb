@@ -9,7 +9,8 @@
 
 <%= render partial: "shared/search_form", locals: {
   url: records_path,
-  placeholder: "Search by EAD Identifier..."
+  placeholder: "Search by EAD Identifier...",
+  model: Record
 } %>
 
 <%= render partial: "shared/infinite_scroll", locals: {
@@ -19,5 +20,5 @@
   collection: @records,
   item_partial: "records/record",
   empty_message: "No records found.",
-  pagination_url: records_path(page: @pagy.next, query: params[:query])
+  pagination_url: records_path(page: @pagy.next, query: params[:query], status: params[:status])
 } %>

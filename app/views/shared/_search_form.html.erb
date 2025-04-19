@@ -8,8 +8,16 @@
                               placeholder: placeholder,
                               aria: { label: "Search" } %>
       </div>
+      <% if local_assigns[:model] && model.respond_to?(:statuses) %>
+        <div>
+          <%= form.select :status,
+                          model.statuses.keys.map { |status| [status.humanize, status] },
+                          { include_blank: "All Statuses", selected: params[:status] },
+                          { class: "form-select" } %>
+        </div>
+      <% end %>
       <%= button_tag "Search", type: "submit", class: "btn btn-primary", name: nil %>
-      <% if params[:query].present? %>
+      <% if params[:query].present? || params[:status].present? %>
         <%= link_to "Reset", url, class: "btn btn-outline-secondary" %>
       <% end %>
     <% end %>

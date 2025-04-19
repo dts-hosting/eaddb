@@ -8,6 +8,10 @@ class TransfersController < ApplicationController
       )
     end
 
+    if params[:status].present?
+      transfers = transfers.where(status: params[:status])
+    end
+
     @pagy, @transfers = pagy(transfers, limit: 20)
   end
 end

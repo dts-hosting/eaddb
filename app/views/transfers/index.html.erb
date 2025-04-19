@@ -12,7 +12,8 @@
 
 <%= render partial: "shared/search_form", locals: {
   url: transfers_path,
-  placeholder: "Search by EAD identifier..."
+  placeholder: "Search by EAD identifier...",
+  model: Transfer
 } %>
 
 <%= render partial: "shared/infinite_scroll", locals: {
@@ -22,6 +23,6 @@
   collection: @transfers,
   item_partial: "transfers/transfer",
   empty_message: "No transfers found.",
-  pagination_url: transfers_path(page: @pagy.next, query: params[:query]),
+  pagination_url: transfers_path(page: @pagy.next, query: params[:query], status: params[:status]),
   inline: true
 } %>
