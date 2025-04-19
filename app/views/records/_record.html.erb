@@ -1,19 +1,19 @@
 <%= tag.div id: dom_id(record), class: "card mb-3" do %>
   <div class="card-body">
     <div class="row align-items-center">
-      <div class="col-md-4 text-start">
+      <div class="col-md-3 text-start">
         <div class="d-flex align-items-center mb-1">
           <span class="text-muted small me-2">Record</span>
           <span class="badge <%= record_status_badge_class(record.status) %> text-light">
             <%= record.status %>
           </span>
         </div>
-          <span class="fw-medium"><%= record.identifier %></span>
+          <span class="fw-medium"><%= record.ead_identifier %></span>
       </div>
 
-      <div class="col-md-4 text-center">
-        <span class="text-muted small d-block mb-1">EAD Identifier</span>
-        <span class="fw-medium"><%= record.ead_identifier %></span>
+      <div class="col-md-3 text-center">
+        <span class="text-muted small d-block mb-1">Source</span>
+        <span class="fw-medium"><%= link_to record.collection.source.name, source_path(record.collection.source) %></span>
       </div>
 
       <div class="col-md-3 text-center">
@@ -21,7 +21,7 @@
         <span class="fw-medium"><%= link_to record.collection.name, collection_path(record.collection) %></span>
       </div>
 
-      <div class="col-md-1 text-end d-flex justify-content-end align-items-center">
+      <div class="col-md-3 text-end d-flex justify-content-end align-items-center">
         <div class="btn-group" role="group" aria-label="Collection actions">
           <%= link_to "#", class: "btn btn-outline-primary btn-sm", title: "View collection details" do %>
             <i class="bi bi-eye"></i>

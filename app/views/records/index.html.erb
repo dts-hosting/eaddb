@@ -1,0 +1,32 @@
+<div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4 mt-3">
+  <div>
+    <h2 class="fw-bold mb-0">Records</h2>
+    <p class="text-muted small">View imported records</p>
+  </div>
+  <div class="btn-group">
+  </div>
+</div>
+
+<%= render partial: "shared/search_form", locals: {
+  url: records_path,
+  placeholder: "Search by EAD Identifier..."
+} %>
+
+<div id="records">
+  <%= turbo_frame_tag :records_page, @pagy.page, target: :_top do %>
+    <% if @records.empty? && params[:query].present? %>
+      <div class="alert alert-info text-center">
+        <p class="mb-0">No records found.</p>
+      </div>
+    <% elsif @records.empty? %>
+    <% else %>
+      <%= render partial: "records/record", collection: @records %>
+    <% end %>
+
+    <% if @pagy.next %>
+      <%= turbo_frame_tag :records_page, @pagy.next, src: records_path(page: @pagy.next, query: params[:query]), loading: :lazy, target: :_top do %>
+        <%= tag.div "Loading..." %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

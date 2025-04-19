@@ -34,4 +34,6 @@ Rails.application.routes.draw do
       post :run
     end
   end
+
+  resources :records, only: [:index]
 end
