@@ -3,7 +3,7 @@ class RecordsController < ApplicationController
     records = Record.none
 
     if params[:query].present? || params[:status].present?
-      records = Record.all
+      records = Record.all.order(:ead_identifier)
 
       if params[:query].present?
         records = records.where(
