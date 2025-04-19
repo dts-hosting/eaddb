@@ -12,21 +12,12 @@
   placeholder: "Search by EAD Identifier..."
 } %>
 
-<div id="records">
-  <%= turbo_frame_tag :records_page, @pagy.page, target: :_top do %>
-    <% if @records.empty? && params[:query].present? %>
-      <div class="alert alert-info text-center">
-        <p class="mb-0">No records found.</p>
-      </div>
-    <% elsif @records.empty? %>
-    <% else %>
-      <%= render partial: "records/record", collection: @records %>
-    <% end %>
-
-    <% if @pagy.next %>
-      <%= turbo_frame_tag :records_page, @pagy.next, src: records_path(page: @pagy.next, query: params[:query]), loading: :lazy, target: :_top do %>
-        <%= tag.div "Loading..." %>
-      <% end %>
-    <% end %>
-  <% end %>
-</div>
+<%= render partial: "shared/infinite_scroll", locals: {
+  container_id: "records",
+  frame_id: :records_page,
+  pagy: @pagy,
+  collection: @records,
+  item_partial: "records/record",
+  empty_message: "No records found.",
+  pagination_url: records_path(page: @pagy.next, query: params[:query])
+} %>

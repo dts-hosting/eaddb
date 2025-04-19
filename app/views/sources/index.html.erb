@@ -19,20 +19,13 @@
   placeholder: "Search by name..."
 } %>
 
-<div id="sources">
-  <%= turbo_frame_tag :sources_page, @pagy.page, target: :_top do %>
-    <% if @sources.empty? %>
-      <div class="alert alert-info text-center">
-        <p class="mb-0">No sources found.</p>
-      </div>
-    <% else %>
-      <%= render partial: "sources/source", collection: @sources, locals: {inline: true} %>
-    <% end %>
-
-    <% if @pagy.next %>
-      <%= turbo_frame_tag :sources_page, @pagy.next, src: sources_path(page: @pagy.next), loading: :lazy, target: :_top do %>
-        <%= tag.div "Loading..." %>
-      <% end %>
-    <% end %>
-  <% end %>
-</div>
+<%= render partial: "shared/infinite_scroll", locals: {
+  container_id: "sources",
+  frame_id: :sources_page,
+  pagy: @pagy,
+  collection: @sources,
+  item_partial: "sources/source",
+  empty_message: "No sources found.",
+  pagination_url: sources_path(page: @pagy.next, query: params[:query]),
+  inline: true
+} %>

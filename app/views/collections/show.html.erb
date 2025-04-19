@@ -60,22 +60,14 @@
       <h5 class="card-title mb-0">Destinations</h5>
     </div>
 
-    <div id="destinations">
-      <%= turbo_frame_tag :destinations_page, @pagy.page, target: :_top do %>
-        <% if @destinations.empty? %>
-          <div class="alert alert-info text-center">
-            <p class="mb-0">No destinations found.</p>
-          </div>
-        <% else %>
-          <%= render partial: "destinations/destination", collection: @destinations %>
-        <% end %>
-
-        <% if @pagy.next %>
-          <%= turbo_frame_tag :destinations_page, @pagy.next, src: collection_path(page: @pagy.next), loading: :lazy, target: :_top do %>
-            <%= tag.div "Loading..." %>
-          <% end %>
-        <% end %>
-      <% end %>
-    </div>
+    <%= render partial: "shared/infinite_scroll", locals: {
+      container_id: "destinations",
+      frame_id: :destinations_page,
+      pagy: @pagy,
+      collection: @destinations,
+      item_partial: "destinations/destination",
+      empty_message: "No destinations found.",
+      pagination_url: collection_path(page: @pagy.next, query: params[:query])
+    } %>
   </div>
 </div>

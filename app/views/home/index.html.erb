@@ -15,20 +15,13 @@
   placeholder: "Search by EAD identifier..."
 } %>
 
-<div id="transfers">
-  <%= turbo_frame_tag :transfers_page, @pagy.page, target: :_top do %>
-    <% if @transfers.empty? %>
-      <div class="alert alert-info text-center">
-        <p class="mb-0">No transfers found.</p>
-      </div>
-    <% else %>
-      <%= render partial: "transfers/transfer", collection: @transfers, locals: {inline: true} %>
-    <% end %>
-
-    <% if @pagy.next %>
-      <%= turbo_frame_tag :transfers_page, @pagy.next, src: root_path(page: @pagy.next), loading: :lazy, target: :_top do %>
-        <%= tag.div "Loading..." %>
-      <% end %>
-    <% end %>
-  <% end %>
-</div>
+<%= render partial: "shared/infinite_scroll", locals: {
+  container_id: "transfers",
+  frame_id: :transfers_page,
+  pagy: @pagy,
+  collection: @transfers,
+  item_partial: "transfers/transfer",
+  empty_message: "No transfers found.",
+  pagination_url: root_path(page: @pagy.next, query: params[:query]),
+  inline: true
+} %>

@@ -1,0 +1,17 @@
+<div id="<%= container_id %>">
+  <%= turbo_frame_tag frame_id, pagy.page, target: :_top do %>
+    <% if collection.empty? %>
+      <div class="alert alert-info text-center">
+        <p class="mb-0"><%= empty_message %></p>
+      </div>
+    <% else %>
+      <%= render partial: item_partial, collection: collection, locals: local_assigns.slice(:inline) %>
+    <% end %>
+
+    <% if pagy.next %>
+      <%= turbo_frame_tag frame_id, pagy.next, src: pagination_url, loading: :lazy, target: :_top do %>
+        <%= tag.div "Loading..." %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>
