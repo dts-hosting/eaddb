@@ -36,4 +36,5 @@ Rails.application.routes.draw do
   end
 
   resources :records, only: [:index]
+  resources :transfers, only: [:index]
 end

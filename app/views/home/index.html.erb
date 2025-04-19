@@ -1,27 +1,13 @@
-<div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4 mt-3">
-  <div>
-    <h2 class="fw-bold mb-0">Latest Transfers</h2>
-    <p class="text-muted small">List of most recent transfer activities</p>
-  </div>
-  <div class="btn-group">
-    <button class="btn btn-outline-secondary btn-sm" title="Refresh transfers" onclick="window.location.reload()">
-      <i class="bi bi-arrow-repeat"></i>
-    </button>
+<div class="dashboard-container">
+  <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4 mt-3">
+    <div>
+      <h2 class="fw-bold mb-0">Dashboard</h2>
+      <p class="text-muted small">System overview and statistics</p>
+    </div>
+    <div class="btn-group">
+      <button class="btn btn-outline-secondary btn-sm" title="Refresh dashboard" onclick="window.location.reload()">
+        <i class="bi bi-arrow-repeat"></i> Refresh
+      </button>
+    </div>
   </div>
 </div>
-
-<%= render partial: "shared/search_form", locals: {
-  url: root_path,
-  placeholder: "Search by EAD identifier..."
-} %>
-
-<%= render partial: "shared/infinite_scroll", locals: {
-  container_id: "transfers",
-  frame_id: :transfers_page,
-  pagy: @pagy,
-  collection: @transfers,
-  item_partial: "transfers/transfer",
-  empty_message: "No transfers found.",
-  pagination_url: root_path(page: @pagy.next, query: params[:query]),
-  inline: true
-} %>
