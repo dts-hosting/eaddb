@@ -73,7 +73,7 @@
     <div class="card-body">
       <div id="source_<%= @source.id %>_progress_message">
         <%= render partial: "progress_message", locals: {
-          message: "No import currently running",
+          message: "No current status updates.",
           timestamp: Time.current.strftime('%H:%M:%S')
         } %>
       </div>

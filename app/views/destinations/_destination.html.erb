@@ -4,27 +4,27 @@
       <div class="col-md-3 text-start">
         <div class="d-flex align-items-center mb-1">
           <span class="text-muted small me-2">Destination</span>
-          <span class="badge bg-info"><%= destination.type.demodulize %></span>
+          <span class="badge bg-info"><%= destination.class.display_name %></span>
         </div>
         <span class="fw-medium"><%= destination.name %></span>
       </div>
 
-      <div class="col-md-3 text-center">
-        <span class="text-muted small d-block mb-1">Identifier</span>
-        <span class="fw-medium"><%= destination.identifier %></span>
+      <div class="col-md-3 text-start">
+        <span class="text-muted small d-block mb-1">Source</span>
+        <span class="fw-medium"><%= link_to destination.collection.source.name, source_path(destination.collection.source) %></span>
       </div>
 
-      <div class="col-md-3 text-center">
+      <div class="col-md-3 text-start">
+        <span class="text-muted small d-block mb-1">Collection</span>
+        <span class="fw-medium"><%= link_to destination.collection.name, destination.collection %></span>
+      </div>
+
+      <div class="col-md-2 text-start">
         <span class="text-muted small d-block mb-1">Last Updated</span>
-        <span class="fw-medium"><%= time_ago_in_words(destination.updated_at) %> ago</span>
+        <span class="fw-medium"><%= destination.updated_at.strftime("%B %d, %Y at %H:%M") %></span>
       </div>
 
-      <div class="col-md-3 text-end d-flex justify-content-between align-items-center">
-        <div>
-          <span class="text-muted small d-block mb-1">Date Added</span>
-          <span class="fw-medium"><%= time_ago_in_words(destination.created_at) %> ago</span>
-        </div>
-
+      <div class="col-md-1 text-end d-flex justify-content-end align-items-center">
         <div class="btn-group" role="group" aria-label="Destination actions">
           <%= link_to edit_destination_path(destination), class: "btn btn-outline-success btn-sm border-end-0", title: "Edit destination" do %>
             <i class="bi bi-pencil"></i>

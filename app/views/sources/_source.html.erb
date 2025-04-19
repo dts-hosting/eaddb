@@ -9,24 +9,24 @@
         <span class="fw-medium"><%= source.name %></span>
       </div>
 
-      <div class="col-md-3 text-center">
+      <div class="col-md-3 text-start">
         <span class="text-muted small d-block mb-1">URL</span>
         <a href="<%= source.url %>" target="_blank" class="text-truncate d-inline-block" style="max-width: 250px;">
           <%= source.url %>
         </a>
       </div>
 
-      <div class="col-md-3 text-center">
+      <div class="col-md-3 text-start">
         <span class="text-muted small d-block mb-1">Records</span>
         <span class="fw-medium"><%= number_with_delimiter(source.total_records_count) || 0 %></span>
       </div>
 
-      <div class="col-md-3 text-end d-flex justify-content-between align-items-center">
-        <div>
-          <span class="text-muted small d-block mb-1">Last Updated</span>
-          <span class="fw-medium"><%= time_ago_in_words(source.updated_at) %> ago</span>
-        </div>
+      <div class="col-md-2 text-start">
+        <span class="text-muted small d-block mb-1">Last Updated</span>
+        <span class="fw-medium"><%= source.updated_at.strftime("%B %d, %Y at %H:%M") %></span>
+      </div>
 
+      <div class="col-md-1 text-end d-flex justify-content-end align-items-center">
         <div class="btn-group" role="group" aria-label="Source actions">
           <%= link_to edit_source_path(source), class: "btn btn-outline-success btn-sm border-end-0", title: "Edit source" do %>
             <i class="bi bi-pencil"></i>
