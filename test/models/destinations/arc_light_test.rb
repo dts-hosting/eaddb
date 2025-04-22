@@ -34,9 +34,11 @@ module Destinations
     end
 
     test "enqueues correct job" do
+      collection = create_collection
+      create_record(collection: collection)
       destination = create_destination(
         type: :arc_light,
-        attributes: {collection: create_collection}
+        attributes: {collection: collection, url: "https://example.com"}
       )
 
       assert_enqueued_with(job: ArcLightSendRecordsJob) do

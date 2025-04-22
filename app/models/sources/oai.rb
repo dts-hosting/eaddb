@@ -18,17 +18,15 @@ module Sources
       "oai_ead"
     end
 
-    def run
-      return unless ok_to_run?
-
-      OaiGetRecordsJob.perform_later(self)
-    end
-
     def self.display_name
       "OAI"
     end
 
     private
+
+    def perform_run
+      OaiGetRecordsJob.perform_later(self)
+    end
 
     def url_must_end_with_oai
       return if url.blank? || url.end_with?("/oai")

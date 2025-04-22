@@ -19,12 +19,21 @@ class DestinationTest < ActiveSupport::TestCase
   end
 
   test "name must be unique per type" do
-    create_destination(type: :arc_light, attributes: {name: "Shared Name", collection: @collection})
+    create_destination(
+      type: :arc_light,
+      attributes: {name: "Shared Name", collection: @collection, url: "https://example.com"}
+    )
 
     duplicate = Destinations::ArcLight.new(name: "Shared Name", url: "https://example.com", collection: @collection)
     assert_not duplicate.valid?
 
-    different_type = Destinations::S3Bucket.new(name: "Shared Name", url: "https://example.com", collection: @collection)
+    different_type = Destinations::S3Bucket.new(
+      name: "Shared Name",
+      url: "https://example.com",
+      collection: @collection,
+      username: "user",
+      password: "password"
+    )
     assert different_type.valid?
   end
 

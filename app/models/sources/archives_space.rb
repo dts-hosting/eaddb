@@ -14,17 +14,15 @@ module Sources
       username.present? && password.present? && collections.any?
     end
 
-    def run
-      return unless ok_to_run?
-
-      ArchivesSpaceGetRecordsJob.perform_later(self)
-    end
-
     def self.display_name
       "ArchivesSpace"
     end
 
     private
+
+    def perform_run
+      ArchivesSpaceGetRecordsJob.perform_later(self)
+    end
 
     def url_must_end_with_api
       return if url.blank? || url.end_with?("/api")

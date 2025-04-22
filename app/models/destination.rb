@@ -15,7 +15,7 @@ class Destination < ApplicationRecord
   after_create_commit :create_transfers_for_collection_records
 
   def ok_to_run?
-    raise NotImplementedError
+    raise NotImplementedError, "#{self} must implement ok_to_run?"
   end
 
   def pending_deletes
@@ -39,7 +39,9 @@ class Destination < ApplicationRecord
   end
 
   def run(transfer_ids = nil)
-    raise NotImplementedError
+    return unless ok_to_run?
+
+    perform_run(transfer_ids)
   end
 
   private
@@ -48,6 +50,10 @@ class Destination < ApplicationRecord
     transferables.find_each do |record|
       transfers.create!(record: record)
     end
+  end
+
+  def perform_run(transfer_ids = nil)
+    raise NotImplementedError, "#{self} must implement perform_run"
   end
 
   def transferables

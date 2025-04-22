@@ -6,7 +6,7 @@ module Destinations
       collection = create_collection
       destination = create_destination(
         type: :s3_bucket,
-        attributes: {collection: collection}
+        attributes: {collection: collection, username: "user", password: "password"}
       )
 
       assert destination.valid?

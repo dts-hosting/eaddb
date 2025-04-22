@@ -43,7 +43,7 @@ class Source < ApplicationRecord
   end
 
   def ok_to_run?
-    raise NotImplementedError
+    raise NotImplementedError, "#{self} must implement ok_to_run?"
   end
 
   def recalculate_total_records_count!
@@ -51,7 +51,9 @@ class Source < ApplicationRecord
   end
 
   def run
-    raise NotImplementedError
+    return unless ok_to_run?
+
+    perform_run
   end
 
   def self.display_name
@@ -65,6 +67,10 @@ class Source < ApplicationRecord
       errors.add(:base, "Cannot delete source while collections exist.")
       throw(:abort)
     end
+  end
+
+  def perform_run
+    raise NotImplementedError, "#{self} must implement perform_run"
   end
 
   def render_progress_message(message)

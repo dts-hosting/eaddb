@@ -6,7 +6,7 @@ module Destinations
       collection = create_collection
       destination = create_destination(
         type: :git_repository,
-        attributes: {collection: collection}
+        attributes: {collection: collection, password: "password"}
       )
 
       assert destination.valid?
