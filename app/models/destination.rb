@@ -9,6 +9,8 @@ class Destination < ApplicationRecord
   validates :name, presence: true, uniqueness: {scope: :type}
   validates :url, presence: true, format: {with: URI::DEFAULT_PARSER.make_regexp, message: "must be a valid URL"}
 
+  attr_readonly :type
+
   encrypts :username
   encrypts :password
 

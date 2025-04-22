@@ -1,4 +1,5 @@
 class Source < ApplicationRecord
+  include Broadcastable
   include Descendents
 
   has_many :collections, dependent: nil
@@ -15,16 +16,6 @@ class Source < ApplicationRecord
   encrypts :password
 
   before_destroy :ensure_no_collections
-
-  broadcasts_refreshes
-
-  def broadcast_import_progress(message)
-    Turbo::StreamsChannel.broadcast_update_to(
-      self,
-      target: "source_#{id}_progress_message",
-      html: render_progress_message(message)
-    )
-  end
 
   def build_validation_url
     raise NotImplementedError
@@ -71,16 +62,6 @@ class Source < ApplicationRecord
 
   def perform_run
     raise NotImplementedError, "#{self} must implement perform_run"
-  end
-
-  def render_progress_message(message)
-    ApplicationController.renderer.render(
-      partial: "sources/progress_message",
-      locals: {
-        message: message,
-        timestamp: Time.current.strftime("%H:%M:%S")
-      }
-    )
   end
 
   def update_total_records_count
