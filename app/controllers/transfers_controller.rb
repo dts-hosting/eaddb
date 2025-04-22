@@ -1,17 +1,18 @@
 class TransfersController < ApplicationController
+  include Filterable
+
   def index
-    transfers = Transfer.includes(:destination, :record).order(updated_at: :desc)
-
-    if params[:query].present?
-      transfers = transfers.joins(:record).where(
-        "records.ead_identifier LIKE ?", "%#{params[:query]}%"
-      )
-    end
-
-    if params[:status].present?
-      transfers = transfers.where(status: params[:status])
-    end
-
+    transfers = apply_filters(Transfer.includes(:destination, :record), params)
     @pagy, @transfers = pagy(transfers, limit: 20)
+  end
+
+  private
+
+  def order_by
+    {updated_at: :desc}
+  end
+
+  def query_filter(scope, query)
+    scope.joins(:record).where("records.ead_identifier LIKE ?", "%#{query}%")
   end
 end

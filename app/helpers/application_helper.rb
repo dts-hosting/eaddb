@@ -1,4 +1,5 @@
 module ApplicationHelper
+  include Filterable
   include Pagy::Frontend
 
   def safe_external_link(url, link_text = nil)

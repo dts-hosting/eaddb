@@ -1,21 +1,27 @@
 class RecordsController < ApplicationController
+  include Filterable
+
   def index
-    records = Record.none
-
-    if params[:query].present? || params[:status].present?
-      records = Record.all.order(:ead_identifier)
-
-      if params[:query].present?
-        records = records.where(
-          "records.ead_identifier LIKE ?", "%#{params[:query]}%"
-        )
-      end
-
-      if params[:status].present?
-        records = records.where(status: params[:status])
-      end
+    records = if filter_params_present?
+      apply_filters(Record.all, params)
+    else
+      Record.none
     end
 
     @pagy, @records = pagy(records, limit: 20)
+  end
+
+  private
+
+  def collection_filter(scope, collection_name)
+    scope.joins(:collection).where("collections.name LIKE ?", "%#{collection_name}%")
+  end
+
+  def order_by
+    :ead_identifier
+  end
+
+  def query_filter(scope, query)
+    scope.where("records.ead_identifier LIKE ?", "%#{query}%")
   end
 end

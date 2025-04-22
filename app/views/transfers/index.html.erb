@@ -23,6 +23,8 @@
   collection: @transfers,
   item_partial: "transfers/transfer",
   empty_message: "No transfers found.",
-  pagination_url: transfers_path(page: @pagy.next, query: params[:query], status: params[:status]),
+  pagination_url: transfers_path(
+    page: @pagy.next, query: params[:query], collection: params[:collection], status: params[:status]
+  ),
   inline: true
 } %>
