@@ -1,4 +1,3 @@
-# test/system/sources_search_test.rb
 require "application_system_test_case"
 
 class SourcesSearchTest < ApplicationSystemTestCase
