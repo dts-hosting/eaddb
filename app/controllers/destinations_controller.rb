@@ -53,9 +53,9 @@ class DestinationsController < ApplicationController
   def run
     if @destination.ok_to_run?
       @destination.run
-      redirect_to destination_path(@destination), notice: "Job has been queued for this destination."
+      redirect_to destination_path(@destination)
     else
-      redirect_to destination_path(@destination), alert: "Could not queue job for this destination."
+      redirect_to destination_path(@destination), alert: "Preconditions not met. See destination for details."
     end
   end
 

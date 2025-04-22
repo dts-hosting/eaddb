@@ -1,4 +1,5 @@
-<!-- app/views/destinations/show.html.erb -->
+<%= turbo_stream_from @destination %>
+
 <div class="container py-4">
   <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4 mt-3">
     <div>
@@ -54,4 +55,17 @@
       </div>
     </div>
   </div>
+
+  <%= turbo_frame_tag dom_id(@destination) do %>
+    <div class="card mt-3">
+      <div class="card-body">
+        <div id="<%= dom_id(@destination) %>_message">
+          <%= render partial: "message", locals: {
+            message: "No current messages.",
+            timestamp: Time.current.strftime('%H:%M:%S')
+          } %>
+        </div>
+      </div>
+    </div>
+  <% end %>
 </div>

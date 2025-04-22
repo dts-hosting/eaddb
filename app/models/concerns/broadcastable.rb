@@ -1,5 +1,6 @@
 module Broadcastable
   extend ActiveSupport::Concern
+  include ActionView::RecordIdentifier
 
   included do
     broadcasts_refreshes
@@ -8,7 +9,7 @@ module Broadcastable
   def broadcast_message(message)
     Turbo::StreamsChannel.broadcast_update_to(
       self,
-      target: "#{resolve_base_type}_#{id}_message",
+      target: "#{dom_id(self)}_message",
       html: render_message(message)
     )
   end

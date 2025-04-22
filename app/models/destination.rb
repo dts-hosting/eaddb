@@ -1,4 +1,5 @@
 class Destination < ApplicationRecord
+  include Broadcastable
   include Descendents
 
   belongs_to :collection

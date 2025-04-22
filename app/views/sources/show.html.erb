@@ -71,7 +71,7 @@
 <%= turbo_frame_tag dom_id(@source) do %>
   <div class="card mt-3">
     <div class="card-body">
-      <div id="source_<%= @source.id %>_message">
+      <div id="<%= dom_id(@source) %>_message">
         <%= render partial: "message", locals: {
           message: "No current messages.",
           timestamp: Time.current.strftime('%H:%M:%S')

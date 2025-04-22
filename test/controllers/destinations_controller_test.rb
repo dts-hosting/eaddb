@@ -103,7 +103,7 @@ class DestinationsControllerTest < ActionDispatch::IntegrationTest
     post run_destination_path(@destination)
 
     assert_redirected_to destination_path(@destination)
-    assert_equal "Could not queue job for this destination.", flash[:alert]
+    assert_equal "Preconditions not met. See destination for details.", flash[:alert]
   end
 
   test "should start job when preconditions are met" do
@@ -112,6 +112,5 @@ class DestinationsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_redirected_to destination_path(@destination)
-    assert_equal "Job has been queued for this destination.", flash[:notice]
   end
 end

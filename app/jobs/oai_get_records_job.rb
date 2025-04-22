@@ -1,10 +1,10 @@
 class OaiGetRecordsJob < ApplicationJob
-  limits_concurrency to: 1, key: ->(source) { source.url }, duration: 2.hours
+  limits_concurrency to: 1, key: ->(source) { source.url }, duration: 1.hour
   queue_as :default
 
   def perform(source)
     Rails.logger.info "Started import from: #{source.url} #{Time.current}"
-    source.broadcast_message("Started import from #{source.url}")
+    source.broadcast_message("Started import from: #{source.url}")
 
     records_processed = 0
     last_update_time = Time.current
@@ -22,6 +22,6 @@ class OaiGetRecordsJob < ApplicationJob
     sleep 3
     source.touch # now refresh the page
 
-    Rails.logger.info "Completed OAI Get Records: #{source.url} #{Time.current}"
+    Rails.logger.info "Completed import from: #{source.url} #{Time.current}"
   end
 end
