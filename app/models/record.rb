@@ -17,6 +17,11 @@ class Record < ApplicationRecord
   scope :with_ead, -> { where(status: "active").where.not(ead_identifier: nil) }
   scope :without_ead, -> { where(ead_identifier: nil) }
 
+  def resend
+    reset_transfers_status
+    transfer
+  end
+
   # transfer this record to all destinations
   def transfer
     return if failed?
