@@ -7,7 +7,7 @@ module Descendents
       descendants = ObjectSpace.each_object(Class).select { |klass| klass < self }
 
       descendants.map do |klass|
-        [klass.display_name, klass.to_s]
+        [klass.display_name, klass]
       end.to_h
     end
 

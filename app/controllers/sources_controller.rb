@@ -18,7 +18,7 @@ class SourcesController < ApplicationController
   def new
     source_type = Source.descendants_by_display_name[params[:type]]
     if source_type
-      @source = source_type.constantize.new
+      @source = source_type.new
     else
       redirect_to sources_url, alert: "Invalid source type."
     end

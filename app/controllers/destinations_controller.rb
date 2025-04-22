@@ -18,7 +18,7 @@ class DestinationsController < ApplicationController
   def new
     destination_type = Destination.descendants_by_display_name[params[:type]]
     if destination_type
-      @destination = destination_type.constantize.new
+      @destination = destination_type.new
     else
       redirect_to destinations_url, alert: "Invalid destination type."
     end

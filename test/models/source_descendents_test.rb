@@ -50,13 +50,13 @@ class SourceDescendentsTest < ActiveSupport::TestCase
   test "descendants_by_display_name returns hash of display names to class names" do
     descendants = Source.descendants_by_display_name
 
-    assert_includes descendants.values, TestSourceSubclass.to_s
-    assert_includes descendants.values, AnotherTestSourceSubclass.to_s
+    assert_includes descendants.values, TestSourceSubclass
+    assert_includes descendants.values, AnotherTestSourceSubclass
 
     assert_includes descendants.keys, "Test Source"
     assert_includes descendants.keys, "Another Test Source"
 
-    assert_equal TestSourceSubclass.to_s, descendants["Test Source"]
-    assert_equal AnotherTestSourceSubclass.to_s, descendants["Another Test Source"]
+    assert_equal TestSourceSubclass, descendants["Test Source"]
+    assert_equal AnotherTestSourceSubclass, descendants["Another Test Source"]
   end
 end
