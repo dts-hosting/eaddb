@@ -83,4 +83,7 @@ bundle exec kamal app exec -i --reuse bash -d qa
 
 # connect to the container and access the console
 bundle exec kamal app exec -i -d qa "bin/rails console"
+
+# follow logs
+bundle exec kamal app logs -f -d qa
 ```
