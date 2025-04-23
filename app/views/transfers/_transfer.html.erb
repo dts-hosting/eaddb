@@ -8,10 +8,10 @@
             <%= transfer.status.capitalize %>
           </span>
         </div>
-        <span class="text-monospace fw-medium"><%= transfer.record.ead_identifier %></span>
+        <span class="text-monospace fw-medium"><%= transfer.record.ead_identifier || "No EAD ID" %></span>
       </div>
 
-      <div class="col-md-3 text-start">
+      <div class="col-md-2 text-start">
         <span class="text-muted small d-block mb-1">Last Updated</span>
         <span class="fw-medium"><%= transfer.updated_at.strftime("%b %d, %Y %H:%M") %></span>
       </div>
@@ -29,6 +29,14 @@
           </span>
         </div>
         <span class="fw-medium"><%= link_to transfer.destination.name, destination_path(transfer.destination) %></span>
+      </div>
+
+      <div class="col-md-1 text-end d-flex justify-content-end align-items-center">
+        <div class="btn-group" role="group" aria-label="Record actions">
+          <%= link_to "#", class: "btn btn-outline-primary btn-sm", title: "View collection details" do %>
+            <i class="bi bi-eye"></i>
+          <% end %>
+        </div>
       </div>
     </div>
   </div>
