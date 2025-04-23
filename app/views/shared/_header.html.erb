@@ -9,19 +9,29 @@
         <div class="d-flex align-items-center me-auto">
           <ul class="navbar-nav flex-row me-auto">
             <li class="nav-item me-3">
-              <%= link_to "Home", root_path, class: "nav-link" %>
+              <%= link_to root_path, class: "nav-link" do %>
+                <i class="bi bi-house-door"></i> Home
+              <% end %>
             </li>
             <li class="nav-item me-3">
-              <%= link_to "Sources", sources_path, class: "nav-link" %>
+              <%= link_to sources_path, class: "nav-link" do %>
+                <i class="bi bi-database"></i> Sources
+              <% end %>
             </li>
             <li class="nav-item me-3">
-              <%= link_to "Destinations", destinations_path, class: "nav-link" %>
+              <%= link_to destinations_path, class: "nav-link" do %>
+                <i class="bi bi-folder"></i> Destinations
+              <% end %>
             </li>
             <li class="nav-item me-3">
-              <%= link_to "Records", records_path, class: "nav-link" %>
+              <%= link_to records_path, class: "nav-link" do %>
+                <i class="bi bi-collection"></i> Records
+              <% end %>
             </li>
             <li class="nav-item me-3">
-              <%= link_to "Transfers", transfers_path, class: "nav-link" %>
+              <%= link_to transfers_path, class: "nav-link" do %>
+                <i class="bi bi-send"></i> Transfers
+              <% end %>
             </li>
           </ul>
         </div>

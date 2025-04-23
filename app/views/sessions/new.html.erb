@@ -31,6 +31,16 @@
               <%= form.submit "Sign in", class: "btn btn-primary btn-lg" %>
             </div>
           <% end %>
+
+          <% if Rails.env.development? %>
+            <div class="card-body border-top mt-3 text-center">
+              <h6 class="mb-2 text-muted">Development Credentials</h6>
+              <div class="small">
+                <p class="mb-1"><strong>Username:</strong> admin@eaddb.org</p>
+                <p class="mb-0"><strong>Password:</strong> password</p>
+              </div>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>
