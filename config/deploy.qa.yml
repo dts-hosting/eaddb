@@ -8,4 +8,6 @@ servers:
     hosts:
       - eaddb.lyrasistechnology.org
     env:
+      JOB_CONCURRENCY: 2
       SOLID_QUEUE_IN_PUMA: true
+      WEB_CONCURRENCY: 2
