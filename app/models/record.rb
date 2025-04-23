@@ -17,6 +17,12 @@ class Record < ApplicationRecord
   scope :with_ead, -> { where(status: "active").where.not(ead_identifier: nil) }
   scope :without_ead, -> { where(ead_identifier: nil) }
 
+  # delete this record from all destinations
+  def rescind
+    # TODO: set status to deleted, message to "Rescinded"
+    # transfer
+  end
+
   def resend
     reset_transfers_status
     transfer
