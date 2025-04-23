@@ -1,20 +1,38 @@
 module Utils
   module Ead
-    def ensure_eadid(xml_element)
+    XPATH_FOR_EADHEADER = "//eadheader"
+    XPATH_FOR_EADID = "//eadheader/eadid"
+    XPATH_FOR_REPOSITORY_NAME = "//repository/corpname"
+    XPATH_FOR_ROOT = "//ead"
+    XPATH_FOR_UNITID = "//ead/archdesc/did/unitid"
+
+    def extract_ead(xml_element)
+      return if xml_element.nil?
+
+      xml_element.elements[XPATH_FOR_ROOT]
+    end
+
+    def extract_eadid(xml_element)
+      xml_text_value(xml_element, XPATH_FOR_EADID)
+    end
+
+    def extract_repository_name(xml_element)
+      xml_text_value(xml_element, XPATH_FOR_REPOSITORY_NAME)
+    end
+
+    def find_ead_identifier(xml_element)
       return if xml_element.nil?
 
       eadid = extract_eadid(xml_element)
       return eadid if eadid
 
-      unitid = xml_text_value(xml_element, "//ead/archdesc/did/unitid")
-      return nil if unitid.nil?
+      unitid = xml_text_value(xml_element, XPATH_FOR_UNITID)
+      eadid_element = REXML::XPath.first(xml_element, XPATH_FOR_EADID)
 
-      eadid_element = REXML::XPath.first(xml_element, "//eadheader/eadid")
-
-      if eadid_element
+      if unitid && eadid_element
         eadid_element.text = unitid
-      else
-        eadheader = REXML::XPath.first(xml_element, "//eadheader")
+      elsif unitid
+        eadheader = REXML::XPath.first(xml_element, XPATH_FOR_EADHEADER)
         if eadheader
           eadid_element = REXML::Element.new("eadid")
           eadid_element.text = unitid
@@ -25,20 +43,6 @@ module Utils
       end
 
       unitid
-    end
-
-    def extract_ead(xml_element)
-      return if xml_element.nil?
-
-      xml_element.elements["/metadata/ead"] || xml_element.elements["//ead"]
-    end
-
-    def extract_eadid(xml_element)
-      xml_text_value(xml_element, "//eadheader/eadid")
-    end
-
-    def extract_repository_name(xml_element)
-      xml_text_value(xml_element, "//repository/corpname")
     end
 
     def xml_text_value(xml_element, xpath)

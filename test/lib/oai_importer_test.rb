@@ -7,8 +7,8 @@ class OaiImporterTest < ActiveSupport::TestCase
   end
 
   {
-    ensure_eadid: {
-      method_name: :ensure_eadid,
+    find_ead_identifier: {
+      method_name: :find_ead_identifier,
       cases: [
         {
           name: "returns nil when xml_element is nil",

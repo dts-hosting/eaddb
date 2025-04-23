@@ -44,7 +44,8 @@ class OaiImporter
       return
     end
 
-    eadid = ensure_eadid(ead_element)
+    eadid = find_ead_identifier(ead_element)
+    eadid = eadid.gsub(/\s/, ".") if eadid.present?
     attributes = build_record_attributes(datestamp, corpname, eadid)
     update_record(record, xml_to_string(ead_element), attributes)
   rescue => e
