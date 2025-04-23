@@ -19,7 +19,7 @@
   pagy: @pagy,
   collection: @records,
   item_partial: "records/record",
-  empty_message: "No records found.",
+  empty_message: "Missing search query or no records found.",
   pagination_url: records_path(
     page: @pagy.next, query: params[:query], collection: params[:collection], status: params[:status]
   )
