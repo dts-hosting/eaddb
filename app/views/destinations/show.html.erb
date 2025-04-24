@@ -60,7 +60,7 @@
     <div class="card mt-3">
       <div class="card-body">
         <div id="<%= dom_id(@destination) %>_message">
-          <%= render partial: "message", locals: {
+          <%= render partial: "shared/message", locals: {
             message: "No current messages.",
             timestamp: Time.current.strftime('%H:%M:%S')
           } %>

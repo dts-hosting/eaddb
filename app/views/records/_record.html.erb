@@ -8,7 +8,7 @@
             <%= record.status %>
           </span>
         </div>
-          <span class="fw-medium"><%= record.ead_identifier || "No EAD ID" %></span>
+        <span class="fw-medium"><%= record.ead_identifier || "No EAD ID" %></span>
       </div>
 
       <div class="col-md-3 text-start">
@@ -28,10 +28,10 @@
 
       <div class="col-md-1 text-end d-flex justify-content-end align-items-center">
         <div class="btn-group" role="group" aria-label="Record actions">
-          <%= link_to "#", class: "btn btn-outline-primary btn-sm", title: "View collection details" do %>
+          <%= link_to record_path(record), class: "btn btn-outline-primary btn-sm", title: "View collection details" do %>
             <i class="bi bi-eye"></i>
           <% end %>
-          <%= link_to "#", class: "btn btn-outline-danger btn-sm", data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete this collection?" }, title: "Delete record" do %>
+          <%= link_to record_path(record), class: "btn btn-outline-danger btn-sm", data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete this collection?" }, title: "Delete record" do %>
             <i class="bi bi-trash"></i>
           <% end %>
         </div>

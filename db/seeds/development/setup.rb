@@ -24,7 +24,7 @@ source = Sources::Oai.find_or_create_by!(name: "Lyrasis OAI", url: "https://arch
   ) do |d|
     d.identifier = collection.name.downcase.gsub(/\s/, "-")
     d.config.attach(
-      io: File.open(Rails.root.join("test/fixtures/files/repositories.yml")),
+      io: Rails.root.join("test/fixtures/files/repositories.yml").open,
       filename: "repositories.yml",
       content_type: "application/yaml"
     )

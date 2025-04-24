@@ -4,6 +4,8 @@ class Transfer < ApplicationRecord
 
   enum :status, {pending: "pending", succeeded: "succeeded", failed: "failed"}, default: :pending
 
+  broadcasts_refreshes
+
   def failed!(error_message = nil)
     update!(status: "failed", message: error_message)
   end

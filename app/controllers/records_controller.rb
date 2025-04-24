@@ -1,5 +1,6 @@
 class RecordsController < ApplicationController
   include Filterable
+  before_action :set_record, only: [:show]
 
   def index
     records = if filter_params_present?
@@ -9,6 +10,10 @@ class RecordsController < ApplicationController
     end
 
     @pagy, @records = pagy(records, limit: 20)
+  end
+
+  def show
+    @pagy, @transfers = pagy(@record.transfers, limit: 5)
   end
 
   private
@@ -23,5 +28,9 @@ class RecordsController < ApplicationController
 
   def query_filter(scope, query)
     scope.where("records.ead_identifier LIKE ?", "%#{query}%")
+  end
+
+  def set_record
+    @record = Record.find(params[:id])
   end
 end

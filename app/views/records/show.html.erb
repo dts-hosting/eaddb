@@ -1,0 +1,106 @@
+<div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4 mt-3">
+  <div>
+    <h2 class="fw-bold mb-0"><%= @record.ead_identifier || "No EAD ID" %></h2>
+    <p class="text-muted small">Record details and transfer status</p>
+  </div>
+
+  <div class="d-flex gap-2">
+    <div class="btn-group">
+      <% if @record.ead_identifier.present? %>
+        <%= link_to url_for(@record.ead_xml),
+                    download: "#{@record.ead_identifier}.xml",
+                    class: "btn btn-primary btn-sm",
+                    data: {
+                      turbo_method: :get,
+                      turbo_confirm: "Are you sure you want to download this record?"
+                    },
+                    role: "button" do %>
+          <i class="bi bi-download"></i> Download
+        <% end %>
+        <%= link_to "#",
+                    class: "btn btn-warning btn-sm",
+                    data: {
+                      turbo_method: :post,
+                      turbo_confirm: "Are you sure you want to transfer this record?"
+                    },
+                    role: "button" do %>
+          <i class="bi bi-send"></i> Transfer
+        <% end %>
+        <%= link_to "#",
+                    class: "btn btn-danger btn-sm",
+                    data: {
+                      turbo_method: :post,
+                      turbo_confirm: "Are you sure you want to withdraw this record?"
+                    },
+                    role: "button" do %>
+          <i class="bi bi-eraser"></i> Withdraw
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="btn-group">
+      <%= link_to record_path(@record),
+                  data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete this record?" },
+                  class: "btn btn-outline-danger btn-sm",
+                  title: "Delete record" do %>
+        <i class="bi bi-trash"></i> Delete
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <h5 class="card-title">Record Information</h5>
+    <div class="row">
+      <div class="col-md-6">
+        <p><strong>Status:</strong>
+          <span class="badge <%= record_status_badge_class(@record.status) %> text-light">
+            <%= @record.status %>
+          </span>
+        </p>
+        <p>
+          <strong>Source:</strong> <%= link_to @record.collection.source.name, source_path(@record.collection.source) %>
+        </p>
+        <p><strong>Collection:</strong> <%= link_to @record.collection.name, collection_path(@record.collection) %></p>
+        <p><strong>Owner:</strong> <%= @record.owner || "No owner extracted from EAD" %></p>
+      </div>
+      <div class="col-md-6">
+        <p><strong>Identifier:</strong> <%= @record.identifier %></p>
+        <p><strong>Modification Date:</strong> <%= @record.modification_date.strftime("%B %d, %Y at %H:%M") %></p>
+        <p><strong>Date Imported:</strong> <%= @record.created_at.strftime("%B %d, %Y at %H:%M") %></p>
+        <p><strong>Last Updated:</strong> <%= @record.updated_at.strftime("%B %d, %Y at %H:%M") %></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card mt-3">
+  <div class="card-body">
+    <div>
+      <%= render partial: "shared/message", locals: {
+        message: @record.message || "No current messages.",
+        timestamp: Time.current.strftime('%H:%M:%S')
+      } %>
+    </div>
+  </div>
+</div>
+
+<div class="card mt-3">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="card-title mb-0">Transfers</h5>
+    </div>
+
+    <%= render partial: "shared/infinite_scroll", locals: {
+      container_id: "transfers",
+      frame_id: :records_page,
+      pagy: @pagy,
+      collection: @transfers,
+      item_partial: "records/transfer",
+      empty_message: "No transfers found.",
+      pagination_url: record_path(page: @pagy.next),
+      inline: true
+    } %>
+  </div>
+</div>
