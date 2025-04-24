@@ -41,6 +41,7 @@ class ArcLightExporter
     end
   end
 
+  # TODO: we're not checking the result did anything. Ok?
   def process_delete(transfer)
     uri = URI.parse("#{destination.url}/update?commit=true")
     http = Net::HTTP.new(uri.host, uri.port)
@@ -63,8 +64,10 @@ class ArcLightExporter
     if result.is_a?(Net::HTTPSuccess)
       transfer.succeeded!("Deleted record from #{destination.identifier}")
     else
-      transfer.failed!("Failed to delete record #{transfer.record.id}: #{result.code} #{result.message}")
+      transfer.failed!("Failed to delete record: #{result.code} #{result.message}")
     end
+  rescue => e
+    transfer.failed!("Failed to delete record: #{e.message}")
   end
 
   def process_transfer(transfer, indexer_cfg, repositories_cfg)
