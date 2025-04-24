@@ -3,17 +3,17 @@
 <%= tag.div id: dom_id(transfer), class: "card mb-3" do %>
   <div class="card-body">
     <div class="row align-items-center">
-      <div class="col-md-3 text-start">
+      <div class="col-md-5 text-start">
         <div class="d-flex align-items-center mb-1">
-          <span class="text-muted small me-2">EAD ID</span>
+          <span class="text-muted small me-2">Status</span>
           <span class="badge <%= transfer_status_badge_class(transfer.status) %>">
             <%= transfer.status.capitalize %>
           </span>
         </div>
-        <span class="text-monospace fw-medium"><%= transfer.record.ead_identifier || "No EAD ID" %></span>
+        <span class="fw-medium"><%= transfer.message || "No current messages." %></span>
       </div>
 
-      <div class="col-md-3 text-start">
+      <div class="col-md-4 text-start">
         <span class="text-muted small d-block mb-1">Last Updated</span>
         <span class="fw-medium"><%= transfer.updated_at.strftime("%b %d, %Y %H:%M") %></span>
       </div>
@@ -26,11 +26,6 @@
           </span>
         </div>
         <span class="fw-medium"><%= link_to transfer.destination.name, destination_path(transfer.destination) %></span>
-      </div>
-
-      <div class="col-md-3 text-end">
-        <span class="text-muted small d-block mb-1">Message</span>
-        <span class="fw-medium"><%= transfer.message || "No current messages." %></span>
       </div>
     </div>
   </div>
