@@ -1,5 +1,7 @@
-# Exports records to ArcLight using traject as per the docs (bundle exec)
-# and getting the EAD mapping configuration from the ArcLight gem directly
+# Exports records to and deletes from ArcLight:
+# For import we use traject as per the docs (bundle exec) and get
+# the EAD mapping configuration from the ArcLight gem.
+# For delete we use the Solr API directly.
 class ArcLightExporter
   attr_reader :destination
 
@@ -28,14 +30,44 @@ class ArcLightExporter
         yield transfer if block_given?
       end
 
-      # TODO: deletes = delete_ids.nil? ? destination.pending_deletes : destination.pending_deletes.where(id: delete_ids)
-      # deletes.find_each do |transfer|
-      #   process_delete(transfer)
-      #   yield transfer if block_given?
-      # end
+      deletes = transfer_ids.nil? ? destination.pending_deletes : destination.pending_deletes.where(id: transfer_ids)
+      deletes.find_each do |transfer|
+        process_delete(transfer)
+        yield transfer if block_given?
+      end
     ensure
       repositories_cfg.close
       repositories_cfg.unlink
+    end
+  end
+
+  def process_delete(transfer)
+    uri = URI.parse("#{destination.url}/update?commit=true")
+    http = Net::HTTP.new(uri.host, uri.port)
+
+    if uri.scheme == "https"
+      http.use_ssl = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    end
+
+    request = Net::HTTP::Post.new(uri.request_uri)
+    request["Content-Type"] = "application/xml"
+
+    escaped_id = CGI.escapeHTML(transfer.record.ead_identifier)
+
+    delete_xml = <<~XML
+      <delete>
+        <query>_root_:#{escaped_id}</query>
+      </delete>
+    XML
+
+    request.body = delete_xml
+
+    result = http.request(request)
+    if result.is_a?(Net::HTTPSuccess)
+      transfer.succeeded!
+    else
+      transfer.failed!("Failed to delete record #{transfer.record.id}: #{result.code} #{result.message}")
     end
   end
 
@@ -45,15 +77,11 @@ class ArcLightExporter
       if status.success?
         transfer.succeeded!
       else
-        error_message = "Failed to process transfer #{transfer.id}: #{first_error(stderr)}"
-        Rails.logger.error(error_message)
-        transfer.failed!(error_message)
+        transfer.failed!("Failed to process #{transfer.id}: #{first_error(stderr)}")
       end
     end
   rescue => e
-    error_message = "Failed to process transfer #{transfer.id}: #{e.message}"
-    Rails.logger.error(error_message)
-    transfer.failed!(error_message)
+    transfer.failed!("Failed to process transfer #{transfer.id}: #{e.message}")
   end
 
   private

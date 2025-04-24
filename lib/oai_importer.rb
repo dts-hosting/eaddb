@@ -1,5 +1,4 @@
-# Imports records from an OAI-PMH source, processing only valid records
-# that match collection requirements and have been updated since last import.
+# Imports records from an OAI-PMH source.
 require_relative "utils/ead"
 
 class OaiImporter
@@ -50,8 +49,6 @@ class OaiImporter
     update_record(record, xml_to_string(ead_element), attributes)
   rescue => e
     record.update(status: RECORD_FAILED, message: e.message)
-    Rails.logger.error("Failed to process record #{record.identifier}: #{e.message}")
-    Rails.logger.debug(e.backtrace.join("\n"))
   end
 
   private

@@ -19,12 +19,16 @@ class Record < ApplicationRecord
 
   # delete this record from all destinations
   def rescind
-    # TODO: set status to deleted, message to "Rescinded"
-    # transfer
+    return if failed?
+
+    update!(status: "deleted", message: "Rescinded record")
+    transfer
   end
 
   def resend
-    reset_transfers_status
+    return if failed?
+
+    update!(status: "active", message: "Resent record")
     transfer
   end
 
