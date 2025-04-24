@@ -44,11 +44,7 @@ class ArcLightExporter
   def process_delete(transfer)
     uri = URI.parse("#{destination.url}/update?commit=true")
     http = Net::HTTP.new(uri.host, uri.port)
-
-    if uri.scheme == "https"
-      http.use_ssl = true
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    end
+    http.use_ssl = true if uri.scheme == "https"
 
     request = Net::HTTP::Post.new(uri.request_uri)
     request["Content-Type"] = "application/xml"
