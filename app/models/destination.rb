@@ -7,6 +7,8 @@ class Destination < ApplicationRecord
   has_many :records, through: :transfers
   has_one_attached :config
 
+  enum :status, {active: "active", failed: "failed"}, default: :active
+
   validates :name, presence: true, uniqueness: {scope: :type}
   validates :url, presence: true, format: {with: URI::DEFAULT_PARSER.make_regexp, message: "must be a valid URL"}
 

@@ -5,6 +5,8 @@ class Source < ApplicationRecord
   has_many :collections, dependent: nil
   has_many :records, through: :collections
 
+  enum :status, {active: "active", failed: "failed"}, default: :active
+
   validates :name, :type, presence: true
   validates :url, format: {with: URI::DEFAULT_PARSER.make_regexp, message: "must be a valid URL"}
   validates :url, presence: true, uniqueness: {scope: :name, message: "and name combination already exists"}

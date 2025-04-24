@@ -1,6 +1,7 @@
 module Destinations
   class ArcLight < Destination
     validates :identifier, :config, presence: true
+    # TODO: validates identifier in config
 
     def exporter
       ArcLightExporter

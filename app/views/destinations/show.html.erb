@@ -41,7 +41,13 @@
       <h5 class="card-title">Destination Information</h5>
       <div class="row">
         <div class="col-md-6">
-          <p><strong>Type:</strong> <span class="badge bg-info text-light"><%= @destination.class.display_name %></span></p>
+          <p>
+            <strong>Type:</strong>
+            <span class="badge bg-info text-light"><%= @destination.class.display_name %></span>
+            <span class="badge <%= record_status_badge_class(@destination.status) %> text-light">
+              <%= @destination.status %>
+            </span>
+          </p>
           <p><strong>Name:</strong> <%= @destination.name %></p>
           <p><strong>Source:</strong> <%= link_to @destination.collection.source.name, source_path(@destination.collection.source) %></p>
           <p><strong>Collection:</strong> <%= link_to @destination.collection.name, collection_path(@destination.collection) %></p>
@@ -61,7 +67,7 @@
       <div class="card-body">
         <div id="<%= dom_id(@destination) %>_message">
           <%= render partial: "shared/message", locals: {
-            message: "No current messages.",
+            message: @destination.message || "No current messages.",
             timestamp: @destination.updated_at.strftime('%H:%M:%S')
           } %>
         </div>

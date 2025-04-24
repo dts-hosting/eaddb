@@ -45,7 +45,11 @@
     <div class="row">
       <div class="col-md-6">
         <p>
-          <strong>Type:</strong> <span class="badge bg-info text-light"><%= @source.class.display_name %></span>
+          <strong>Type: </strong>
+          <span class="badge bg-info text-light"><%= @source.class.display_name %></span>
+          <span class="badge <%= record_status_badge_class(@source.status) %> text-light">
+            <%= @source.status %>
+          </span>
         </p>
         <p>
           <strong>Name:</strong> <%= @source.name %>
@@ -73,7 +77,7 @@
     <div class="card-body">
       <div id="<%= dom_id(@source) %>_message">
         <%= render partial: "shared/message", locals: {
-          message: "No current messages.",
+          message: @source.message || "No current messages.",
           timestamp: @source.updated_at.strftime('%H:%M:%S')
         } %>
       </div>

@@ -18,15 +18,8 @@ class GetRecordsJob < ApplicationJob
       record.transfer
     end
 
-    source.broadcast_message("Completed import of #{records_processed} records from #{source.url}")
-    sleep 3
-    # TODO: replace with source.update(message: nil)
-    source.touch # now refresh the page
-
-    Rails.logger.info "Completed import from: #{source.url} #{Time.current}"
+    source.update(status: "active", message: "Import ran successfully")
   rescue => e
-    # TODO: replace with source.update(message: e.message)
-    source.broadcast_message("Error importing records: #{e.message}")
-    sleep 3
+    source.update(status: "failed", message: e.message)
   end
 end
