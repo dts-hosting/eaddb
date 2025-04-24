@@ -10,6 +10,10 @@ module Sources
       raise NotImplementedError
     end
 
+    def importer
+      ArchivesSpaceImporter
+    end
+
     def ok_to_run?
       username.present? && password.present? && collections.any?
     end
@@ -19,10 +23,6 @@ module Sources
     end
 
     private
-
-    def perform_run
-      ArchivesSpaceGetRecordsJob.perform_later(self)
-    end
 
     def url_must_end_with_api
       return if url.blank? || url.end_with?("/api")

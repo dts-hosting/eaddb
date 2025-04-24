@@ -10,6 +10,10 @@ module Sources
       OAI::Client.new(url)
     end
 
+    def importer
+      OaiImporter
+    end
+
     def ok_to_run?
       collections.any?
     end
@@ -23,10 +27,6 @@ module Sources
     end
 
     private
-
-    def perform_run
-      OaiGetRecordsJob.perform_later(self)
-    end
 
     def url_must_end_with_oai
       return if url.blank? || url.end_with?("/oai")

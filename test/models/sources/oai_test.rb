@@ -34,7 +34,7 @@ module Sources
       source = create_source
       create_collection(source: source)
 
-      assert_enqueued_with(job: OaiGetRecordsJob) do
+      assert_enqueued_with(job: GetRecordsJob) do
         source.run
       end
     end

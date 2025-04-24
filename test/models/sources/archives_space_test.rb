@@ -28,7 +28,7 @@ module Sources
       )
       create_collection(source: source)
 
-      assert_enqueued_with(job: ArchivesSpaceGetRecordsJob) do
+      assert_enqueued_with(job: GetRecordsJob) do
         source.run
       end
     end

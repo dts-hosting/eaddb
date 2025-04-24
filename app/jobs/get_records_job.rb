@@ -1,4 +1,4 @@
-class OaiGetRecordsJob < ApplicationJob
+class GetRecordsJob < ApplicationJob
   limits_concurrency to: 1, key: ->(source) { source.url }, duration: 1.hour
   queue_as :default
 
@@ -9,7 +9,7 @@ class OaiGetRecordsJob < ApplicationJob
     records_processed = 0
     last_update_time = Time.current
 
-    OaiImporter.new(source).import do |record|
+    source.importer.new(source).import do |record|
       records_processed += 1
       last_update_time = broadcast_message(source, records_processed, last_update_time)
 

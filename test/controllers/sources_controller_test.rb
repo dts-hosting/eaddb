@@ -123,7 +123,7 @@ class SourcesControllerTest < ActionDispatch::IntegrationTest
   test "should start job when collections exist" do
     create_collection(source: @source)
 
-    assert_enqueued_with(job: OaiGetRecordsJob) do
+    assert_enqueued_with(job: GetRecordsJob) do
       post run_source_path(@source)
     end
 

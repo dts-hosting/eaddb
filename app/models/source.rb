@@ -33,6 +33,10 @@ class Source < ApplicationRecord
       .pluck(:ead_identifier)
   end
 
+  def importer
+    raise NotImplementedError, "#{self} must implement importer"
+  end
+
   def ok_to_run?
     raise NotImplementedError, "#{self} must implement ok_to_run?"
   end
@@ -44,7 +48,7 @@ class Source < ApplicationRecord
   def run
     return unless ok_to_run?
 
-    perform_run
+    GetRecordsJob.perform_later(self)
   end
 
   def self.display_name
@@ -58,10 +62,6 @@ class Source < ApplicationRecord
       errors.add(:base, "Cannot delete source while collections exist.")
       throw(:abort)
     end
-  end
-
-  def perform_run
-    raise NotImplementedError, "#{self} must implement perform_run"
   end
 
   def update_total_records_count
