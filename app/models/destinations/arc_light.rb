@@ -2,6 +2,10 @@ module Destinations
   class ArcLight < Destination
     validates :identifier, :config, presence: true
 
+    def exporter
+      ArcLightExporter
+    end
+
     def ok_to_run?
       transfers.any?
     end
@@ -12,12 +16,6 @@ module Destinations
 
     def self.version
       Gem::Specification.find_by_name("arclight").version.to_s
-    end
-
-    private
-
-    def perform_run(transfer_ids = nil)
-      ArcLightSendRecordsJob.perform_later(self, transfer_ids)
     end
   end
 end

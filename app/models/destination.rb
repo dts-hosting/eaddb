@@ -17,6 +17,10 @@ class Destination < ApplicationRecord
 
   after_create_commit :create_transfers_for_collection_records
 
+  def exporter
+    raise NotImplementedError, "#{self} must implement exporter"
+  end
+
   def ok_to_run?
     raise NotImplementedError, "#{self} must implement ok_to_run?"
   end
@@ -37,14 +41,10 @@ class Destination < ApplicationRecord
       .where.not(status: "succeeded")
   end
 
-  def reset_transfers_status
-    transfers.update_all(status: :pending, message: nil)
-  end
-
   def run(transfer_ids = nil)
     return unless ok_to_run?
 
-    perform_run(transfer_ids)
+    SendRecordsJob.perform_later(self, transfer_ids)
   end
 
   private
@@ -53,10 +53,6 @@ class Destination < ApplicationRecord
     transferables.find_each do |record|
       transfers.create!(record: record)
     end
-  end
-
-  def perform_run(transfer_ids = nil)
-    raise NotImplementedError, "#{self} must implement perform_run"
   end
 
   def transferables

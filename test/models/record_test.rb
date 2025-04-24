@@ -126,8 +126,7 @@ class RecordTest < ActiveSupport::TestCase
     @record.save
     assert_enqueued_jobs 0
     @record.transfer
-    assert_enqueued_with(job: ArcLightSendRecordsJob)
-    assert_enqueued_with(job: S3SendRecordsJob)
+    assert_enqueued_with(job: SendRecordsJob)
     assert_enqueued_jobs @record.destinations.count
   end
 end

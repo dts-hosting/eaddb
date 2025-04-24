@@ -107,7 +107,7 @@ class DestinationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should start job when preconditions are met" do
-    assert_enqueued_with(job: ArcLightSendRecordsJob) do
+    assert_enqueued_with(job: SendRecordsJob) do
       post run_destination_path(@destination)
     end
 

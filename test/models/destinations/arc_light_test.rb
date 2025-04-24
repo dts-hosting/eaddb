@@ -41,7 +41,7 @@ module Destinations
         attributes: {collection: collection, url: "https://example.com"}
       )
 
-      assert_enqueued_with(job: ArcLightSendRecordsJob) do
+      assert_enqueued_with(job: SendRecordsJob) do
         destination.run
       end
     end
