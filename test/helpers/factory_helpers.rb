@@ -23,7 +23,7 @@ module FactoryHelpers
     when :arc_light
       config = fixture_file_upload(
         Rails.root.join("test/fixtures/files/repositories.yml"),
-        "application/xml"
+        "application/yaml"
       )
       Destinations::ArcLight
     when :s3_bucket

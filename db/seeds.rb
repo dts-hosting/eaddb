@@ -1,1 +1,1 @@
-require_relative "seeds/development/sources"
+require_relative "seeds/development/setup"
