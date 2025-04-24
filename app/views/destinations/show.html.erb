@@ -62,7 +62,7 @@
         <div id="<%= dom_id(@destination) %>_message">
           <%= render partial: "shared/message", locals: {
             message: "No current messages.",
-            timestamp: Time.current.strftime('%H:%M:%S')
+            timestamp: @destination.updated_at.strftime('%H:%M:%S')
           } %>
         </div>
       </div>

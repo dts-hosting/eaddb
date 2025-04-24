@@ -15,8 +15,7 @@ class ArcLightExporter
     repositories = YAML.safe_load(destination.config.download)
 
     unless repositories.key?(destination.identifier)
-      Rails.logger.error("Repository #{destination.identifier} not found in #{repositories.keys}")
-      return
+      raise "Repository #{destination.identifier} not found in #{repositories.keys}"
     end
 
     repositories_cfg = Tempfile.new(["destination_", destination.id.to_s, ".yml"])

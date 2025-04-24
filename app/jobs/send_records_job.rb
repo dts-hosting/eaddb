@@ -16,8 +16,13 @@ class SendRecordsJob < ApplicationJob
 
     destination.broadcast_message("Completed sending #{records_processed} records to: #{destination.url}")
     sleep 3
+    # TODO: replace with destination.update(message: nil)
     destination.touch # now refresh the page
 
     Rails.logger.info "Completed sending records to: #{destination.url} #{Time.current}"
+  rescue => e
+    # TODO: replace with destination.update(message: e.message)
+    destination.broadcast_message("Error exporting records: #{e.message}")
+    sleep 3
   end
 end

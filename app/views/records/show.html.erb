@@ -80,7 +80,7 @@
     <div>
       <%= render partial: "shared/message", locals: {
         message: @record.message || "No current messages.",
-        timestamp: Time.current.strftime('%H:%M:%S')
+        timestamp: @record.updated_at.strftime('%H:%M:%S')
       } %>
     </div>
   </div>

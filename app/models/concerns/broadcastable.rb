@@ -16,10 +16,6 @@ module Broadcastable
 
   private
 
-  def resolve_base_type
-    self.class.superclass.name.downcase
-  end
-
   def render_message(message)
     ApplicationController.renderer.render(
       partial: "shared/message",
