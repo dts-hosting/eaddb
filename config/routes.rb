@@ -35,6 +35,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :records, only: [:index, :show]
+  resources :records, only: [:index, :show] do
+    member do
+      post :resend
+      post :withdraw
+    end
+  end
   resources :transfers, only: [:index]
 end

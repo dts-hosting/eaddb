@@ -17,7 +17,7 @@
                     role: "button" do %>
           <i class="bi bi-download"></i> Download
         <% end %>
-        <%= link_to "#",
+        <%= link_to resend_record_path(@record),
                     class: "btn btn-warning btn-sm",
                     data: {
                       turbo_method: :post,
@@ -26,7 +26,7 @@
                     role: "button" do %>
           <i class="bi bi-send"></i> Transfer
         <% end %>
-        <%= link_to "#",
+        <%= link_to withdraw_record_path(@record),
                     class: "btn btn-danger btn-sm",
                     data: {
                       turbo_method: :post,

@@ -22,7 +22,7 @@ module Broadcastable
 
   def render_message(message)
     ApplicationController.renderer.render(
-      partial: "#{resolve_base_type.pluralize}/message",
+      partial: "shared/message",
       locals: {
         message: message,
         timestamp: Time.current.strftime("%H:%M:%S")

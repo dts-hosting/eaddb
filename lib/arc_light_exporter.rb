@@ -49,7 +49,7 @@ class ArcLightExporter
     request = Net::HTTP::Post.new(uri.request_uri)
     request["Content-Type"] = "application/xml"
 
-    escaped_id = CGI.escapeHTML(transfer.record.ead_identifier)
+    escaped_id = CGI.escapeHTML(transfer.record.ead_identifier).tr(".", "-")
 
     delete_xml = <<~XML
       <delete>
@@ -61,7 +61,7 @@ class ArcLightExporter
 
     result = http.request(request)
     if result.is_a?(Net::HTTPSuccess)
-      transfer.succeeded!
+      transfer.succeeded!("Deleted record from #{destination.identifier}")
     else
       transfer.failed!("Failed to delete record #{transfer.record.id}: #{result.code} #{result.message}")
     end
@@ -71,13 +71,13 @@ class ArcLightExporter
     transfer.record.ead_xml.open do |xml|
       _, stderr, status = Open3.capture3(command(indexer_cfg, repositories_cfg, xml.path))
       if status.success?
-        transfer.succeeded!
+        transfer.succeeded!("Transferred to #{destination.identifier}")
       else
-        transfer.failed!("Failed to process #{transfer.id}: #{first_error(stderr)}")
+        transfer.failed!("Failed to process: #{first_error(stderr)}")
       end
     end
   rescue => e
-    transfer.failed!("Failed to process transfer #{transfer.id}: #{e.message}")
+    transfer.failed!("Failed to process: #{e.message}")
   end
 
   private

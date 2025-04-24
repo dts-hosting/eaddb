@@ -1,6 +1,6 @@
 class RecordsController < ApplicationController
   include Filterable
-  before_action :set_record, only: [:show]
+  before_action :set_record, only: [:show, :resend, :withdraw]
 
   def index
     records = if filter_params_present?
@@ -14,6 +14,25 @@ class RecordsController < ApplicationController
 
   def show
     @pagy, @transfers = pagy(@record.transfers, limit: 5)
+  end
+
+  # record tools
+  def resend
+    if @record.ok_to_run?
+      @record.resend
+      redirect_to record_path(@record)
+    else
+      redirect_to record_path(@record), alert: "Cannot transfer failed record."
+    end
+  end
+
+  def withdraw
+    if @record.ok_to_run?
+      @record.withdraw
+      redirect_to record_path(@record)
+    else
+      redirect_to record_path(@record), alert: "Cannot withdraw failed record."
+    end
   end
 
   private

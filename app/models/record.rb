@@ -17,16 +17,20 @@ class Record < ApplicationRecord
   scope :with_ead, -> { where(status: "active").where.not(ead_identifier: nil) }
   scope :without_ead, -> { where(ead_identifier: nil) }
 
-  def resend
-    return if failed?
+  def ok_to_run?
+    return false if failed?
 
-    update!(status: "active", message: "Transferred record (re-sent to all destinations)")
+    ead_identifier.present?
+  end
+
+  def resend
+    update!(status: "active", message: "Record re-sent to all destinations")
     transfer
   end
 
   # transfer this record to all destinations
   def transfer
-    return if failed?
+    return unless ok_to_run?
 
     transfers.includes(:destination).find_each do |transfer|
       transfer.destination.run([transfer.id])
@@ -35,8 +39,6 @@ class Record < ApplicationRecord
 
   # delete this record from all destinations
   def withdraw
-    return if failed?
-
     update!(status: "deleted", message: "Withdrawn record (deleted from all destinations)")
     transfer
   end
@@ -44,7 +46,7 @@ class Record < ApplicationRecord
   private
 
   def create_transfers_for_collection_destinations
-    return if failed?
+    return unless ok_to_run?
 
     collection.destinations.find_each do |destination|
       transfers.create!(destination: destination)
