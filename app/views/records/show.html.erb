@@ -8,7 +8,7 @@
     <div class="btn-group">
       <% if @record.ead_identifier.present? %>
         <%= link_to url_for(@record.ead_xml),
-                    download: "#{@record.ead_identifier}.xml",
+                    download: @record.ead_xml.filename.to_s,
                     class: "btn btn-primary btn-sm",
                     data: {
                       turbo_method: :get,

@@ -9,6 +9,18 @@
 
     <div class="d-flex gap-2">
       <div class="btn-group">
+        <% if @destination.config.attached? %>
+          <%= link_to url_for(@destination.config),
+                      class: "btn btn-primary btn-sm",
+                      download: @destination.config.filename.to_s,
+                      data: {
+                        turbo_method: :get,
+                        turbo_confirm: "Are you sure you want to download this config?"
+                      },
+                      role: "button" do %>
+            <i class="bi bi-download"></i> Download Config
+          <% end %>
+        <% end %>
         <%= link_to run_destination_path(@destination),
                     class: "btn btn-warning btn-sm #{'disabled' unless @destination.ok_to_run?}",
                     data: {
