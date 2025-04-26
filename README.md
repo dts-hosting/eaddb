@@ -6,6 +6,7 @@ Supported sources:
 
 - ArchivesSpace Api [TODO]
 - Oai EAD XML providers
+- SFTP [TODO]
 
 Supported destinations:
 
