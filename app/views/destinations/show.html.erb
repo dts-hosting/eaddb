@@ -25,12 +25,26 @@
                     class: "btn btn-warning btn-sm #{'disabled' unless @destination.ok_to_run?}",
                     data: {
                       turbo_method: :post,
-                      turbo_confirm: "Are you sure you want to queue a job for this destination?"
+                      turbo_confirm: "Are you sure you want to process transfers for this destination?"
                     },
                     "aria-disabled": !@destination.ok_to_run?,
                     role: @destination.ok_to_run? ? nil : "button",
                     onclick: @destination.ok_to_run? ? nil : "return false;" do %>
           <i class="bi bi-cloud-upload"></i> Send Records
+        <% end %>
+      </div>
+
+      <div class="btn-group">
+        <%= link_to reset_destination_path(@destination),
+                    class: "btn btn-danger btn-sm #{'disabled' unless @destination.ok_to_run?}",
+                    data: {
+                      turbo_method: :post,
+                      turbo_confirm: "Are you sure you want to delete all records in this destination?"
+                    },
+                    "aria-disabled": !@destination.ok_to_run?,
+                    role: @destination.ok_to_run? ? nil : "button",
+                    onclick: @destination.ok_to_run? ? nil : "return false;" do %>
+          <i class="bi bi-eraser"></i> Reset
         <% end %>
       </div>
 

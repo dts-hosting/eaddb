@@ -31,6 +31,7 @@ Rails.application.routes.draw do
 
   resources :destinations, only: [:index] do
     member do
+      post :reset
       post :run
     end
   end

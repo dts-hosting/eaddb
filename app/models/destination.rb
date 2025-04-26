@@ -43,6 +43,12 @@ class Destination < ApplicationRecord
       .where.not(status: "succeeded")
   end
 
+  def reset
+    # TODO: background job
+    exporter.new(self).reset
+    transfers.update_all(status: "pending", message: nil)
+  end
+
   def run(transfer_ids = nil)
     return unless ok_to_run?
 

@@ -1,6 +1,6 @@
 class DestinationsController < ApplicationController
   before_action :set_collection, only: [:new, :create]
-  before_action :set_destination, only: [:show, :edit, :update, :destroy, :run]
+  before_action :set_destination, only: [:show, :edit, :update, :destroy, :reset, :run]
 
   def index
     destinations = Destination.includes(:collection).order(:name)
@@ -48,6 +48,15 @@ class DestinationsController < ApplicationController
     collection = @destination.collection
     @destination.destroy
     redirect_to collection_path(collection), status: :see_other, notice: "Destination was successfully destroyed."
+  end
+
+  def reset
+    if @destination.ok_to_run?
+      @destination.reset
+      redirect_to destination_path(@destination)
+    else
+      redirect_to destination_path(@destination), alert: "Preconditions not met. See destination for details."
+    end
   end
 
   def run

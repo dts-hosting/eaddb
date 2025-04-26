@@ -3,6 +3,7 @@ require_relative "../config/environment"
 require_relative "helpers/factory_helpers"
 require_relative "helpers/test_constants"
 
+require "mocha/minitest"
 require "rails/test_help"
 require "webmock/minitest"
 

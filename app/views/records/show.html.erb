@@ -26,6 +26,11 @@
                     role: "button" do %>
           <i class="bi bi-send"></i> Transfer
         <% end %>
+      <% end %>
+    </div>
+
+    <div class="btn-group">
+      <% if @record.ead_identifier.present? %>
         <%= link_to withdraw_record_path(@record),
                     class: "btn btn-danger btn-sm",
                     data: {

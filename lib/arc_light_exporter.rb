@@ -40,30 +40,20 @@ class ArcLightExporter
     end
   end
 
-  # TODO: we're not checking the result did anything. Ok?
+  # TODO: we're not checking the response did anything. Ok?
   def process_delete(transfer)
-    uri = URI.parse("#{destination.url}/update?commit=true")
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true if uri.scheme == "https"
-
-    request = Net::HTTP::Post.new(uri.request_uri)
-    request["Content-Type"] = "application/xml"
-
     escaped_id = CGI.escapeHTML(transfer.record.ead_identifier).tr(".", "-")
-
     delete_xml = <<~XML
       <delete>
         <query>_root_:#{escaped_id}</query>
       </delete>
     XML
 
-    request.body = delete_xml
-
-    result = http.request(request)
-    if result.is_a?(Net::HTTPSuccess)
+    response = delete_request(delete_xml)
+    if response.is_a?(Net::HTTPSuccess)
       transfer.succeeded!("Deleted record from #{destination.identifier}")
     else
-      transfer.failed!("Failed to delete record: #{result.code} #{result.message}")
+      transfer.failed!("Failed to delete record: #{response.code} #{response.message}")
     end
   rescue => e
     transfer.failed!("Failed to delete record: #{e.message}")
@@ -82,6 +72,14 @@ class ArcLightExporter
     transfer.failed!("Failed to process: #{e.message}")
   end
 
+  def reset
+    delete_xml = "<delete><query>*:*</query></delete>"
+    response = delete_request(delete_xml)
+    unless response.is_a?(Net::HTTPSuccess)
+      raise "Failed to reset Solr: #{response.code} #{response.message}"
+    end
+  end
+
   private
 
   def command(indexer_cfg, repositories_cfg, ead_xml)
@@ -96,6 +94,18 @@ class ArcLightExporter
       -s solr_writer.thread_pool=0 \
       #{ead_xml}
     CMD
+  end
+
+  def delete_request(body)
+    uri = URI.parse("#{destination.url}/update?commit=true")
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true if uri.scheme == "https"
+
+    request = Net::HTTP::Post.new(uri.request_uri)
+    request["Content-Type"] = "text/xml"
+
+    request.body = body
+    http.request(request)
   end
 
   def first_error(text)
