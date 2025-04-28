@@ -44,8 +44,7 @@ class Destination < ApplicationRecord
   end
 
   def reset
-    # TODO: background job
-    exporter.new(self).reset
+    ResetDestinationJob.perform_later(self)
     transfers.update_all(status: "pending", message: nil)
   end
 

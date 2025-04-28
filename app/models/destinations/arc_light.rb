@@ -11,6 +11,19 @@ module Destinations
       transfers.any?
     end
 
+    # TODO: cache
+    def repositories
+      YAML.safe_load(config.download)
+    end
+
+    def repository
+      repositories[identifier]
+    end
+
+    def repository_name
+      repository["name"] if repository
+    end
+
     def self.display_name
       "ArcLight"
     end

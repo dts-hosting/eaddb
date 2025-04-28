@@ -12,15 +12,15 @@ class ArcLightExporter
   def export(transfer_ids = nil, &block)
     arclight_dir = Gem::Specification.find_by_name("arclight").gem_dir
     indexer_cfg = File.join(arclight_dir, "lib", "arclight", "traject", "ead2_config.rb")
-    repositories = YAML.safe_load(destination.config.download)
 
-    unless repositories.key?(destination.identifier)
-      raise "Repository #{destination.identifier} not found in #{repositories.keys}"
+    # TODO: this can be handled by validation
+    unless destination.repository
+      raise "Repository #{destination.identifier} not found in config."
     end
 
     repositories_cfg = Tempfile.new(["destination_", destination.id.to_s, ".yml"])
     begin
-      repositories_cfg.write(repositories.to_yaml)
+      repositories_cfg.write(destination.repositories.to_yaml)
       repositories_cfg.flush
 
       transfers = transfer_ids.nil? ? destination.pending_transfers : destination.pending_transfers.where(id: transfer_ids)
@@ -73,7 +73,9 @@ class ArcLightExporter
   end
 
   def reset
-    delete_xml = "<delete><query>*:*</query></delete>"
+    # TODO: this can be handled by validation
+    raise "Repository #{destination.identifier} not found in config." unless destination.repository
+    delete_xml = "<delete><query>repository_ssim:\"#{destination.repository_name}\"</query></delete>"
     response = delete_request(delete_xml)
     unless response.is_a?(Net::HTTPSuccess)
       raise "Failed to reset Solr: #{response.code} #{response.message}"
