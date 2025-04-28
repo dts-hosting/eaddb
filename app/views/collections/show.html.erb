@@ -6,13 +6,6 @@
 
   <div class="d-flex gap-2">
     <div class="btn-group">
-      <% Destination.display_names.each_with_index do |type, index| %>
-        <%= link_to new_collection_destinations_path(@collection, type: type),
-                    class: "btn btn-primary btn-sm equal-width-btn",
-                    style: "width: 100px; #{index > 0 ? 'border-left: 2px solid #0d6efd;' : ''}" do %>
-          <i class="bi bi-plus-circle me-1"></i> <%= type %>
-        <% end %>
-      <% end %>
       <%= link_to records_path(collection: @collection.name),
                   class: "btn btn-info btn-sm #{'disabled' unless @collection.records.any?}" do %>
         <i class="bi bi-collection me-1"></i> View Records
@@ -60,8 +53,19 @@
 
 <div class="card mt-3">
   <div class="card-body">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h5 class="card-title mb-0">Destinations</h5>
+    <div class="mb-3">
+      <h5 class="card-title mb-2">Destinations</h5>
+      <div class="d-flex justify-content-start mb-3">
+        <div class="btn-group">
+          <% Destination.display_names.each_with_index do |type, index| %>
+            <%= link_to new_collection_destinations_path(@collection, type: type),
+                        class: "btn btn-primary btn-sm equal-width-btn",
+                        style: "width: 100px; #{index > 0 ? 'border-left: 2px solid #0d6efd;' : ''}" do %>
+              <i class="bi bi-plus-circle me-1"></i> <%= type %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
     </div>
 
     <%= render partial: "shared/infinite_scroll", locals: {
