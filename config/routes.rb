@@ -37,6 +37,7 @@ Rails.application.routes.draw do
   end
 
   resources :records, only: [:index, :show] do
+    get :untransferables, on: :collection
     member do
       post :resend
       post :withdraw

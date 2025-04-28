@@ -12,6 +12,10 @@ class RecordsController < ApplicationController
     @pagy, @records = pagy(records, limit: 20)
   end
 
+  def untransferables
+    @pagy, @records = pagy(Record.untransferables, limit: 20)
+  end
+
   def show
     @pagy, @transfers = pagy(@record.transfers, limit: 5)
   end

@@ -43,6 +43,12 @@ class Record < ApplicationRecord
     transfer
   end
 
+  def self.untransferables
+    joins(collection: :destinations)
+      .where.missing(:transfers)
+      .distinct
+  end
+
   private
 
   def create_transfers_for_collection_destinations

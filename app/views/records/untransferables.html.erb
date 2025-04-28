@@ -1,0 +1,19 @@
+<div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4 mt-3">
+  <div>
+    <h2 class="fw-bold mb-0">Records</h2>
+    <p class="text-muted small">View records that cannot be transferred</p>
+  </div>
+  <div class="btn-group">
+    <%= link_to "Back", :back, class: "btn btn-sm btn-outline-secondary", title: "Back to records list" %>
+  </div>
+</div>
+
+<%= render partial: "shared/infinite_scroll", locals: {
+  container_id: "records",
+  frame_id: :records_page,
+  pagy: @pagy,
+  collection: @records,
+  item_partial: "records/record",
+  empty_message: "No records found.",
+  pagination_url: untransferables_records_path(page: @pagy.next)
+} %>
