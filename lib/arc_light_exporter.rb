@@ -40,6 +40,18 @@ class ArcLightExporter
     end
   end
 
+  def reset
+    # TODO: this can be handled by validation
+    raise "Repository #{destination.identifier} not found in config." unless destination.repository
+    delete_xml = "<delete><query>repository_ssim:\"#{destination.repository_name}\"</query></delete>"
+    response = delete_request(delete_xml)
+    unless response.is_a?(Net::HTTPSuccess)
+      raise "Failed to reset Solr: #{response.code} #{response.message}"
+    end
+  end
+
+  private
+
   # TODO: we're not checking the response did anything. Ok?
   def process_delete(transfer)
     escaped_id = CGI.escapeHTML(transfer.record.ead_identifier).tr(".", "-")
@@ -71,18 +83,6 @@ class ArcLightExporter
   rescue => e
     transfer.failed!("Failed to process: #{e.message}")
   end
-
-  def reset
-    # TODO: this can be handled by validation
-    raise "Repository #{destination.identifier} not found in config." unless destination.repository
-    delete_xml = "<delete><query>repository_ssim:\"#{destination.repository_name}\"</query></delete>"
-    response = delete_request(delete_xml)
-    unless response.is_a?(Net::HTTPSuccess)
-      raise "Failed to reset Solr: #{response.code} #{response.message}"
-    end
-  end
-
-  private
 
   def command(indexer_cfg, repositories_cfg, ead_xml)
     <<~CMD

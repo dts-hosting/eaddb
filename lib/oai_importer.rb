@@ -33,6 +33,8 @@ class OaiImporter
     end
   end
 
+  private
+
   def process_record(collection, record, datestamp)
     oai_record = fetch_record(record.identifier)
     ead_element = extract_ead(oai_record.metadata)
@@ -50,8 +52,6 @@ class OaiImporter
   rescue => e
     record.update(status: RECORD_FAILED, message: e.message)
   end
-
-  private
 
   def get_collection(record_identifier)
     collection_identifier = parse_identifier(record_identifier)
