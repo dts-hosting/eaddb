@@ -1,4 +1,4 @@
-# Exports records to and deletes from ArcLight:
+# Exports records to and deletes from ArcLight.
 # For import we use traject as per the docs (bundle exec) and get
 # the EAD mapping configuration from the ArcLight gem.
 # For delete we use the Solr API directly.

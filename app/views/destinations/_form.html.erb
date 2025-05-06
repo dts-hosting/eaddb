@@ -19,11 +19,15 @@
     <%= form.text_field :name, class: "form-control", required: true %>
   </div>
 
-  <div class="mb-3">
-    <%= form.label :url, class: "form-label" %>
-    <%= form.url_field :url, class: "form-control", required: true %>
-    <div class="form-text">The URL where records will be sent.</div>
-  </div>
+  <% if destination.is_local? %>
+    <%= form.hidden_field :url, value: "http://example.com" %>
+  <% else %>
+    <div class="mb-3">
+      <%= form.label :url, class: "form-label" %>
+      <%= form.url_field :url, class: "form-control", required: true %>
+      <div class="form-text">The URL where records will be sent.</div>
+    </div>
+  <% end %>
 
   <%= render "#{destination.class.display_name.underscore}_fields", form: form, destination: destination %>
 

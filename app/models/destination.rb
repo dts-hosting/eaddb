@@ -23,6 +23,10 @@ class Destination < ApplicationRecord
     raise NotImplementedError, "#{self} must implement exporter"
   end
 
+  def is_local?
+    false
+  end
+
   def ok_to_run?
     raise NotImplementedError, "#{self} must implement ok_to_run?"
   end
