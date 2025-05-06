@@ -79,7 +79,7 @@
           <p><strong>Collection:</strong> <%= link_to @destination.collection.name, collection_path(@destination.collection) %></p>
         </div>
         <div class="col-md-6">
-          <p><strong>URL:</strong> <%= @destination.url %></p>
+          <p><strong>URL:</strong> <%= @destination.is_local? ? "N/A" : @destination.url %></p>
           <p><strong>Identifier:</strong> <%= @destination.identifier %></p>
           <p><strong>Date Created:</strong> <%= @destination.created_at.strftime("%B %d, %Y at %H:%M") %></p>
           <p><strong>Last Updated:</strong> <%= @destination.updated_at.strftime("%B %d, %Y at %H:%M") %></p>
