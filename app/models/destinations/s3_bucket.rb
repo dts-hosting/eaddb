@@ -3,7 +3,7 @@ module Destinations
     validates :username, :password, presence: true
 
     def exporter
-      S3Exporter
+      Exporters::S3
     end
 
     def ok_to_run?

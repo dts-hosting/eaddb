@@ -11,7 +11,7 @@ module Sources
     end
 
     def importer
-      OaiImporter
+      Importers::Oai
     end
 
     def ok_to_run?

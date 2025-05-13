@@ -25,7 +25,7 @@ class DestinationResetIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "reset destination through controller endpoint" do
-    ArcLightExporter.any_instance.stubs(:reset).returns(true)
+    Exporters::ArcLight.any_instance.stubs(:reset).returns(true)
 
     assert_equal "succeeded", @transfer1.status
     assert_equal "failed", @transfer2.status

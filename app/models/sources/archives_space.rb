@@ -11,7 +11,7 @@ module Sources
     end
 
     def importer
-      ArchivesSpaceImporter
+      Importers::ArchivesSpace
     end
 
     def ok_to_run?

@@ -3,7 +3,7 @@ module Destinations
     validates :identifier, presence: true
 
     def exporter
-      PublicDirectoryExporter
+      Exporters::PublicDirectory
     end
 
     def is_local?

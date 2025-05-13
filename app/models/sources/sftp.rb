@@ -9,7 +9,7 @@ module Sources
     end
 
     def importer
-      SftpImporter
+      Importers::Sftp
     end
 
     def ok_to_run?

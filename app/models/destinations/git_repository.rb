@@ -4,7 +4,7 @@ module Destinations
     validates :username, :password, presence: true
 
     def exporter
-      GitRepositoryExporter
+      Exporters::GitRepository
     end
 
     def ok_to_run?

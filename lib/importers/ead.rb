@@ -1,4 +1,4 @@
-module Utils
+module Importers
   module Ead
     XPATH_FOR_EADHEADER = "//eadheader"
     XPATH_FOR_EADID = "//eadheader/eadid"

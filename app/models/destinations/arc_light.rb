@@ -4,7 +4,7 @@ module Destinations
     # TODO: validates identifier in config
 
     def exporter
-      ArcLightExporter
+      Exporters::ArcLight
     end
 
     def ok_to_run?

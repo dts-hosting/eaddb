@@ -3,7 +3,7 @@ require "rexml/document"
 
 class OaiImporterTest < ActiveSupport::TestCase
   setup do
-    @importer = OaiImporter.new(create_source)
+    @importer = Importers::Oai.new(create_source)
   end
 
   {
