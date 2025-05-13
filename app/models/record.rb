@@ -46,6 +46,7 @@ class Record < ApplicationRecord
   def self.untransferables
     joins(collection: :destinations)
       .where.missing(:transfers)
+      .or(where(ead_identifier: nil))
       .distinct
   end
 

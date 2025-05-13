@@ -5,7 +5,7 @@
         <div class="d-flex align-items-center mb-1">
           <span class="text-muted small me-2">Destination</span>
           <span class="badge bg-info text-light me-1"><%= destination.class.display_name %></span>
-          <span class="badge <%= record_status_badge_class(destination.status) %> text-light">
+          <span class="badge <%= status_badge_class(destination) %> text-light">
             <%= destination.status %>
           </span>
         </div>

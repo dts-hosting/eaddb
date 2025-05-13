@@ -70,7 +70,7 @@
           <p>
             <strong>Type:</strong>
             <span class="badge bg-info text-light"><%= @destination.class.display_name %></span>
-            <span class="badge <%= record_status_badge_class(@destination.status) %> text-light">
+            <span class="badge <%= status_badge_class(@destination) %> text-light">
               <%= @destination.status %>
             </span>
           </p>
