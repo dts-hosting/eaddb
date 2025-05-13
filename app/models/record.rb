@@ -52,8 +52,6 @@ class Record < ApplicationRecord
   private
 
   def create_transfers_for_collection_destinations
-    return unless ok_to_run?
-
     collection.destinations.find_each do |destination|
       transfers.create!(destination: destination)
     end
