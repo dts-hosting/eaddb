@@ -56,9 +56,9 @@ D_CFG_FILE=test/fixtures/files/repositories.yml
 ```
 
 In this example sources were created, records imported and then subsequently transferred.
-However, if you create the destinations before importing the records then the records will be
-automatically transferred as they are imported. This behavior can be prevented by disabling
-`transfer_on_import` for the source.
+
+If you create destinations before importing records the records can be set to automatically
+transfer as they are imported by enabling `transfer_on_import` for the source.
 
 ## Deployment
 
