@@ -1,10 +1,5 @@
-class SftpImporter
-  attr_reader :source
-
-  def initialize(source)
-    @source = source
-  end
-
+class SftpImporter < Importer
   def import(&block)
+    # TODO
   end
 end

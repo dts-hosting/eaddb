@@ -1,10 +1,5 @@
-class ArchivesSpaceImporter
-  attr_reader :source
-
-  def initialize(source)
-    @source = source
-  end
-
+class ArchivesSpaceImporter < Importer
   def import(&block)
+    # TODO
   end
 end

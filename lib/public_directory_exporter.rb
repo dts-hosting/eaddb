@@ -1,14 +1,8 @@
 # Exports records to and deletes from the Rails public folder.
 # Format: public_dir / ead / destination.identifier / record.ead_identifier
 # This exporter has no external dependencies.
-class PublicDirectoryExporter
-  attr_reader :destination
-
+class PublicDirectoryExporter < Exporter
   PUBLIC_EAD_DIRECTORY = Rails.public_path.join("ead")
-
-  def initialize(destination)
-    @destination = destination
-  end
 
   def export(transfer_ids = nil, &block)
     FileUtils.mkdir_p(export_path)

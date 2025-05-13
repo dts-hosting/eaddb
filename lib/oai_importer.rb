@@ -1,17 +1,12 @@
 # Imports records from an OAI-PMH source.
 require_relative "utils/ead"
 
-class OaiImporter
+class OaiImporter < Importer
   include Utils::Ead
-  attr_reader :source
 
   RECORD_ACTIVE = "active"
   RECORD_DELETED = "deleted"
   RECORD_FAILED = "failed"
-
-  def initialize(source)
-    @source = source
-  end
 
   def import(&block)
     return unless source.collections.any?

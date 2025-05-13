@@ -1,10 +1,9 @@
-class GitRepositoryExporter
-  attr_reader :destination
-
-  def initialize(destination)
-    @destination = destination
+class GitRepositoryExporter < Exporter
+  def export(transfter_ids = nil, &block)
+    # TODO
   end
 
-  def export(transfter_ids = nil, &block)
+  def reset
+    # TODO
   end
 end

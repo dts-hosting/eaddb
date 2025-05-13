@@ -1,10 +1,9 @@
-class S3Exporter
-  attr_reader :destination
-
-  def initialize(destination)
-    @destination = destination
+class S3Exporter < Exporter
+  def export(transfter_ids = nil, &block)
+    # TODO
   end
 
-  def export(transfter_ids = nil, &block)
+  def reset
+    # TODO
   end
 end

@@ -2,13 +2,7 @@
 # For import we use traject as per the docs (bundle exec) and get
 # the EAD mapping configuration from the ArcLight gem.
 # For delete we use the Solr API directly.
-class ArcLightExporter
-  attr_reader :destination
-
-  def initialize(destination)
-    @destination = destination
-  end
-
+class ArcLightExporter < Exporter
   def export(transfer_ids = nil, &block)
     arclight_dir = Gem::Specification.find_by_name("arclight").gem_dir
     indexer_cfg = File.join(arclight_dir, "lib", "arclight", "traject", "ead2_config.rb")
