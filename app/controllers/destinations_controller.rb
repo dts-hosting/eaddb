@@ -16,7 +16,7 @@ class DestinationsController < ApplicationController
   end
 
   def new
-    destination_type = Destination.descendants_by_display_name[params[:type]]
+    destination_type = Destination.find_type_by_param_name(params[:type])
     if destination_type
       @destination = destination_type.new
     else

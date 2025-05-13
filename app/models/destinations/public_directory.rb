@@ -6,8 +6,8 @@ module Destinations
       Exporters::PublicDirectory
     end
 
-    def is_local?
-      true
+    def has_url?
+      false
     end
 
     def ok_to_run?
@@ -15,7 +15,7 @@ module Destinations
     end
 
     def self.display_name
-      "Public"
+      "Public Directory"
     end
 
     def self.version

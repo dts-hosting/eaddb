@@ -12,12 +12,6 @@ class DestinationTest < ActiveSupport::TestCase
     assert_includes destination.errors[:name], "can't be blank"
   end
 
-  test "requires a URL" do
-    destination = Destination.new(name: "Test Destination", collection: @collection)
-    assert_not destination.valid?
-    assert_includes destination.errors[:url], "can't be blank"
-  end
-
   test "name must be unique per type" do
     create_destination(
       type: :arc_light,

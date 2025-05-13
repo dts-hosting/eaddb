@@ -25,13 +25,13 @@
     <div class="form-text">Enter the full URL (e.g., https://example.com/api).</div>
   </div>
 
+  <%= render "#{source.class.display_name.parameterize(separator: "_")}_fields", form: form, source: source %>
+
   <div class="mb-3 form-check">
     <%= form.check_box :transfer_on_import, class: "form-check-input" %>
     <%= form.label :transfer_on_import, "Transfer on import?", class: "form-check-label" %>
     <div class="form-text">If checked, records are immediately queued for transfer after import.</div>
   </div>
-
-  <%= render "#{source.class.display_name.underscore}_fields", form: form, source: source %>
 
   <div class="d-flex justify-content-between">
     <%= link_to "Cancel", :back, class: "btn btn-outline-secondary" %>

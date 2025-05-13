@@ -16,7 +16,7 @@ class SourcesController < ApplicationController
   end
 
   def new
-    source_type = Source.descendants_by_display_name[params[:type]]
+    source_type = Source.find_type_by_param_name(params[:type])
     if source_type
       @source = source_type.new
     else

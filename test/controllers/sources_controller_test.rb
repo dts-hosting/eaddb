@@ -13,7 +13,7 @@ class SourcesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get new" do
-    get new_sources_path(type: "OAI")
+    get new_sources_path(type: "oai")
     assert_response :success
     assert_select "h2", "New Source"
   end

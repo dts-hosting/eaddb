@@ -14,6 +14,17 @@ module Destinations
       assert_equal "Destinations::ArcLight", destination.type
     end
 
+    test "requires a URL" do
+      destination = create_destination(
+        type: :arc_light,
+        attributes: {collection: create_collection, url: "https://example.com"}
+      )
+
+      destination.url = nil
+      assert_not destination.valid?
+      assert_includes destination.errors[:url], "can't be blank"
+    end
+
     test "requires an identifier" do
       destination = create_destination(
         type: :arc_light,

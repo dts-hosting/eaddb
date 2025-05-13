@@ -14,5 +14,12 @@ module Descendents
     def display_names
       descendants_by_display_name.keys.sort
     end
+
+    def find_type_by_param_name(param_name)
+      type = descendants_by_display_name.find do |name, _|
+        name.parameterize == param_name
+      end
+      type&.last
+    end
   end
 end

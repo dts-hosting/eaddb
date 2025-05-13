@@ -14,7 +14,7 @@ class DestinationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get new" do
-    get new_collection_destinations_path(@collection, type: "ArcLight")
+    get new_collection_destinations_path(@collection, type: "arclight")
     assert_response :success
   end
 

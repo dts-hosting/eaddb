@@ -6,6 +6,10 @@ module Destinations
       Exporters::S3
     end
 
+    def has_url?
+      false
+    end
+
     def ok_to_run?
       username.present? && password.present? && transfers.any?
     end

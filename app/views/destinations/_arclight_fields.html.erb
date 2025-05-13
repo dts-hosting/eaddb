@@ -1,7 +1,13 @@
 <div class="mb-3">
-  <%= form.label :identifier, class: "form-label" %>
+  <%= form.label :url, class: "form-label" %>
+  <%= form.url_field :url, class: "form-control", required: true %>
+  <div class="form-text">The ArcLight URL where records will be sent.</div>
+</div>
+
+<div class="mb-3">
+  <%= form.label :identifier, "Site Key", class: "form-label" %>
   <%= form.text_field :identifier, class: "form-control" %>
-  <div class="form-text">A unique identifier. This identifier must match a key in the repositories config.</div>
+  <div class="form-text">The site key is an identifier that must match a key in the repositories config.</div>
 </div>
 
 <div class="mb-3">

@@ -1,0 +1,16 @@
+<div class="mb-3">
+  <%= form.label :username, class: "form-label" %>
+  <%= form.text_field :username,
+                      required: form.object.new_record?,
+                      placeholder: "admin",
+                      class: "form-control" %>
+</div>
+
+<div class="mb-3">
+  <%= form.label :password, class: "form-label" %>
+  <%= form.password_field :password,
+                          required: form.object.new_record?,
+                          placeholder: "password",
+                          maxlength: 72,
+                          class: "form-control" %>
+</div>

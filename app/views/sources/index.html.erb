@@ -3,11 +3,11 @@
     <h2 class="fw-bold mb-0">Sources</h2>
     <p class="text-muted small">Manage data collection sources</p>
   </div>
-  <div class="btn-group">
+  <div class="d-flex justify-content-end">
     <% Source.display_names.each_with_index do |type, index| %>
-      <%= link_to new_sources_path(type: type),
-                  class: "btn btn-primary btn-sm equal-width-btn",
-                  style: "width: 140px; #{index > 0 ? 'border-left: 2px solid #0d6efd;' : ''}" do %>
+      <%= link_to new_sources_path(type: type.parameterize),
+                  class: "btn btn-primary btn-sm #{index > 0 ? 'ms-1' : ''}",
+                  style: "width: 140px;" do %>
         <i class="bi bi-plus-circle me-1"></i> <%= type.camelize %>
       <% end %>
     <% end %>

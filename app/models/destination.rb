@@ -10,7 +10,6 @@ class Destination < ApplicationRecord
   enum :status, {active: "active", failed: "failed"}, default: :active
 
   validates :name, presence: true, uniqueness: {scope: :type}
-  validates :url, presence: true, format: {with: URI::DEFAULT_PARSER.make_regexp, message: "must be a valid URL"}
 
   attr_readonly :type
 
@@ -23,8 +22,8 @@ class Destination < ApplicationRecord
     raise NotImplementedError, "#{self} must implement exporter"
   end
 
-  def is_local?
-    false
+  def has_url?
+    raise NotImplementedError, "#{self} must implement has_url?"
   end
 
   def ok_to_run?
