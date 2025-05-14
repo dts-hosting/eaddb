@@ -1,5 +1,5 @@
 class GetRecordsJob < ApplicationJob
-  limits_concurrency to: 1, key: ->(source) { source.url }, duration: 1.hour
+  limits_concurrency to: 1, key: ->(source) { source }, duration: 1.hour
   queue_as :default
 
   def perform(source)

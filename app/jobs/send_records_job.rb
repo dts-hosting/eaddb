@@ -1,5 +1,5 @@
 class SendRecordsJob < ApplicationJob
-  limits_concurrency to: 1, key: ->(destination, _) { destination.url }, duration: 1.hour
+  limits_concurrency to: 1, key: ->(destination, _) { destination }, duration: 1.hour
   queue_as :default
 
   def perform(destination, transfer_ids = nil)
