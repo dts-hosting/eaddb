@@ -19,7 +19,7 @@ gem "thruster", require: false
 group :development do
   gem "hotwire-spark"
   gem "htmlbeautifier"
-  gem "kamal", "~> 2.5"
+  gem "kamal", "~> 2.6"
   gem "letter_opener"
   gem "solargraph"
   gem "web-console"
