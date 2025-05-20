@@ -87,4 +87,7 @@ bundle exec kamal app exec -i -d qa "bin/rails console"
 
 # follow logs
 bundle exec kamal app logs -f -d qa
+
+# reboot kamal proxy
+kamal proxy reboot -d qa
 ```
