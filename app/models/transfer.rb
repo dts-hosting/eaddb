@@ -6,6 +6,10 @@ class Transfer < ApplicationRecord
 
   after_update_commit -> { broadcast_replace_to self, partial: "records/transfer" }
 
+  scope :recent, -> { where("updated_at > ?", 1.day.ago) }
+  scope :not_pending, -> { where.not(status: "pending") }
+  scope :latest_active, -> { recent.not_pending }
+
   def failed!(error_message = nil)
     update!(status: "failed", message: error_message)
   end
