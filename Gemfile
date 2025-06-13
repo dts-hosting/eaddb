@@ -41,6 +41,7 @@ group :test do
 end
 
 gem "arclight", "~> 2.0.alpha", git: "https://github.com/projectblacklight/arclight", ref: "086061a", require: false
+gem "aws-sdk-s3", require: false
 gem "pagy"
 gem "oai", "~> 1.3"
 gem "traject", "~> 3.8"

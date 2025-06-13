@@ -65,8 +65,6 @@ transfer as they are imported by enabling `transfer_on_import` for the source.
 Remote with Kamal.
 
 ```bash
-# TODO: download .kamal/secrets.qa
-
 # verify connections to the server
 bundle exec kamal server bootstrap -d qa
 
