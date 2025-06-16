@@ -8,6 +8,8 @@ servers:
     hosts:
       - eaddb.lyrasistechnology.org
     env:
+      AWS_BUCKET: eaddb-qa-storage
+      AWS_REGION: us-west-2
       JOB_CONCURRENCY: 2
       SOLID_QUEUE_IN_PUMA: true
       WEB_CONCURRENCY: 2
