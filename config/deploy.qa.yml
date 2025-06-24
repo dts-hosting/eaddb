@@ -11,5 +11,6 @@ servers:
       AWS_BUCKET: eaddb-qa-storage
       AWS_REGION: us-west-2
       JOB_CONCURRENCY: 2
+      SCOUT_NAME: EadDB (QA)
       SOLID_QUEUE_IN_PUMA: true
       WEB_CONCURRENCY: 2

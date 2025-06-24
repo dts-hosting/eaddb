@@ -45,4 +45,5 @@ gem "arclight", "~> 2.0.alpha", git: "https://github.com/projectblacklight/arcli
 gem "aws-sdk-s3", require: false
 gem "oai", "~> 1.3"
 gem "pagy"
+gem "scout_apm"
 gem "traject", "~> 3.8"

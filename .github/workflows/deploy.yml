@@ -21,6 +21,7 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       DOCKER_REGISTRY_USER: ${{ secrets.DOCKER_REGISTRY_USER }}
       DOCKER_REGISTRY_PASSWORD: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+      SCOUT_KEY: ${{ secrets.SCOUT_KEY }}
       SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
 
     steps:
@@ -54,6 +55,7 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       DOCKER_REGISTRY_USER: ${{ secrets.DOCKER_REGISTRY_USER }}
       DOCKER_REGISTRY_PASSWORD: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+      SCOUT_KEY: ${{ secrets.SCOUT_KEY }}
       SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
 
     steps:
