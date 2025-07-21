@@ -59,7 +59,7 @@
         <% Destination.display_names.each_with_index do |type, index| %>
           <%= link_to new_collection_destinations_path(@collection, type: type.parameterize),
                       class: "btn btn-primary btn-sm #{index > 0 ? 'ms-1' : ''}",
-                      style: "width: 140px" do %>
+                      style: "width: 160px" do %>
             <i class="bi bi-plus-circle me-1"></i> <%= type %>
           <% end %>
         <% end %>

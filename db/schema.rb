@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_13_233004) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_21_214534) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -64,6 +64,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_13_233004) do
     t.datetime "updated_at", null: false
     t.string "message"
     t.string "status", default: "active", null: false
+    t.datetime "started_at"
+    t.datetime "completed_at"
     t.index ["collection_id"], name: "index_destinations_on_collection_id"
     t.index ["name", "type"], name: "index_destinations_on_name_and_type", unique: true
   end
@@ -107,6 +109,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_13_233004) do
     t.boolean "transfer_on_import", default: false, null: false
     t.string "message"
     t.string "status", default: "active", null: false
+    t.datetime "started_at"
+    t.datetime "completed_at"
     t.index ["name", "url"], name: "index_sources_on_name_and_url", unique: true
     t.index ["name"], name: "index_sources_on_name"
     t.index ["type"], name: "index_sources_on_type"

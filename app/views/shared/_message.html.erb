@@ -1,4 +1,10 @@
 <div class="message">
-  <p><%= message %></p>
-  <p class="text-muted small">Last updated: <%= timestamp %></p>
+  <h5>Status</h5>
+  <pre><%= record.message || "No current messages." %></pre>
+  <% if defined? record.started_at %>
+    <p class="text-muted small">Last started at: <%= record.started_at %></p>
+  <% end %>
+  <% if defined? record.completed_at %>
+    <p class="text-muted small">Last completed at: <%= record.completed_at %></p>
+  <% end %>
 </div>

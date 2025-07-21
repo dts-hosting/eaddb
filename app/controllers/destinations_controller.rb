@@ -51,6 +51,7 @@ class DestinationsController < ApplicationController
   end
 
   def reset
+    # TODO: don't allow reset if running an export
     if @destination.ok_to_run?
       @destination.reset
       redirect_to destination_path(@destination)
