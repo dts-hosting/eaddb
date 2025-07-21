@@ -1,12 +1,11 @@
 class ResetDestinationJob < ApplicationJob
-  limits_concurrency to: 1, key: ->(destination) { destination.url }, duration: 1.hour
+  limits_concurrency to: 1, key: ->(destination) { destination }, duration: 1.hour
   queue_as :default
 
   def perform(destination)
-    Rails.logger.info "Reset started for: #{destination.url} #{Time.current}"
-    destination.broadcast_message("Reset started for: #{destination.url}")
+    destination.update(message: "Reset started", started_at: Time.current, completed_at: nil)
     destination.exporter.new(destination).reset
-    destination.update(status: "active", message: "Reset ran successfully")
+    destination.update(status: "active", message: "Reset completed", completed_at: Time.current)
   rescue => e
     destination.update(status: "failed", message: e.message)
   end

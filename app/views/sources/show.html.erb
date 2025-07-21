@@ -72,18 +72,11 @@
   </div>
 </div>
 
-<%= turbo_frame_tag dom_id(@source) do %>
-  <div class="card mt-3">
-    <div class="card-body">
-      <div id="<%= dom_id(@source) %>_message">
-        <%= render partial: "shared/message", locals: {
-          message: @source.message || "No current messages.",
-          timestamp: @source.updated_at.strftime('%H:%M:%S')
-        } %>
-      </div>
-    </div>
+<div class="card mt-3">
+  <div class="card-body">
+    <%= render partial: "shared/message", locals: { record: @source } %>
   </div>
-<% end %>
+</div>
 
 <div class="card mt-3">
   <div class="card-body">

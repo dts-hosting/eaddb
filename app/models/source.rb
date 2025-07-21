@@ -1,5 +1,4 @@
 class Source < ApplicationRecord
-  include Broadcastable
   include Descendents
 
   has_many :collections, dependent: nil
@@ -18,6 +17,8 @@ class Source < ApplicationRecord
   encrypts :password
 
   before_destroy :ensure_no_collections
+
+  broadcasts_refreshes
 
   def build_validation_url
     raise NotImplementedError

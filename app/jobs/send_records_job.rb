@@ -3,18 +3,21 @@ class SendRecordsJob < ApplicationJob
   queue_as :default
 
   def perform(destination, transfer_ids = nil)
-    Rails.logger.info "Started sending records to: #{destination.url} #{Time.current}"
-    destination.broadcast_message("Started sending records to: #{destination.url}")
+    destination.update(message: "Export started", started_at: Time.current, completed_at: nil)
 
     records_processed = 0
     last_update_time = Time.current
 
     destination.exporter.new(destination).export(transfer_ids) do |_|
       records_processed += 1
-      last_update_time = broadcast_message(destination, records_processed, last_update_time)
+      last_update_time = report_progress(destination, records_processed, last_update_time)
     end
 
-    destination.update(status: "active", message: "Export ran successfully")
+    destination.update(
+      status: "active",
+      message: I18n.t("jobs.export_completed", count: records_processed),
+      completed_at: Time.current
+    )
   rescue => e
     destination.update(status: "failed", message: e.message)
   end

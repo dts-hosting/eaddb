@@ -1,5 +1,4 @@
 class Destination < ApplicationRecord
-  include Broadcastable
   include Descendents
 
   belongs_to :collection
@@ -17,6 +16,8 @@ class Destination < ApplicationRecord
   encrypts :password
 
   after_create_commit :create_transfers_for_collection_records
+
+  broadcasts_refreshes
 
   def exporter
     raise NotImplementedError, "#{self} must implement exporter"

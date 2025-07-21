@@ -82,12 +82,7 @@
 
 <div class="card mt-3">
   <div class="card-body">
-    <div>
-      <%= render partial: "shared/message", locals: {
-        message: @record.message || "No current messages.",
-        timestamp: @record.updated_at.strftime('%H:%M:%S')
-      } %>
-    </div>
+    <%= render partial: "shared/message", locals: { record: @record } %>
   </div>
 </div>
 
