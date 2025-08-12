@@ -13,110 +13,41 @@
 
   <!-- Stats Cards Section -->
   <div class="row mb-4">
-    <div class="col-md-3">
-      <div class="card text-center h-100">
-        <div class="card-body">
-          <h5 class="card-title">Sources</h5>
-          <h2 class="card-text"><%= @stats[:sources_count] %></h2>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-3">
-      <div class="card text-center h-100">
-        <div class="card-body">
-          <h5 class="card-title">Collections</h5>
-          <h2 class="card-text"><%= @stats[:collections_count] %></h2>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-3">
-      <div class="card text-center h-100">
-        <div class="card-body">
-          <h5 class="card-title">Records</h5>
-          <h2 class="card-text"><%= @stats[:records_count] %></h2>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-3">
-      <div class="card text-center h-100">
-        <div class="card-body">
-          <h5 class="card-title">Destinations</h5>
-          <h2 class="card-text"><%= @stats[:destinations_count] %></h2>
-        </div>
-      </div>
-    </div>
+    <%= render partial: "stats", locals: { title: "Sources", count: @stats[:sources_count], width: 3 } %>
+    <%= render partial: "stats", locals: { title: "Collections", count: @stats[:collections_count], width: 3 } %>
+    <%= render partial: "stats", locals: { title: "Records", count: @stats[:records_count], width: 3 } %>
+    <%= render partial: "stats", locals: { title: "Destinations", count: @stats[:destinations_count], width: 3 } %>
   </div>
 
-  <!-- Sources with Collections Section -->
+  <!-- Sources with Collections / Collections with Records Section -->
   <div class="row mb-4">
     <div class="col-6">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Top 5 sources by no. of collections</h5>
-          <% if @sources_with_collections.any? %>
-            <table class="table table-hover">
-              <thead>
-              <tr>
-                <th>#</th>
-                <th>Source</th>
-                <th>Collections</th>
-              </tr>
-              </thead>
-              <tbody>
-              <% @sources_with_collections.each_with_index do |source, idx| %>
-                <tr>
-                  <td><%= idx + 1 %></td>
-                  <td>
-                    <%= link_to source.name, source_path(source), class: "text-decoration-none" %>
-                  </td>
-                  <td><%= source.collections_count %></td>
-                </tr>
-              <% end %>
-              </tbody>
-            </table>
-          <% else %>
-            <p class="text-center">No sources available yet.</p>
-          <% end %>
-          <%= link_to "View all sources", sources_path, class: "btn btn-outline-primary btn-sm" %>
-        </div>
-      </div>
+      <%= render partial: "top_items_card", locals: {
+        title: "Top 5 sources by no. of collections",
+        items: @sources_with_collections,
+        item_label: "Source",
+        count_label: "Collections",
+        item_path: ->(item) { source_path(item) },
+        count_method: ->(item) { item.collections_count },
+        empty_message: "No sources available yet.",
+        button_text: "View all sources",
+        button_path: sources_path,
+        button_alignment: ""
+      } %>
     </div>
     <div class="col-6">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Top 5 collections by no. of records</h5>
-          <% if @collections_with_records.any? %>
-            <table class="table table-hover">
-              <thead>
-              <tr>
-                <th>#</th>
-                <th>Collection</th>
-                <th>Records</th>
-              </tr>
-              </thead>
-              <tbody>
-              <% @collections_with_records.each_with_index do |collection, idx| %>
-                <tr>
-                  <td><%= idx + 1 %></td>
-                  <td>
-                    <%= link_to collection.name, collection_path(collection), class: "text-decoration-none" %>
-                  </td>
-                  <td><%= collection.records_count %></td>
-                </tr>
-              <% end %>
-              </tbody>
-            </table>
-          <% else %>
-            <p class="text-center">No collections available yet.</p>
-          <% end %>
-          <div class="text-end">
-            <%= link_to "Search for records", records_path, class: "btn btn-outline-primary btn-sm" %>
-          </div>
-        </div>
-      </div>
+      <%= render partial: "top_items_card", locals: {
+        title: "Top 5 collections by no. of records",
+        items: @collections_with_records,
+        item_label: "Collection",
+        count_label: "Records",
+        item_path: ->(item) { collection_path(item) },
+        count_method: ->(item) { item.records_count },
+        empty_message: "No collections available yet.",
+        button_text: "Search for records",
+        button_path: records_path,
+        button_alignment: "text-end"
+      } %>
     </div>
   </div>
 

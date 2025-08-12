@@ -1,0 +1,32 @@
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title"><%= title %></h5>
+    <% if items.any? %>
+      <table class="table table-hover">
+        <thead>
+        <tr>
+          <th>#</th>
+          <th><%= item_label %></th>
+          <th><%= count_label %></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% items.each_with_index do |item, idx| %>
+          <tr>
+            <td><%= idx + 1 %></td>
+            <td>
+              <%= link_to item.name, item_path.call(item), class: "text-decoration-none" %>
+            </td>
+            <td><%= count_method.call(item) %></td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p class="text-center"><%= empty_message %></p>
+    <% end %>
+    <div class="<%= button_alignment %>">
+      <%= link_to button_text, button_path, class: "btn btn-outline-primary btn-sm" %>
+    </div>
+  </div>
+</div>
