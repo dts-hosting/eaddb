@@ -114,5 +114,7 @@ module Exporters
       request.body = body
       http.request(request)
     end
+
+    private_class_method :delete_request
   end
 end
