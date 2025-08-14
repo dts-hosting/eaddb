@@ -94,3 +94,22 @@
     </div>
   </div>
 </div>
+
+<div class="card mt-3">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="card-title mb-0">Transfers</h5>
+    </div>
+
+    <%= render partial: "shared/infinite_scroll", locals: {
+      container_id: "transfers",
+      frame_id: :destinations_page,
+      pagy: @pagy,
+      collection: @transfers,
+      item_partial: "shared/transfer",
+      empty_message: "No transfers found.",
+      pagination_url: destination_path(page: @pagy.next),
+      inline: true
+    } %>
+  </div>
+</div>

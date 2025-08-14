@@ -5,6 +5,11 @@
     <div class="row align-items-center">
       <div class="col-md-5 text-start">
         <div class="d-flex align-items-center mb-1">
+          <span class="text-muted small me-2">Action</span>
+          <span class="badge <%= transfer_action_badge_class(transfer) %>">
+            <%= transfer.action.capitalize %>
+          </span>
+          <span class="text-muted small ms-2"></span>
           <span class="text-muted small me-2">Status</span>
           <span class="badge <%= transfer_status_badge_class(transfer) %>">
             <%= transfer.status.capitalize %>

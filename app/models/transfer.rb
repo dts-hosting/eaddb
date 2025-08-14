@@ -6,7 +6,7 @@ class Transfer < ApplicationRecord
   enum :status, {pending: "pending", succeeded: "succeeded", failed: "failed"}, default: :pending
 
   after_create_commit -> { TransferJob.perform_later(self) }
-  after_update_commit -> { broadcast_replace_to self, partial: "records/transfer" }
+  after_update_commit -> { broadcast_replace_to self, partial: "shared/transfer" }
 
   scope :latest_active, -> { recent.not_pending }
   scope :not_pending, -> { where.not(status: "pending") }
