@@ -8,13 +8,9 @@ class GetRecordsJob < ApplicationJob
     records_processed = 0
     last_update_time = Time.current
 
-    source.importer.new(source).import do |record|
+    source.importer.new(source).import do |_|
       records_processed += 1
       last_update_time = report_progress(source, records_processed, last_update_time)
-
-      next unless source.transfer_on_import?
-
-      record.transfer
     end
 
     source.update(

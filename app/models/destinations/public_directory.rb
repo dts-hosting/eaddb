@@ -11,7 +11,7 @@ module Destinations
     end
 
     def ok_to_run?
-      transfers.any?
+      active?
     end
 
     def self.display_name

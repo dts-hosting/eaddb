@@ -14,7 +14,7 @@ module FactoryHelpers
     defaults = {
       name: "Test #{type.to_s.camelize} Destination",
       url: "https://example.com/#{type}",
-      identifier: "test-#{type}-#{SecureRandom.hex(4)}",
+      identifier: "lyrasis-corporate-archive",
       collection: collection
     }
 

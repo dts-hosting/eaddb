@@ -34,10 +34,10 @@ en:
       zero: "Import completed (no records)"
       one: "Import completed (1 record)"
       other: "Import completed (%{count} records)"
-    export_completed:
-      zero: "Export completed (no records)"
-      one: "Export completed (1 record)"
-      other: "Export completed (%{count} records)"
+    export_queued:
+      zero: "Export queued (no records)"
+      one: "Export queued (1 record)"
+      other: "Export queued (%{count} records)"
     records_processed:
       zero: "Processed (no records so far)"
       one: "Processed (1 record)"

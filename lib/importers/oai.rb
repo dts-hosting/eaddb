@@ -1,14 +1,6 @@
 # Imports records from an OAI-PMH source.
-require_relative "ead"
-
 module Importers
   class Oai < Base
-    include Ead
-
-    RECORD_ACTIVE = "active"
-    RECORD_DELETED = "deleted"
-    RECORD_FAILED = "failed"
-
     def import(&block)
       return unless source.collections.any?
 
@@ -21,17 +13,15 @@ module Importers
         next unless collection
 
         datestamp = header.datestamp
-        record = create_record(collection, record_identifier, status, datestamp)
-        next unless should_process?(record, datestamp)
-
-        process_record(collection, record, datestamp)
+        record = create_or_update_record(collection, record_identifier, status, datestamp)
         yield record if block_given?
       end
     end
 
-    private
+    def process(record)
+      return unless record.active?
 
-    def process_record(collection, record, datestamp)
+      collection = record.collection
       oai_record = fetch_record(record.identifier)
       ead_element = extract_ead(oai_record.metadata)
       corpname = extract_repository_name(ead_element)
@@ -43,10 +33,31 @@ module Importers
 
       eadid = find_ead_identifier(ead_element)
       eadid = eadid.gsub(/\s/, ".") if eadid.present?
-      attributes = build_record_attributes(datestamp, corpname, eadid)
-      update_record(record, xml_to_string(ead_element), attributes)
+      update_record(record, xml_to_string(ead_element), {ead_identifier: eadid, owner: corpname})
     rescue => e
       record.update(status: RECORD_FAILED, message: e.message)
+    end
+
+    private
+
+    def create_or_update_record(collection, record_identifier, status, datestamp)
+      record = collection.records.find_or_create_by(
+        collection: collection,
+        identifier: record_identifier
+      ) do |r|
+        r.modification_date = datestamp
+        r.status = status
+      end
+      record.update(modification_date: datestamp) if record.modification_date != datestamp
+      record.update(status: status) if record.status != status
+      record
+    end
+
+    def fetch_record(identifier)
+      source.client.get_record(
+        metadata_prefix: source.metadata_prefix,
+        identifier: identifier
+      ).record
     end
 
     def get_collection(record_identifier)
@@ -60,39 +71,6 @@ module Importers
       if (match = identifier.match(%r{(/repositories/\d+)}))
         match[1]
       end
-    end
-
-    def create_record(collection, record_identifier, status, datestamp)
-      record = collection.records.find_or_create_by(
-        collection: collection,
-        identifier: record_identifier
-      ) do |r|
-        r.modification_date = datestamp
-        r.status = status
-      end
-      record.update(status: status) if record.status != status
-      record
-    end
-
-    def should_process?(record, datestamp)
-      return false unless record.active?
-
-      !record.ead_xml.attached? || record.modification_date < datestamp
-    end
-
-    def fetch_record(identifier)
-      source.client.get_record(
-        metadata_prefix: source.metadata_prefix,
-        identifier: identifier
-      ).record
-    end
-
-    def build_record_attributes(datestamp, corpname, eadid)
-      {
-        ead_identifier: eadid,
-        modification_date: datestamp,
-        owner: corpname
-      }
     end
 
     def update_record(record, ead_xml, attributes)

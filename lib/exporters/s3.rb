@@ -1,11 +1,15 @@
 module Exporters
   class S3 < Base
-    def export(transfter_ids = nil, &block)
-      # TODO
+    def export
+      raise NotImplementedError
     end
 
-    def reset
-      # TODO
+    def withdraw
+      raise NotImplementedError
+    end
+
+    def self.reset(destination)
+      raise NotImplementedError
     end
   end
 end

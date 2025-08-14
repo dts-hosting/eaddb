@@ -99,7 +99,7 @@ class DestinationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should redirect with alert when preconditions are not met" do
-    @destination.transfers.destroy_all
+    Destinations::ArcLight.any_instance.stubs(:ok_to_run?).returns(false)
     post run_destination_path(@destination)
 
     assert_redirected_to destination_path(@destination)

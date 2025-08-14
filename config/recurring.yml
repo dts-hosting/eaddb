@@ -5,9 +5,6 @@ production:
   get_records_from_sources:
     class: GetRecordsFromSourcesJob
     schedule: "0 * * * *"
-  send_records_to_destinations:
-    class: SendRecordsToDestinationsJob
-    schedule: "30 * * * *"
   session_expiration:
     command: "Session.sweep"
     schedule: every hour

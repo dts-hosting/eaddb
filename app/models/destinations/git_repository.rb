@@ -13,7 +13,7 @@ module Destinations
     end
 
     def ok_to_run?
-      username.present? && password.present? && transfers.any?
+      active? && username.present? && password.present?
     end
 
     def self.display_name
