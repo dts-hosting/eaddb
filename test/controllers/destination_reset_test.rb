@@ -18,8 +18,8 @@ class DestinationResetIntegrationTest < ActionDispatch::IntegrationTest
     @record2 = create_record(collection: @collection)
   end
 
-  # TODO: reimplement
   test "reset destination through controller endpoint" do
-    Exporters::ArcLight.any_instance.stubs(:reset).returns(true)
+    post reset_destination_path(@destination)
+    assert_redirected_to destination_path(@destination)
   end
 end

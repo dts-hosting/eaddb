@@ -4,7 +4,9 @@ class RecordTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
 
   def setup
-    @collection = create_collection
+    @collection = create_collection(
+      source: create_source(transfer_on_import: false)
+    )
     @destination1 = create_destination(
       type: :arc_light, attributes: {collection: @collection, username: "user", password: "<PASSWORD>"}
     )
@@ -97,12 +99,31 @@ class RecordTest < ActiveSupport::TestCase
     assert_includes Record.without_ead, @record
   end
 
-  # TODO: reimplement
-  test "transfer enqueues the right jobs" do
-    @record.save
-    # assert_enqueued_jobs 0
-    # @record.export
-    # assert_enqueued_with(job: SendRecordsJob)
-    # assert_enqueued_jobs @record.destinations.count
+  test "enqueues the right jobs" do
+    assert_enqueued_with(job: ProcessRecordJob) do
+      assert_no_enqueued_jobs(only: TransferJob) do
+        @record.save
+      end
+    end
+
+    assert_enqueued_with(job: TransferJob) do
+      @record.queue_export
+    end
+  end
+
+  test "enqueues the right jobs with source transfer on import" do
+    @collection.source.update!(transfer_on_import: true)
+
+    Importers::Oai.any_instance.stubs(:process).with(@record).returns(nil)
+    @record.stubs(:reload).returns(@record)
+    @record.stubs(:active?).returns(true)
+
+    assert_enqueued_with(job: ProcessRecordJob) do
+      @record.save
+    end
+
+    assert_enqueued_with(job: TransferJob) do
+      perform_enqueued_jobs(only: ProcessRecordJob)
+    end
   end
 end

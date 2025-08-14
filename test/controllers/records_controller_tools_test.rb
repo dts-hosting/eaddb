@@ -19,25 +19,26 @@ class RecordsControllerToolsTest < ActionDispatch::IntegrationTest
   test "should not resend failed record" do
     @record.update!(status: "failed")
 
-    assert_no_changes -> { @record.reload.updated_at } do
+    assert_no_changes -> { @record.transfers.count } do
       post resend_record_url(@record)
     end
     assert_redirected_to record_url(@record)
     assert_equal "Cannot transfer failed record.", flash[:alert]
   end
 
-  # TODO: reimplement
   test "should withdraw record" do
-    # assert_changes -> { @record.reload.updated_at } do
-    #   post withdraw_record_url(@record)
-    # end
-    # assert_redirected_to record_url(@record)
+    assert_changes -> { @record.transfers.count } do
+      post withdraw_record_url(@record)
+    end
+    assert_redirected_to record_url(@record)
+
+    assert @record.transfers.last.withdraw?
   end
 
   test "should not withdraw failed record" do
     @record.update!(status: "failed")
 
-    assert_no_changes -> { @record.reload.updated_at } do
+    assert_no_changes -> { @record.transfers.count } do
       post withdraw_record_url(@record)
     end
     assert_redirected_to record_url(@record)
