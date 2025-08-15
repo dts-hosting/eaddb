@@ -30,7 +30,7 @@ class DestinationsController < ApplicationController
     if @destination.save
       redirect_to destination_path(@destination), notice: "Destination was successfully created."
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -41,7 +41,7 @@ class DestinationsController < ApplicationController
     if @destination.update(destination_params)
       redirect_to destination_path(@destination), notice: "Destination was successfully updated."
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

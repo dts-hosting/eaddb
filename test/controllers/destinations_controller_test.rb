@@ -49,7 +49,7 @@ class DestinationsControllerTest < ActionDispatch::IntegrationTest
       }
     end
 
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
   end
 
   test "should get edit" do
@@ -82,7 +82,7 @@ class DestinationsControllerTest < ActionDispatch::IntegrationTest
       }
     }
 
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
     @destination.reload
     assert_equal original_name, @destination.name
   end

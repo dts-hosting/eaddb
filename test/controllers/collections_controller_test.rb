@@ -45,7 +45,7 @@ class CollectionsControllerTest < ActionDispatch::IntegrationTest
       post source_collections_url(@source), params: {collection: @invalid_attributes}
     end
 
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
     assert_select "div.alert-danger", /prohibited this collection from being saved/i
   end
 
@@ -70,7 +70,7 @@ class CollectionsControllerTest < ActionDispatch::IntegrationTest
   test "should not update collection with invalid attributes" do
     patch collection_url(@collection), params: {collection: @invalid_attributes}
 
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
     assert_select "div.alert-danger", /prohibited this collection from being saved/i
   end
 

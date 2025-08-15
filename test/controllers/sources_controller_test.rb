@@ -44,7 +44,7 @@ class SourcesControllerTest < ActionDispatch::IntegrationTest
       }
     end
 
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
   end
 
   test "should show source" do
@@ -79,7 +79,7 @@ class SourcesControllerTest < ActionDispatch::IntegrationTest
         url: @source.url
       }
     }
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
   end
 
   test "should destroy source" do

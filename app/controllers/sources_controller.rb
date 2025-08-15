@@ -29,7 +29,7 @@ class SourcesController < ApplicationController
     if @source.save
       redirect_to source_path(@source), notice: "Source was successfully created."
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -40,7 +40,7 @@ class SourcesController < ApplicationController
     if @source.update(source_params)
       redirect_to source_path(@source), notice: "Source was successfully updated."
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
