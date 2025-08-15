@@ -17,13 +17,13 @@ class RecordsController < ApplicationController
   end
 
   def show
-    @pagy, @transfers = pagy(@record.transfers, limit: 5)
+    @pagy, @transfers = pagy(@record.transfers.order(created_at: :desc), limit: 5)
   end
 
   # record tools
   def resend
     if @record.ok_to_run?
-      @record.resend
+      @record.queue_export
       redirect_to record_path(@record)
     else
       redirect_to record_path(@record), alert: "Cannot transfer failed record."
@@ -32,7 +32,7 @@ class RecordsController < ApplicationController
 
   def withdraw
     if @record.ok_to_run?
-      @record.withdraw
+      @record.queue_withdraw
       redirect_to record_path(@record)
     else
       redirect_to record_path(@record), alert: "Cannot withdraw failed record."

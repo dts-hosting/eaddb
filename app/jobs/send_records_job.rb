@@ -1,21 +1,23 @@
 class SendRecordsJob < ApplicationJob
-  limits_concurrency to: 1, key: ->(destination, _) { destination }, duration: 1.hour
+  limits_concurrency to: 1, key: ->(destination) { destination }, duration: 1.hour
   queue_as :default
 
-  def perform(destination, transfer_ids = nil)
+  def perform(destination)
     destination.update(message: "Export started", started_at: Time.current, completed_at: nil)
 
     records_processed = 0
-    last_update_time = Time.current
 
-    destination.exporter.new(destination).export(transfer_ids) do |_|
+    # TODO: more efficiently and scope
+    destination.records.where(status: "active").find_each do |record|
+      next unless record.ok_to_run?
+
+      Transfer.create(action: "export", record: record, destination: destination)
       records_processed += 1
-      last_update_time = report_progress(destination, records_processed, last_update_time)
     end
 
     destination.update(
       status: "active",
-      message: I18n.t("jobs.export_completed", count: records_processed),
+      message: I18n.t("jobs.export_queued", count: records_processed),
       completed_at: Time.current
     )
   rescue => e

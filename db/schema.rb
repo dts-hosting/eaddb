@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_21_214534) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_14_214731) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -123,7 +123,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_21_214534) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "message"
-    t.index ["destination_id", "record_id"], name: "index_transfers_on_destination_id_and_record_id", unique: true
+    t.string "action", default: "export", null: false
+    t.index ["destination_id", "record_id"], name: "index_transfers_on_destination_id_and_record_id"
     t.index ["destination_id"], name: "index_transfers_on_destination_id"
     t.index ["record_id"], name: "index_transfers_on_record_id"
   end

@@ -1,16 +1,30 @@
 module Exporters
   class Base
-    attr_reader :destination
+    attr_reader :destination, :record, :transfer
 
-    def initialize(destination)
-      @destination = destination
+    def initialize(transfer)
+      @transfer = transfer
+      @destination = transfer.destination
+      @record = transfer.record
     end
 
-    def export(transfer_ids = nil, &block)
+    # export the record to destination
+    def export
       raise NotImplementedError
     end
 
-    def reset
+    def process
+      export if transfer.export?
+      withdraw if transfer.withdraw?
+    end
+
+    # withdraw (delete) record from destination
+    def withdraw
+      raise NotImplementedError
+    end
+
+    # purge all records from destination
+    def self.reset(destination)
       raise NotImplementedError
     end
   end

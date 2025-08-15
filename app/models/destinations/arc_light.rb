@@ -2,7 +2,8 @@ module Destinations
   class ArcLight < Destination
     validates :url, presence: true, format: {with: URI::DEFAULT_PARSER.make_regexp, message: "must be a valid URL"}
     validates :identifier, :config, presence: true
-    # TODO: validates identifier in config
+
+    after_commit :validate_identifier_in_config
 
     def exporter
       Exporters::ArcLight
@@ -13,12 +14,13 @@ module Destinations
     end
 
     def ok_to_run?
-      transfers.any?
+      active? && identifier.present? && config.attached?
     end
 
-    # TODO: cache
     def repositories
-      YAML.safe_load(config.download)
+      Rails.cache.fetch("repositories_cfg_#{id}", expires_in: 1.hour) do
+        YAML.safe_load(config.download)
+      end
     end
 
     def repository
@@ -35,6 +37,18 @@ module Destinations
 
     def self.version
       Gem::Specification.find_by_name("arclight").version.to_s
+    end
+
+    private
+
+    def validate_identifier_in_config
+      return unless active? && config.attached?
+
+      unless repositories.key?(identifier)
+        update(status: "failed", message: "identifier '#{identifier}' not found in configuration")
+      end
+    rescue => e
+      update(status: "failed", message: e.message)
     end
   end
 end

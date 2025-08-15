@@ -14,26 +14,37 @@ module ApplicationHelper
   def status_badge_class(type)
     case type.status
     when "active"
-      "bg-success"
+      "text-bg-success"
     when "failed"
-      "bg-danger"
+      "text-bg-danger"
     when "deleted"
-      "bg-warning"
+      "text-bg-warning"
     else
-      "bg-secondary"
+      "text-bg-secondary"
+    end
+  end
+
+  def transfer_action_badge_class(transfer)
+    case transfer.action
+    when "export"
+      "text-bg-info"
+    when "withdraw"
+      "text-bg-warning"
+    else
+      "text-bg-secondary"
     end
   end
 
   def transfer_status_badge_class(transfer)
     case transfer.status
     when "succeeded"
-      "bg-success"
+      "text-bg-success"
     when "failed"
-      "bg-danger"
+      "text-bg-danger"
     when "pending"
-      transfer.record.ok_to_run? ? "bg-warning" : "bg-danger"
+      transfer.record.ok_to_run? ? "text-bg-warning" : "text-bg-danger"
     else
-      "bg-secondary"
+      "text-bg-secondary"
     end
   end
 end

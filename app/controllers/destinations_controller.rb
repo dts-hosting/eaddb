@@ -13,6 +13,7 @@ class DestinationsController < ApplicationController
   end
 
   def show
+    @pagy, @transfers = pagy(@destination.transfers.order(created_at: :desc), limit: 5)
   end
 
   def new

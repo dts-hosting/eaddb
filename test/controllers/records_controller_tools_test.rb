@@ -5,11 +5,12 @@ class RecordsControllerToolsTest < ActionDispatch::IntegrationTest
 
   setup do
     sign_in(users(:admin))
-    @record = create_record
+    @destination = create_destination
+    @record = create_record(collection: @destination.collection)
   end
 
   test "should resend record" do
-    assert_changes -> { @record.reload.updated_at } do
+    assert_changes -> { @record.transfers.count } do
       post resend_record_url(@record)
     end
     assert_redirected_to record_url(@record)
@@ -18,7 +19,7 @@ class RecordsControllerToolsTest < ActionDispatch::IntegrationTest
   test "should not resend failed record" do
     @record.update!(status: "failed")
 
-    assert_no_changes -> { @record.reload.updated_at } do
+    assert_no_changes -> { @record.transfers.count } do
       post resend_record_url(@record)
     end
     assert_redirected_to record_url(@record)
@@ -26,16 +27,18 @@ class RecordsControllerToolsTest < ActionDispatch::IntegrationTest
   end
 
   test "should withdraw record" do
-    assert_changes -> { @record.reload.updated_at } do
+    assert_changes -> { @record.transfers.count } do
       post withdraw_record_url(@record)
     end
     assert_redirected_to record_url(@record)
+
+    assert @record.transfers.last.withdraw?
   end
 
   test "should not withdraw failed record" do
     @record.update!(status: "failed")
 
-    assert_no_changes -> { @record.reload.updated_at } do
+    assert_no_changes -> { @record.transfers.count } do
       post withdraw_record_url(@record)
     end
     assert_redirected_to record_url(@record)

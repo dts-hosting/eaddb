@@ -1,83 +1,55 @@
-# Exports records to and deletes from ArcLight.
+# Exports records to and withdraws from ArcLight.
 # For import we use traject as per the docs (bundle exec) and get
 # the EAD mapping configuration from the ArcLight gem.
-# For delete we use the Solr API directly.
+# For withdraw (delete) we use the Solr API directly.
 module Exporters
   class ArcLight < Base
-    def export(transfer_ids = nil, &block)
-      arclight_dir = Gem::Specification.find_by_name("arclight").gem_dir
-      indexer_cfg = File.join(arclight_dir, "lib", "arclight", "traject", "ead2_config.rb")
+    attr_reader :arclight_dir, :indexer_cfg
 
-      # TODO: this can be handled by validation
-      unless destination.repository
-        raise "Repository #{destination.identifier} not found in config."
-      end
+    def initialize(transfer)
+      super
+      @arclight_dir = Gem::Specification.find_by_name("arclight").gem_dir
+      @indexer_cfg = File.join(arclight_dir, "lib", "arclight", "traject", "ead2_config.rb")
+    end
 
-      repositories_cfg = Tempfile.new(["destination_", destination.id.to_s, ".yml"])
-      begin
-        repositories_cfg.write(destination.repositories.to_yaml)
-        repositories_cfg.flush
-
-        transfers = transfer_ids.nil? ? destination.pending_transfers : destination.pending_transfers.where(id: transfer_ids)
-        transfers.find_each do |transfer|
-          process_transfer(transfer, indexer_cfg, repositories_cfg.path)
-          yield transfer if block_given?
+    def export
+      create_repositories_config do |repositories_cfg|
+        record.ead_xml.open do |xml|
+          _, stderr, status = Open3.capture3(command(indexer_cfg, repositories_cfg, xml.path))
+          if status.success?
+            transfer.succeeded!("Transferred to #{destination.identifier}")
+          else
+            transfer.failed!("Failed to process: #{first_error(stderr)}")
+          end
         end
-
-        deletes = transfer_ids.nil? ? destination.pending_deletes : destination.pending_deletes.where(id: transfer_ids)
-        deletes.find_each do |transfer|
-          process_delete(transfer)
-          yield transfer if block_given?
-        end
-      ensure
-        repositories_cfg.close
-        repositories_cfg.unlink
       end
     end
 
-    def reset
-      # TODO: this can be handled by validation
-      raise "Repository #{destination.identifier} not found in config." unless destination.repository
-      delete_xml = "<delete><query>repository_ssim:\"#{destination.repository_name}\"</query></delete>"
-      response = delete_request(delete_xml)
-      unless response.is_a?(Net::HTTPSuccess)
-        raise "Failed to reset Solr: #{response.code} #{response.message}"
-      end
-    end
-
-    private
-
-    # TODO: we're not checking the response did anything. Ok?
-    def process_delete(transfer)
-      escaped_id = CGI.escapeHTML(transfer.record.ead_identifier).tr(".", "-")
+    def withdraw
+      escaped_id = CGI.escapeHTML(record.ead_identifier).tr(".", "-")
       delete_xml = <<~XML
         <delete>
           <query>_root_:#{escaped_id}</query>
         </delete>
       XML
 
-      response = delete_request(delete_xml)
+      response = self.class.delete_request(destination, delete_xml)
       if response.is_a?(Net::HTTPSuccess)
         transfer.succeeded!("Deleted record from #{destination.identifier}")
       else
         transfer.failed!("Failed to delete record: #{response.code} #{response.message}")
       end
-    rescue => e
-      transfer.failed!("Failed to delete record: #{e.message}")
     end
 
-    def process_transfer(transfer, indexer_cfg, repositories_cfg)
-      transfer.record.ead_xml.open do |xml|
-        _, stderr, status = Open3.capture3(command(indexer_cfg, repositories_cfg, xml.path))
-        if status.success?
-          transfer.succeeded!("Transferred to #{destination.identifier}")
-        else
-          transfer.failed!("Failed to process: #{first_error(stderr)}")
-        end
+    def self.reset(destination)
+      delete_xml = "<delete><query>repository_ssim:\"#{destination.repository_name}\"</query></delete>"
+      response = delete_request(destination, delete_xml)
+      unless response.is_a?(Net::HTTPSuccess)
+        raise "Failed to reset Solr: #{response.code} #{response.message}"
       end
-    rescue => e
-      transfer.failed!("Failed to process: #{e.message}")
     end
+
+    private
 
     def command(indexer_cfg, repositories_cfg, ead_xml)
       <<~CMD
@@ -93,16 +65,21 @@ module Exporters
       CMD
     end
 
-    def delete_request(body)
-      uri = URI.parse("#{destination.url}/update?commit=true")
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true if uri.scheme == "https"
+    def create_repositories_config
+      config_hash = Digest::SHA256.hexdigest(destination.repositories.to_yaml)
+      filename = "destination_#{destination.id}_#{config_hash}.yml"
+      filepath = Rails.root.join("tmp", filename)
+      unless File.exist?(filepath) && file_content_matches?(filepath, destination.repositories.to_yaml)
+        File.write(filepath, destination.repositories.to_yaml)
+      end
 
-      request = Net::HTTP::Post.new(uri.request_uri)
-      request["Content-Type"] = "text/xml"
+      yield filepath
+    end
 
-      request.body = body
-      http.request(request)
+    def file_content_matches?(filepath, expected_content)
+      File.read(filepath) == expected_content
+    rescue Errno::ENOENT
+      false
     end
 
     def first_error(text)
@@ -125,5 +102,19 @@ module Exporters
       end
       error_content
     end
+
+    def self.delete_request(destination, body)
+      uri = URI.parse("#{destination.url}/update?commit=true")
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true if uri.scheme == "https"
+
+      request = Net::HTTP::Post.new(uri.request_uri)
+      request["Content-Type"] = "text/xml"
+
+      request.body = body
+      http.request(request)
+    end
+
+    private_class_method :delete_request
   end
 end

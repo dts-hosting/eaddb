@@ -4,7 +4,7 @@ class ResetDestinationJob < ApplicationJob
 
   def perform(destination)
     destination.update(message: "Reset started", started_at: Time.current, completed_at: nil)
-    destination.exporter.new(destination).reset
+    destination.exporter.reset(destination)
     destination.update(status: "active", message: "Reset completed", completed_at: Time.current)
   rescue => e
     destination.update(status: "failed", message: e.message)

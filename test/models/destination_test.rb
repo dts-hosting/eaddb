@@ -48,18 +48,4 @@ class DestinationTest < ActiveSupport::TestCase
     assert_equal "user123", destination.username
     assert_equal "secret123", destination.password
   end
-
-  test "creates transfers for all collection records after creation" do
-    record2 = create_record(collection: @collection)
-    record3 = create_record(collection: @collection)
-
-    destination = create_destination(attributes: {collection: @collection})
-
-    assert_equal @collection.records.count, destination.transfers.count
-    assert destination.transfers.all?(&:pending?)
-
-    [@record, record2, record3].each do |record|
-      assert Transfer.exists?(record: record, destination: destination)
-    end
-  end
 end
