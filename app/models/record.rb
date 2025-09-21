@@ -19,15 +19,9 @@ class Record < ApplicationRecord
   scope :with_ead, -> { where(status: "active").where.not(ead_identifier: nil) }
   scope :without_ead, -> { where(ead_identifier: nil) }
 
-  def ok_to_run?
-    return false if failed?
-
-    ead_identifier.present? && ead_xml.attached?
-  end
-
   # queue export of this record to all destinations
   def queue_export
-    unless ok_to_run?
+    unless transferable?
       update!(status: "failed", message: "Record is missing EAD identifier and/or XML")
       return
     end
@@ -49,6 +43,12 @@ class Record < ApplicationRecord
     destinations.each do |destination|
       transfers.create(action: "withdraw", destination: destination)
     end
+  end
+
+  def transferable?
+    return false if failed?
+
+    ead_identifier.present? && ead_xml.attached?
   end
 
   def self.untransferables

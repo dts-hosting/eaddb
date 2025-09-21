@@ -40,8 +40,8 @@ class Source < ApplicationRecord
     raise NotImplementedError, "#{self} must implement importer"
   end
 
-  def ok_to_run?
-    raise NotImplementedError, "#{self} must implement ok_to_run?"
+  def ready?
+    raise NotImplementedError, "#{self} must implement ready?"
   end
 
   def recalculate_total_records_count!
@@ -49,7 +49,7 @@ class Source < ApplicationRecord
   end
 
   def run
-    return unless ok_to_run?
+    return unless ready?
 
     GetRecordsJob.perform_later(self)
   end

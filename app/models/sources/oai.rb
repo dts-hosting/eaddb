@@ -14,7 +14,7 @@ module Sources
       Importers::Oai
     end
 
-    def ok_to_run?
+    def ready?
       collections.any?
     end
 

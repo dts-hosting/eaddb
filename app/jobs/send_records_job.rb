@@ -9,7 +9,7 @@ class SendRecordsJob < ApplicationJob
 
     # TODO: more efficiently and scope
     destination.records.where(status: "active").find_each do |record|
-      next unless record.ok_to_run?
+      next unless record.transferable?
 
       Transfer.create(action: "export", record: record, destination: destination)
       records_processed += 1

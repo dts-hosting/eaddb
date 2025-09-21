@@ -53,7 +53,7 @@ class DestinationsController < ApplicationController
 
   def reset
     # TODO: don't allow reset if running an export
-    if @destination.ok_to_run?
+    if @destination.ready?
       @destination.reset
       redirect_to destination_path(@destination)
     else
@@ -62,7 +62,7 @@ class DestinationsController < ApplicationController
   end
 
   def run
-    if @destination.ok_to_run?
+    if @destination.ready?
       @destination.run
       redirect_to destination_path(@destination)
     else

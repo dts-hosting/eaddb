@@ -42,7 +42,7 @@ module ApplicationHelper
     when "failed"
       "text-bg-danger"
     when "pending"
-      transfer.record.ok_to_run? ? "text-bg-warning" : "text-bg-danger"
+      transfer.record.transferable? ? "text-bg-warning" : "text-bg-danger"
     else
       "text-bg-secondary"
     end
