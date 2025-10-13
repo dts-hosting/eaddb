@@ -1,6 +1,7 @@
 module Importers
   class Base
     include Ead
+
     attr_reader :source
 
     RECORD_ACTIVE = "active"
