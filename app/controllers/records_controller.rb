@@ -1,5 +1,6 @@
 class RecordsController < ApplicationController
   include Filterable
+
   before_action :set_record, only: [:show, :resend, :withdraw]
 
   def index
