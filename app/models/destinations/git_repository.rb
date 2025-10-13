@@ -12,7 +12,7 @@ module Destinations
       true
     end
 
-    def ok_to_run?
+    def ready?
       active? && username.present? && password.present?
     end
 

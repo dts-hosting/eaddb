@@ -12,7 +12,7 @@ module Sources
       Importers::Sftp
     end
 
-    def ok_to_run?
+    def ready?
       username.present? && password.present? && collections.any?
     end
 

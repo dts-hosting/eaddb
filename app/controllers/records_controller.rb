@@ -22,7 +22,7 @@ class RecordsController < ApplicationController
 
   # record tools
   def resend
-    if @record.ok_to_run?
+    if @record.transferable?
       @record.queue_export
       redirect_to record_path(@record)
     else
@@ -31,7 +31,7 @@ class RecordsController < ApplicationController
   end
 
   def withdraw
-    if @record.ok_to_run?
+    if @record.transferable?
       @record.queue_withdraw
       redirect_to record_path(@record)
     else

@@ -10,7 +10,7 @@ module Destinations
       false
     end
 
-    def ok_to_run?
+    def ready?
       active?
     end
 

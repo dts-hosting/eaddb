@@ -25,8 +25,8 @@ class Destination < ApplicationRecord
     raise NotImplementedError, "#{self} must implement has_url?"
   end
 
-  def ok_to_run?
-    raise NotImplementedError, "#{self} must implement ok_to_run?"
+  def ready?
+    raise NotImplementedError, "#{self} must implement ready?"
   end
 
   def reset
@@ -34,7 +34,7 @@ class Destination < ApplicationRecord
   end
 
   def run
-    return unless ok_to_run?
+    return unless ready?
 
     SendRecordsJob.perform_later(self)
   end

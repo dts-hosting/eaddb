@@ -14,7 +14,7 @@ module Sources
       Importers::ArchivesSpace
     end
 
-    def ok_to_run?
+    def ready?
       username.present? && password.present? && collections.any?
     end
 

@@ -53,7 +53,7 @@ class SourcesController < ApplicationController
   end
 
   def run
-    if @source.ok_to_run?
+    if @source.ready?
       @source.run
       redirect_to source_path(@source)
     else
