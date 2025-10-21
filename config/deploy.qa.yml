@@ -6,7 +6,7 @@ proxy:
 servers:
   web:
     hosts:
-      - eaddb.lyrasistechnology.org
+      - general-shared-production-apps.lyrasistechnology.org
     env:
       AWS_BUCKET: eaddb-qa-storage
       AWS_REGION: us-west-2
