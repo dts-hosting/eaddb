@@ -74,4 +74,4 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Kamal deploy
-        run: bundle exec kamal deploy -d prod
+        run: bundle exec kamal deploy -d qa # TODO: "prod" (we don't have one currently)
