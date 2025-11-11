@@ -10,26 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_14_214731) do
+ActiveRecord::Schema[8.1].define(version: 2025_08_14_214731) do
   create_table "active_storage_attachments", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "record_type", null: false
-    t.bigint "record_id", null: false
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.bigint "record_id", null: false
+    t.string "record_type", null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
   create_table "active_storage_blobs", force: :cascade do |t|
-    t.string "key", null: false
-    t.string "filename", null: false
-    t.string "content_type"
-    t.text "metadata"
-    t.string "service_name", null: false
     t.bigint "byte_size", null: false
     t.string "checksum"
+    t.string "content_type"
     t.datetime "created_at", null: false
+    t.string "filename", null: false
+    t.string "key", null: false
+    t.text "metadata"
+    t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
@@ -40,47 +40,47 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_14_214731) do
   end
 
   create_table "collections", force: :cascade do |t|
-    t.integer "source_id", null: false
-    t.string "name", null: false
-    t.boolean "require_owner_in_record", default: false
-    t.string "identifier", null: false
     t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string "identifier", null: false
+    t.string "name", null: false
     t.integer "records_count", default: 0, null: false
+    t.boolean "require_owner_in_record", default: false
+    t.integer "source_id", null: false
+    t.datetime "updated_at", null: false
     t.index ["source_id", "identifier"], name: "index_collections_on_source_id_and_identifier", unique: true
     t.index ["source_id", "name"], name: "index_collections_on_source_id_and_name", unique: true
     t.index ["source_id"], name: "index_collections_on_source_id"
   end
 
   create_table "destinations", force: :cascade do |t|
-    t.string "type", null: false
-    t.string "name", null: false
-    t.string "url"
-    t.string "identifier"
-    t.string "username"
-    t.string "password"
     t.integer "collection_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "message"
-    t.string "status", default: "active", null: false
-    t.datetime "started_at"
     t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.string "identifier"
+    t.string "message"
+    t.string "name", null: false
+    t.string "password"
+    t.datetime "started_at"
+    t.string "status", default: "active", null: false
+    t.string "type", null: false
+    t.datetime "updated_at", null: false
+    t.string "url"
+    t.string "username"
     t.index ["collection_id"], name: "index_destinations_on_collection_id"
     t.index ["name", "type"], name: "index_destinations_on_name_and_type", unique: true
   end
 
   create_table "records", force: :cascade do |t|
     t.integer "collection_id", null: false
-    t.string "identifier", null: false
-    t.date "creation_date"
-    t.datetime "modification_date"
     t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.date "creation_date"
     t.string "ead_identifier"
+    t.string "identifier", null: false
+    t.string "message"
+    t.datetime "modification_date"
     t.string "owner"
     t.string "status", default: "active", null: false
-    t.string "message"
+    t.datetime "updated_at", null: false
     t.index ["collection_id", "identifier"], name: "index_records_on_collection_id_and_identifier", unique: true
     t.index ["collection_id"], name: "index_records_on_collection_id"
     t.index ["ead_identifier"], name: "index_records_on_ead_identifier"
@@ -88,51 +88,51 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_14_214731) do
   end
 
   create_table "sessions", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.string "ip_address"
-    t.string "user_agent"
     t.datetime "created_at", null: false
+    t.string "ip_address"
     t.datetime "updated_at", null: false
+    t.string "user_agent"
+    t.integer "user_id", null: false
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
   create_table "sources", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "url", null: false
-    t.string "username"
-    t.string "password"
-    t.string "type", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.integer "collections_count", default: 0, null: false
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.string "message"
+    t.string "name", null: false
+    t.string "password"
+    t.datetime "started_at"
+    t.string "status", default: "active", null: false
     t.integer "total_records_count", default: 0, null: false
     t.boolean "transfer_on_import", default: false, null: false
-    t.string "message"
-    t.string "status", default: "active", null: false
-    t.datetime "started_at"
-    t.datetime "completed_at"
+    t.string "type", null: false
+    t.datetime "updated_at", null: false
+    t.string "url", null: false
+    t.string "username"
     t.index ["name", "url"], name: "index_sources_on_name_and_url", unique: true
     t.index ["name"], name: "index_sources_on_name"
     t.index ["type"], name: "index_sources_on_type"
   end
 
   create_table "transfers", force: :cascade do |t|
+    t.string "action", default: "export", null: false
+    t.datetime "created_at", null: false
     t.integer "destination_id", null: false
+    t.string "message"
     t.integer "record_id", null: false
     t.string "status", null: false
-    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "message"
-    t.string "action", default: "export", null: false
     t.index ["destination_id", "record_id"], name: "index_transfers_on_destination_id_and_record_id"
     t.index ["destination_id"], name: "index_transfers_on_destination_id"
     t.index ["record_id"], name: "index_transfers_on_record_id"
   end
 
   create_table "users", force: :cascade do |t|
+    t.datetime "created_at", null: false
     t.string "email_address", null: false
     t.string "password_digest", null: false
-    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
