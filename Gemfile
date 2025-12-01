@@ -19,7 +19,7 @@ gem "tzinfo-data", platforms: %i[windows jruby]
 group :development do
   gem "hotwire-spark"
   gem "htmlbeautifier"
-  gem "kamal", "~> 2.8"
+  gem "kamal", "~> 2.9"
   gem "letter_opener"
   gem "overcommit"
   gem "web-console"
