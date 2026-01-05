@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "bcrypt", "~> 3.1.7"
+gem "bcrypt", "~> 3.1.21"
 gem "bootsnap", require: false
 gem "importmap-rails"
 gem "jbuilder"
@@ -19,7 +19,7 @@ gem "tzinfo-data", platforms: %i[windows jruby]
 group :development do
   gem "hotwire-spark"
   gem "htmlbeautifier"
-  gem "kamal", "~> 2.9"
+  gem "kamal", "~> 2.10"
   gem "letter_opener"
   gem "overcommit"
   gem "web-console"
